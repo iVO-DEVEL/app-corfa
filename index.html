@@ -1,589 +1,1229 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#0a3d2e">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Visitas CORFA">
-<title>CORFA-BIONESTA · Visitas</title>
-<link rel="manifest" href="manifest-visitador.json">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-:root{
-  --g900:#071a14;--g800:#0a3d2e;--g700:#0f5c44;--g600:#147a5a;
-  --g500:#1a9870;--g400:#22b88a;--g300:#3dd6a8;--g100:#d0f5eb;--g50:#edfaf5;
-  --ink:#0d1f19;--ink2:#3a5249;--ink3:#6b8f82;
-  --bg:#f4f9f7;--bg2:#e8f2ee;--bg3:#fff;
-  --bd:rgba(10,61,46,.11);--bd2:rgba(10,61,46,.2);
-  --amber:#d97706;--amberbg:#fffbeb;
-  --red:#dc2626;--redbg:#fef2f2;
-  --r:14px;--r2:10px;--r3:6px;
-  --font:'DM Sans',sans-serif;--mono:'DM Mono',monospace;
-}
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;background:var(--bg);font-family:var(--font);color:var(--ink);overscroll-behavior:none;-webkit-font-smoothing:antialiased}
-body{display:flex;flex-direction:column;max-width:430px;margin:0 auto;min-height:100dvh}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="theme-color" content="#0a3d2e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Visitas CORFA">
+  <title>CORFA-BIONESTA · Visitas</title>
+  <link rel="manifest" href="manifest-visitador.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --g900: #071a14;
+      --g800: #0a3d2e;
+      --g700: #0f5c44;
+      --g600: #147a5a;
+      --g500: #1a9870;
+      --g400: #22b88a;
+      --g300: #3dd6a8;
+      --g100: #d0f5eb;
+      --g50: #edfaf5;
+      --ink: #0d1f19;
+      --ink2: #3a5249;
+      --ink3: #6b8f82;
+      --bg: #f4f9f7;
+      --bg2: #e8f2ee;
+      --bg3: #fff;
+      --bd: rgba(10, 61, 46, .11);
+      --bd2: rgba(10, 61, 46, .2);
+      --amber: #d97706;
+      --amberbg: #fffbeb;
+      --red: #dc2626;
+      --redbg: #fef2f2;
+      --r: 14px;
+      --r2: 10px;
+      --r3: 6px;
+      --font: 'DM Sans', sans-serif;
+      --mono: 'DM Mono', monospace;
+    }
 
-/* SCREENS */
-.screen{display:none;flex-direction:column;height:100dvh;overflow:hidden}
-.screen.active{display:flex}
-.body{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;padding-bottom:28px}
-.body::-webkit-scrollbar{display:none}
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent
+    }
 
-/* HEADER */
-.hdr{background:var(--g800);padding:env(safe-area-inset-top,0px) 0 0;flex-shrink:0}
-.hdr-inner{padding:14px 18px 18px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-.hdr-left{}
-.hdr-brand{font-size:10px;font-weight:600;color:rgba(255,255,255,.45);letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px}
-.hdr-title{color:#fff;font-size:19px;font-weight:600;letter-spacing:-.3px;line-height:1.2}
-.hdr-sub{color:rgba(255,255,255,.55);font-size:11px;margin-top:3px;font-family:var(--mono)}
-.hdr-pill{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:20px;padding:6px 13px;font-size:11px;color:rgba(255,255,255,.8);font-weight:500;white-space:nowrap;flex-shrink:0;font-family:var(--mono);cursor:default}
+    html,
+    body {
+      height: 100%;
+      background: var(--bg);
+      font-family: var(--font);
+      color: var(--ink);
+      overscroll-behavior: none;
+      -webkit-font-smoothing: antialiased
+    }
 
-/* BOTTOM NAV */
-.nav{background:var(--bg3);border-top:1px solid var(--bd);display:flex;padding:6px 0 env(safe-area-inset-bottom,0px);flex-shrink:0}
-.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 4px;cursor:pointer;border:none;background:none;color:var(--ink3);font-family:var(--font);transition:color .15s}
-.nav-btn.active{color:var(--g600)}
-.nav-btn svg{width:20px;height:20px}
-.nav-btn span{font-size:10px;font-weight:500;letter-spacing:.01em}
+    body {
+      display: flex;
+      flex-direction: column;
+      max-width: 430px;
+      margin: 0 auto;
+      min-height: 100dvh
+    }
 
-/* CARDS */
-.card{background:var(--bg3);border-radius:var(--r);border:1px solid var(--bd);padding:14px}
-.lbl{font-size:10px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:7px;display:flex;align-items:center;gap:5px}
-.lbl svg{width:12px;height:12px;opacity:.7;flex-shrink:0}
+    /* SCREENS */
+    .screen {
+      display: none;
+      flex-direction: column;
+      height: 100dvh;
+      overflow: hidden
+    }
 
-/* INPUTS */
-input[type=text],select,textarea{
-  width:100%;border:1.5px solid var(--bd2);border-radius:var(--r2);
-  padding:10px 13px;font-size:15px;font-family:var(--font);color:var(--ink);
-  background:var(--bg);outline:none;transition:border-color .15s,box-shadow .15s;
-  -webkit-appearance:none
-}
-input:focus,select:focus,textarea:focus{border-color:var(--g500);box-shadow:0 0 0 3px rgba(26,152,112,.1)}
-textarea{resize:none;line-height:1.5;height:76px}
-select{background-image:url("data:image/svg+xml,%3Csvg width='11' height='7' viewBox='0 0 11 7' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%236b8f82' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center;padding-right:34px}
+    .screen.active {
+      display: flex
+    }
 
-/* BUTTONS */
-.btn{width:100%;border:none;border-radius:var(--r2);padding:14px;font-size:15px;font-weight:600;font-family:var(--font);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity .15s,transform .1s;-webkit-appearance:none}
-.btn:active{transform:scale(.98);opacity:.9}
-.btn-primary{background:var(--g700);color:#fff}
-.btn-outline{background:transparent;color:var(--g600);border:1.5px solid var(--g400)}
-.btn-sm{background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r3);padding:7px 11px;font-size:12px;font-weight:500;font-family:var(--font);color:var(--ink2);cursor:pointer;display:inline-flex;align-items:center;gap:5px}
+    .body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding-bottom: 28px
+    }
 
-/* GPS / TIMER BADGES */
-.badge{display:inline-flex;align-items:center;gap:5px;border-radius:20px;padding:5px 11px;font-size:12px;font-weight:500}
-.badge-green{background:var(--g50);color:var(--g700)}
-.badge-amber{background:var(--amberbg);color:var(--amber)}
-.badge-red{background:var(--redbg);color:var(--red)}
-.dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.5)}}
-.pulse{animation:pulse 1.4s ease-in-out infinite}
+    .body::-webkit-scrollbar {
+      display: none
+    }
 
-/* TIMER */
-.timer-num{font-family:var(--mono);font-size:30px;font-weight:500;color:var(--g800);letter-spacing:.02em}
-.timer-sub{font-size:11px;color:var(--ink3);margin-top:1px}
+    /* HEADER */
+    .hdr {
+      background: var(--g800);
+      padding: env(safe-area-inset-top, 0px) 0 0;
+      flex-shrink: 0
+    }
 
-/* CAMERA */
-.cam-zone{background:#0d1a16;border-radius:var(--r2);overflow:hidden;position:relative;min-height:190px;display:flex;flex-direction:column;align-items:center;justify-content:center}
-#videoEl{width:100%;max-height:260px;object-fit:cover;display:none}
-#photoCanvas{display:none}
-.cam-ph{display:flex;flex-direction:column;align-items:center;gap:7px;padding:20px}
-.cam-ph svg{opacity:.35}
-.cam-ph p{color:rgba(255,255,255,.35);font-size:12px;text-align:center;line-height:1.5}
-.cam-ctrl{display:flex;gap:8px;align-items:center;justify-content:center;padding:10px;background:rgba(0,0,0,.45);width:100%;position:absolute;bottom:0}
-.shutter{width:56px;height:56px;border-radius:50%;background:#fff;border:4px solid rgba(255,255,255,.25);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .1s}
-.shutter:active{transform:scale(.9)}
-.shutter-in{width:42px;height:42px;border-radius:50%;background:#fff;border:2px solid #ccc}
-#photoPreviewImg{width:100%;border-radius:var(--r2);display:none;max-height:210px;object-fit:cover}
-.cam-row{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+    .hdr-inner {
+      padding: 14px 18px 18px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px
+    }
 
-/* STATS */
-.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-.stat{background:var(--bg3);border-radius:var(--r2);border:1px solid var(--bd);padding:11px;text-align:center}
-.stat-n{font-size:22px;font-weight:600;color:var(--g800);font-family:var(--mono)}
-.stat-l{font-size:10px;color:var(--ink3);margin-top:2px;text-transform:uppercase;letter-spacing:.04em}
+    .hdr-left {}
 
-/* VISIT CARDS */
-.vcard{background:var(--bg3);border-radius:var(--r);border:1px solid var(--bd);padding:13px;display:flex;gap:11px;align-items:flex-start}
-.vav{width:40px;height:40px;border-radius:50%;background:var(--g100);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:var(--g800);flex-shrink:0;font-family:var(--mono)}
-.vinfo{flex:1;min-width:0}
-.vname{font-size:13px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.vmeta{font-size:11px;color:var(--ink3);margin-top:1px}
-.vnotes{font-size:11px;color:var(--ink2);margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.4}
-.vdur{background:var(--g50);color:var(--g700);font-size:11px;font-weight:600;padding:3px 8px;border-radius:20px;white-space:nowrap;font-family:var(--mono)}
+    .hdr-brand {
+      font-size: 10px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, .45);
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-bottom: 3px
+    }
 
-/* SUCCESS */
-.success-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 20px;gap:18px;background:var(--bg)}
-.success-ring{width:76px;height:76px;border-radius:50%;background:var(--g100);display:flex;align-items:center;justify-content:center}
-@keyframes pop{0%{transform:scale(0)}70%{transform:scale(1.15)}100%{transform:scale(1)}}
-.pop{animation:pop .4s cubic-bezier(.175,.885,.32,1.275) .1s both}
-.sum-card{background:var(--bg3);border-radius:var(--r);border:1px solid var(--bd);width:100%;overflow:hidden}
-.sum-row{display:flex;justify-content:space-between;align-items:center;padding:10px 15px;border-bottom:1px solid var(--bd)}
-.sum-row:last-child{border-bottom:none}
-.sum-k{font-size:11px;color:var(--ink3)}
-.sum-v{font-size:12px;font-weight:500;color:var(--ink);text-align:right;max-width:60%}
+    .hdr-title {
+      color: #fff;
+      font-size: 19px;
+      font-weight: 600;
+      letter-spacing: -.3px;
+      line-height: 1.2
+    }
 
-/* OFFLINE */
-.offline-bar{background:var(--amberbg);border-bottom:1px solid rgba(217,119,6,.2);padding:7px 16px;font-size:11px;color:var(--amber);display:none;align-items:center;gap:7px}
-.offline-bar.on{display:flex}
+    .hdr-sub {
+      color: rgba(255, 255, 255, .55);
+      font-size: 11px;
+      margin-top: 3px;
+      font-family: var(--mono)
+    }
 
-/* CHAR COUNT */
-.ta-wrap{position:relative}
-.cc{position:absolute;bottom:7px;right:9px;font-size:10px;color:var(--ink3);font-family:var(--mono);pointer-events:none}
+    .hdr-pill {
+      background: rgba(255, 255, 255, .1);
+      border: 1px solid rgba(255, 255, 255, .18);
+      border-radius: 20px;
+      padding: 6px 13px;
+      font-size: 11px;
+      color: rgba(255, 255, 255, .8);
+      font-weight: 500;
+      white-space: nowrap;
+      flex-shrink: 0;
+      font-family: var(--mono);
+      cursor: default
+    }
 
-/* ANIM */
-@keyframes up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-.up{animation:up .25s ease-out both}
+    /* BOTTOM NAV */
+    .nav {
+      background: var(--bg3);
+      border-top: 1px solid var(--bd);
+      display: flex;
+      padding: 6px 0 env(safe-area-inset-bottom, 0px);
+      flex-shrink: 0
+    }
 
-/* EMPTY */
-.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:44px 20px;gap:10px;color:var(--ink3);text-align:center}
-.empty svg{opacity:.2}
-.empty p{font-size:13px;line-height:1.5}
+    .nav-btn {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      padding: 7px 4px;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: var(--ink3);
+      font-family: var(--font);
+      transition: color .15s
+    }
 
-/* SYNC DOT */
-.sdot{width:8px;height:8px;border-radius:50%;background:var(--g300);display:inline-block;margin-right:4px}
-</style>
+    .nav-btn.active {
+      color: var(--g600)
+    }
+
+    .nav-btn svg {
+      width: 20px;
+      height: 20px
+    }
+
+    .nav-btn span {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: .01em
+    }
+
+    /* CARDS */
+    .card {
+      background: var(--bg3);
+      border-radius: var(--r);
+      border: 1px solid var(--bd);
+      padding: 14px
+    }
+
+    .lbl {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--ink3);
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      margin-bottom: 7px;
+      display: flex;
+      align-items: center;
+      gap: 5px
+    }
+
+    .lbl svg {
+      width: 12px;
+      height: 12px;
+      opacity: .7;
+      flex-shrink: 0
+    }
+
+    /* INPUTS */
+    input[type=text],
+    select,
+    textarea {
+      width: 100%;
+      border: 1.5px solid var(--bd2);
+      border-radius: var(--r2);
+      padding: 10px 13px;
+      font-size: 15px;
+      font-family: var(--font);
+      color: var(--ink);
+      background: var(--bg);
+      outline: none;
+      transition: border-color .15s, box-shadow .15s;
+      -webkit-appearance: none
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--g500);
+      box-shadow: 0 0 0 3px rgba(26, 152, 112, .1)
+    }
+
+    textarea {
+      resize: none;
+      line-height: 1.5;
+      height: 76px
+    }
+
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg width='11' height='7' viewBox='0 0 11 7' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%236b8f82' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 13px center;
+      padding-right: 34px
+    }
+
+    /* BUTTONS */
+    .btn {
+      width: 100%;
+      border: none;
+      border-radius: var(--r2);
+      padding: 14px;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: var(--font);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: opacity .15s, transform .1s;
+      -webkit-appearance: none
+    }
+
+    .btn:active {
+      transform: scale(.98);
+      opacity: .9
+    }
+
+    .btn-primary {
+      background: var(--g700);
+      color: #fff
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--g600);
+      border: 1.5px solid var(--g400)
+    }
+
+    .btn-sm {
+      background: var(--bg2);
+      border: 1px solid var(--bd);
+      border-radius: var(--r3);
+      padding: 7px 11px;
+      font-size: 12px;
+      font-weight: 500;
+      font-family: var(--font);
+      color: var(--ink2);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px
+    }
+
+    /* GPS / TIMER BADGES */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border-radius: 20px;
+      padding: 5px 11px;
+      font-size: 12px;
+      font-weight: 500
+    }
+
+    .badge-green {
+      background: var(--g50);
+      color: var(--g700)
+    }
+
+    .badge-amber {
+      background: var(--amberbg);
+      color: var(--amber)
+    }
+
+    .badge-red {
+      background: var(--redbg);
+      color: var(--red)
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      flex-shrink: 0
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1)
+      }
+
+      50% {
+        opacity: .4;
+        transform: scale(1.5)
+      }
+    }
+
+    .pulse {
+      animation: pulse 1.4s ease-in-out infinite
+    }
+
+    /* TIMER */
+    .timer-num {
+      font-family: var(--mono);
+      font-size: 30px;
+      font-weight: 500;
+      color: var(--g800);
+      letter-spacing: .02em
+    }
+
+    .timer-sub {
+      font-size: 11px;
+      color: var(--ink3);
+      margin-top: 1px
+    }
+
+    /* CAMERA */
+    .cam-zone {
+      background: #0d1a16;
+      border-radius: var(--r2);
+      overflow: hidden;
+      position: relative;
+      min-height: 190px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center
+    }
+
+    #videoEl {
+      width: 100%;
+      max-height: 260px;
+      object-fit: cover;
+      display: none
+    }
+
+    #photoCanvas {
+      display: none
+    }
+
+    .cam-ph {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 7px;
+      padding: 20px
+    }
+
+    .cam-ph svg {
+      opacity: .35
+    }
+
+    .cam-ph p {
+      color: rgba(255, 255, 255, .35);
+      font-size: 12px;
+      text-align: center;
+      line-height: 1.5
+    }
+
+    .cam-ctrl {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+      background: rgba(0, 0, 0, .45);
+      width: 100%;
+      position: absolute;
+      bottom: 0
+    }
+
+    .shutter {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: #fff;
+      border: 4px solid rgba(255, 255, 255, .25);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform .1s
+    }
+
+    .shutter:active {
+      transform: scale(.9)
+    }
+
+    .shutter-in {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: #fff;
+      border: 2px solid #ccc
+    }
+
+    #photoPreviewImg {
+      width: 100%;
+      border-radius: var(--r2);
+      display: none;
+      max-height: 210px;
+      object-fit: cover
+    }
+
+    .cam-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+      flex-wrap: wrap
+    }
+
+    /* STATS */
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px
+    }
+
+    .stat {
+      background: var(--bg3);
+      border-radius: var(--r2);
+      border: 1px solid var(--bd);
+      padding: 11px;
+      text-align: center
+    }
+
+    .stat-n {
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--g800);
+      font-family: var(--mono)
+    }
+
+    .stat-l {
+      font-size: 10px;
+      color: var(--ink3);
+      margin-top: 2px;
+      text-transform: uppercase;
+      letter-spacing: .04em
+    }
+
+    /* VISIT CARDS */
+    .vcard {
+      background: var(--bg3);
+      border-radius: var(--r);
+      border: 1px solid var(--bd);
+      padding: 13px;
+      display: flex;
+      gap: 11px;
+      align-items: flex-start
+    }
+
+    .vav {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--g100);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--g800);
+      flex-shrink: 0;
+      font-family: var(--mono)
+    }
+
+    .vinfo {
+      flex: 1;
+      min-width: 0
+    }
+
+    .vname {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis
+    }
+
+    .vmeta {
+      font-size: 11px;
+      color: var(--ink3);
+      margin-top: 1px
+    }
+
+    .vnotes {
+      font-size: 11px;
+      color: var(--ink2);
+      margin-top: 3px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      line-height: 1.4
+    }
+
+    .vdur {
+      background: var(--g50);
+      color: var(--g700);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 20px;
+      white-space: nowrap;
+      font-family: var(--mono)
+    }
+
+    /* SUCCESS */
+    .success-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 28px 20px;
+      gap: 18px;
+      background: var(--bg)
+    }
+
+    .success-ring {
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      background: var(--g100);
+      display: flex;
+      align-items: center;
+      justify-content: center
+    }
+
+    @keyframes pop {
+      0% {
+        transform: scale(0)
+      }
+
+      70% {
+        transform: scale(1.15)
+      }
+
+      100% {
+        transform: scale(1)
+      }
+    }
+
+    .pop {
+      animation: pop .4s cubic-bezier(.175, .885, .32, 1.275) .1s both
+    }
+
+    .sum-card {
+      background: var(--bg3);
+      border-radius: var(--r);
+      border: 1px solid var(--bd);
+      width: 100%;
+      overflow: hidden
+    }
+
+    .sum-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 15px;
+      border-bottom: 1px solid var(--bd)
+    }
+
+    .sum-row:last-child {
+      border-bottom: none
+    }
+
+    .sum-k {
+      font-size: 11px;
+      color: var(--ink3)
+    }
+
+    .sum-v {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--ink);
+      text-align: right;
+      max-width: 60%
+    }
+
+    /* OFFLINE */
+    .offline-bar {
+      background: var(--amberbg);
+      border-bottom: 1px solid rgba(217, 119, 6, .2);
+      padding: 7px 16px;
+      font-size: 11px;
+      color: var(--amber);
+      display: none;
+      align-items: center;
+      gap: 7px
+    }
+
+    .offline-bar.on {
+      display: flex
+    }
+
+    /* CHAR COUNT */
+    .ta-wrap {
+      position: relative
+    }
+
+    .cc {
+      position: absolute;
+      bottom: 7px;
+      right: 9px;
+      font-size: 10px;
+      color: var(--ink3);
+      font-family: var(--mono);
+      pointer-events: none
+    }
+
+    /* ANIM */
+    @keyframes up {
+      from {
+        opacity: 0;
+        transform: translateY(12px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    .up {
+      animation: up .25s ease-out both
+    }
+
+    /* EMPTY */
+    .empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 44px 20px;
+      gap: 10px;
+      color: var(--ink3);
+      text-align: center
+    }
+
+    .empty svg {
+      opacity: .2
+    }
+
+    .empty p {
+      font-size: 13px;
+      line-height: 1.5
+    }
+
+    /* SYNC DOT */
+    .sdot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--g300);
+      display: inline-block;
+      margin-right: 4px
+    }
+  </style>
 </head>
+
 <body>
 
-<div class="offline-bar" id="offlineBar">
-  <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" stroke-width="1.2"/><path d="M6.5 4v3M6.5 9v.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
-  Sin conexión — guardando localmente, se sincroniza al reconectar
-</div>
-
-<!-- ═══ SCREEN: NUEVA VISITA ═══ -->
-<div class="screen active" id="s-registro">
-  <div class="hdr">
-    <div class="hdr-inner">
-      <div class="hdr-left">
-        <div class="hdr-brand">CORFA-BIONESTA</div>
-        <div class="hdr-title">Nueva visita</div>
-        <div class="hdr-sub" id="hdrDate">—</div>
-      </div>
-      <div class="hdr-pill" id="timerPill">⏱ 00:00</div>
-    </div>
+  <div class="offline-bar" id="offlineBar">
+    <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+      <circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" stroke-width="1.2" />
+      <path d="M6.5 4v3M6.5 9v.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
+    </svg>
+    Sin conexión — guardando localmente, se sincroniza al reconectar
   </div>
 
-  <div class="body">
-
-    <div class="card up" style="animation-delay:.04s">
-      <div class="lbl">
-        <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="6" cy="4" r="2.5"/><path d="M1.5 11c0-2.5 2-4 4.5-4s4.5 1.5 4.5 4"/></svg>
-        Visitador médico
-      </div>
-      <select id="selVisitador">
-        <option value="YADIRA CÓRDOBA">YADIRA CÓRDOBA</option>
-      </select>
-    </div>
-
-    <div class="card up" style="animation-delay:.08s">
-      <div class="lbl">
-        <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="1" y="2" width="10" height="8" rx="1.5"/><path d="M3.5 5.5h5M3.5 7.5h3"/></svg>
-        Médico visitado
-      </div>
-      <input type="text" id="inMedico" placeholder="Ej: Dr. Carlos Mejía — Clínica San José" autocomplete="off" autocorrect="off">
-    </div>
-
-    <div class="card up" style="animation-delay:.12s">
-      <div class="lbl">
-        <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="1" y="3" width="10" height="7.5" rx="1.5"/><circle cx="6" cy="6.5" r="1.8"/><path d="M3.5 3l.7-1.5h3.6L8.5 3"/></svg>
-        Foto del médico / consultorio
-      </div>
-      <div class="cam-zone" id="camZone">
-        <div class="cam-ph" id="camPh">
-          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="white" stroke-width="1.5"><rect x="2" y="8" width="28" height="20" rx="4"/><circle cx="16" cy="18" r="5"/><path d="M10 8l2-4h8l2 4"/></svg>
-          <p>Toca para abrir cámara<br>y capturar foto</p>
+  <!-- ═══ SCREEN: NUEVA VISITA ═══ -->
+  <div class="screen active" id="s-registro">
+    <div class="hdr">
+      <div class="hdr-inner">
+        <div class="hdr-left">
+          <div class="hdr-brand">CORFA-BIONESTA</div>
+          <div class="hdr-title">Nueva visita</div>
+          <div class="hdr-sub" id="hdrDate">—</div>
         </div>
-        <video id="videoEl" autoplay playsinline muted></video>
-        <canvas id="photoCanvas"></canvas>
-        <img id="photoPreviewImg" alt="Foto capturada">
-        <div class="cam-ctrl" id="camCtrl" style="display:none">
-          <button class="shutter" onclick="takePhoto()"><div class="shutter-in"></div></button>
+        <div class="hdr-pill" id="timerPill">⏱ 00:00</div>
+      </div>
+    </div>
+
+    <div class="body">
+
+      <div class="card up" style="animation-delay:.04s">
+        <div class="lbl">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3">
+            <circle cx="6" cy="4" r="2.5" />
+            <path d="M1.5 11c0-2.5 2-4 4.5-4s4.5 1.5 4.5 4" />
+          </svg>
+          Visitador médico
+        </div>
+        <select id="selVisitador">
+          <option value="YADIRA CÓRDOBA">YADIRA CÓRDOBA</option>
+        </select>
+      </div>
+
+      <div class="card up" style="animation-delay:.08s">
+        <div class="lbl">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3">
+            <rect x="1" y="2" width="10" height="8" rx="1.5" />
+            <path d="M3.5 5.5h5M3.5 7.5h3" />
+          </svg>
+          Médico visitado
+        </div>
+        <input type="text" id="inMedico" placeholder="Ej: Dr. Carlos Mejía — Clínica San José" autocomplete="off"
+          autocorrect="off">
+      </div>
+
+      <div class="card up" style="animation-delay:.12s">
+        <div class="lbl">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3">
+            <rect x="1" y="3" width="10" height="7.5" rx="1.5" />
+            <circle cx="6" cy="6.5" r="1.8" />
+            <path d="M3.5 3l.7-1.5h3.6L8.5 3" />
+          </svg>
+          Foto del médico / consultorio
+        </div>
+        <div class="cam-zone" id="camZone">
+          <div class="cam-ph" id="camPh">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="white" stroke-width="1.5">
+              <rect x="2" y="8" width="28" height="20" rx="4" />
+              <circle cx="16" cy="18" r="5" />
+              <path d="M10 8l2-4h8l2 4" />
+            </svg>
+            <p>Toca para abrir cámara<br>y capturar foto</p>
+          </div>
+          <video id="videoEl" autoplay playsinline muted></video>
+          <canvas id="photoCanvas"></canvas>
+          <img id="photoPreviewImg" alt="Foto capturada">
+          <div class="cam-ctrl" id="camCtrl" style="display:none">
+            <button class="shutter" onclick="takePhoto()">
+              <div class="shutter-in"></div>
+            </button>
+          </div>
+        </div>
+        <div class="cam-row">
+          <button class="btn-sm" id="btnCam" onclick="openCamera()">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.3">
+              <rect x="1" y="3" width="11" height="8.5" rx="1.5" />
+              <circle cx="6.5" cy="7" r="2" />
+              <path d="M4 3l.8-1.5h2.4L8 3" />
+            </svg>
+            Abrir cámara
+          </button>
+          <button class="btn-sm" id="btnRetake" onclick="retakePhoto()" style="display:none">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.3">
+              <path d="M2 6.5A4.5 4.5 0 1 0 3.5 3M2 1v3h3" />
+            </svg>
+            Repetir
+          </button>
+          <button class="btn-sm" id="btnCancel" onclick="closeCamera()" style="display:none">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.3">
+              <path d="M2 2l9 9M11 2L2 11" />
+            </svg>
+            Cancelar
+          </button>
         </div>
       </div>
-      <div class="cam-row">
-        <button class="btn-sm" id="btnCam" onclick="openCamera()">
-          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="1" y="3" width="11" height="8.5" rx="1.5"/><circle cx="6.5" cy="7" r="2"/><path d="M4 3l.8-1.5h2.4L8 3"/></svg>
-          Abrir cámara
-        </button>
-        <button class="btn-sm" id="btnRetake" onclick="retakePhoto()" style="display:none">
-          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M2 6.5A4.5 4.5 0 1 0 3.5 3M2 1v3h3"/></svg>
-          Repetir
-        </button>
-        <button class="btn-sm" id="btnCancel" onclick="closeCamera()" style="display:none">
-          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M2 2l9 9M11 2L2 11"/></svg>
-          Cancelar
-        </button>
-      </div>
-    </div>
 
-    <div class="card up" style="animation-delay:.16s">
-      <div class="lbl">
-        <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M6 1C3.8 1 2 2.8 2 5c0 3 4 7 4 7s4-4 4-7c0-2.2-1.8-4-4-4z"/><circle cx="6" cy="5" r="1.3"/></svg>
-        Ubicación GPS
+      <div class="card up" style="animation-delay:.16s">
+        <div class="lbl">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3">
+            <path d="M6 1C3.8 1 2 2.8 2 5c0 3 4 7 4 7s4-4 4-7c0-2.2-1.8-4-4-4z" />
+            <circle cx="6" cy="5" r="1.3" />
+          </svg>
+          Ubicación GPS
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+          <div id="gpsBadge" class="badge badge-amber">
+            <div class="dot pulse" style="background:var(--amber)"></div>Obteniendo GPS...
+          </div>
+          <button class="btn-sm" onclick="getGPS()">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3">
+              <path d="M1 6A5 5 0 1 0 2.5 2.5M1 1v3h3" />
+            </svg>
+            Actualizar
+          </button>
+        </div>
+        <div id="gpsCoords" style="font-family:var(--mono);font-size:11px;color:var(--ink3);margin-top:5px">Esperando
+          señal...</div>
       </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
-        <div id="gpsBadge" class="badge badge-amber"><div class="dot pulse" style="background:var(--amber)"></div>Obteniendo GPS...</div>
-        <button class="btn-sm" onclick="getGPS()">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M1 6A5 5 0 1 0 2.5 2.5M1 1v3h3"/></svg>
-          Actualizar
-        </button>
+
+      <div class="card up" style="animation-delay:.20s">
+        <div class="lbl">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3">
+            <circle cx="6" cy="6" r="5" />
+            <path d="M6 3.5V6.5l1.8 1.5" />
+          </svg>
+          Duración de la visita
+        </div>
+        <div class="timer-num" id="timerNum">00:00</div>
+        <div class="timer-sub">Cronómetro iniciado al abrir el formulario</div>
       </div>
-      <div id="gpsCoords" style="font-family:var(--mono);font-size:11px;color:var(--ink3);margin-top:5px">Esperando señal...</div>
-    </div>
 
-    <div class="card up" style="animation-delay:.20s">
-      <div class="lbl">
-        <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="6" cy="6" r="5"/><path d="M6 3.5V6.5l1.8 1.5"/></svg>
-        Duración de la visita
+      <div class="card up" style="animation-delay:.24s">
+        <div class="lbl">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3">
+            <path d="M1.5 3h9M1.5 6h6M1.5 9h7" />
+          </svg>
+          Notas de la visita
+        </div>
+        <div class="ta-wrap">
+          <textarea id="inNotas"
+            placeholder="Ej: Interesado en Amoxicilina 500mg, solicitó muestras, próxima visita en 2 semanas..."
+            maxlength="500" oninput="document.getElementById('cc').textContent=this.value.length+'/500'"></textarea>
+          <div class="cc" id="cc">0/500</div>
+        </div>
       </div>
-      <div class="timer-num" id="timerNum">00:00</div>
-      <div class="timer-sub">Cronómetro iniciado al abrir el formulario</div>
-    </div>
 
-    <div class="card up" style="animation-delay:.24s">
-      <div class="lbl">
-        <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M1.5 3h9M1.5 6h6M1.5 9h7"/></svg>
-        Notas de la visita
-      </div>
-      <div class="ta-wrap">
-        <textarea id="inNotas" placeholder="Ej: Interesado en Amoxicilina 500mg, solicitó muestras, próxima visita en 2 semanas..." maxlength="500" oninput="document.getElementById('cc').textContent=this.value.length+'/500'"></textarea>
-        <div class="cc" id="cc">0/500</div>
-      </div>
-    </div>
-
-    <button class="btn btn-primary up" style="animation-delay:.28s" onclick="registrarVisita()">
-      <svg width="17" height="17" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 8.5l5 5 8-8"/></svg>
-      Registrar visita
-    </button>
-
-  </div>
-
-  <nav class="nav">
-    <button class="nav-btn active" onclick="goTo('registro')">
-      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="14" height="14" rx="3"/><path d="M7 10h6M10 7v6"/></svg>
-      <span>Nueva visita</span>
-    </button>
-    <button class="nav-btn" onclick="goTo('historial')">
-      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 5.5h14M3 10h14M3 14.5h9"/></svg>
-      <span>Mis visitas</span>
-    </button>
-  </nav>
-</div>
-
-<!-- ═══ SCREEN: ÉXITO ═══ -->
-<div class="screen" id="s-exito">
-  <div class="hdr">
-    <div class="hdr-inner">
-      <div class="hdr-left">
-        <div class="hdr-brand">CORFA-BIONESTA</div>
-        <div class="hdr-title">Visita guardada</div>
-        <div class="hdr-sub" id="exitoDate">—</div>
-      </div>
-      <div class="hdr-pill"><span class="sdot"></span>Sincronizado</div>
-    </div>
-  </div>
-  <div class="success-body">
-    <div class="success-ring pop">
-      <svg width="38" height="38" viewBox="0 0 38 38" fill="none" stroke="var(--g600)" stroke-width="2.5" stroke-linecap="round"><path d="M7 19l7 7 17-17"/></svg>
-    </div>
-    <div style="text-align:center">
-      <div style="font-size:21px;font-weight:600;letter-spacing:-.3px">¡Visita registrada!</div>
-      <div style="font-size:13px;color:var(--ink3);margin-top:5px;line-height:1.6">Datos enviados a Google Sheets<br>y disponibles para el supervisor.</div>
-    </div>
-    <div class="sum-card" id="sumCard"></div>
-    <div style="width:100%;display:flex;flex-direction:column;gap:9px">
-      <button class="btn btn-primary" onclick="nuevaVisita()">
-        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="2"><path d="M7.5 2v11M2 7.5h11"/></svg>
-        Nueva visita
+      <button class="btn btn-primary up" style="animation-delay:.28s" onclick="registrarVisita()">
+        <svg width="17" height="17" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round">
+          <path d="M2 8.5l5 5 8-8" />
+        </svg>
+        Registrar visita
       </button>
-      <button class="btn btn-outline" onclick="goTo('historial')">Ver mis visitas del día</button>
-    </div>
-  </div>
-</div>
 
-<!-- ═══ SCREEN: HISTORIAL ═══ -->
-<div class="screen" id="s-historial">
-  <div class="hdr">
-    <div class="hdr-inner">
-      <div class="hdr-left">
-        <div class="hdr-brand">CORFA-BIONESTA</div>
-        <div class="hdr-title">Mis visitas</div>
-        <div class="hdr-sub" id="histDate">—</div>
+    </div>
+
+    <nav class="nav">
+      <button class="nav-btn active" onclick="goTo('registro')">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="3" y="3" width="14" height="14" rx="3" />
+          <path d="M7 10h6M10 7v6" />
+        </svg>
+        <span>Nueva visita</span>
+      </button>
+      <button class="nav-btn" onclick="goTo('historial')">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M3 5.5h14M3 10h14M3 14.5h9" />
+        </svg>
+        <span>Mis visitas</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- ═══ SCREEN: ÉXITO ═══ -->
+  <div class="screen" id="s-exito">
+    <div class="hdr">
+      <div class="hdr-inner">
+        <div class="hdr-left">
+          <div class="hdr-brand">CORFA-BIONESTA</div>
+          <div class="hdr-title">Visita guardada</div>
+          <div class="hdr-sub" id="exitoDate">—</div>
+        </div>
+        <div class="hdr-pill"><span class="sdot"></span>Sincronizado</div>
       </div>
-      <div class="hdr-pill" id="histCount">0 hoy</div>
+    </div>
+    <div class="success-body">
+      <div class="success-ring pop">
+        <svg width="38" height="38" viewBox="0 0 38 38" fill="none" stroke="var(--g600)" stroke-width="2.5"
+          stroke-linecap="round">
+          <path d="M7 19l7 7 17-17" />
+        </svg>
+      </div>
+      <div style="text-align:center">
+        <div style="font-size:21px;font-weight:600;letter-spacing:-.3px">¡Visita registrada!</div>
+        <div style="font-size:13px;color:var(--ink3);margin-top:5px;line-height:1.6">Datos enviados a Google Sheets<br>y
+          disponibles para el supervisor.</div>
+      </div>
+      <div class="sum-card" id="sumCard"></div>
+      <div style="width:100%;display:flex;flex-direction:column;gap:9px">
+        <button class="btn btn-primary" onclick="nuevaVisita()">
+          <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M7.5 2v11M2 7.5h11" />
+          </svg>
+          Nueva visita
+        </button>
+        <button class="btn btn-outline" onclick="goTo('historial')">Ver mis visitas del día</button>
+      </div>
     </div>
   </div>
-  <div class="body">
-    <div class="stats" id="statsRow">
-      <div class="stat"><div class="stat-n" id="stTotal">0</div><div class="stat-l">Visitas</div></div>
-      <div class="stat"><div class="stat-n" id="stMins">0</div><div class="stat-l">Min total</div></div>
-      <div class="stat"><div class="stat-n" id="stAvg">0</div><div class="stat-l">Min prom.</div></div>
+
+  <!-- ═══ SCREEN: HISTORIAL ═══ -->
+  <div class="screen" id="s-historial">
+    <div class="hdr">
+      <div class="hdr-inner">
+        <div class="hdr-left">
+          <div class="hdr-brand">CORFA-BIONESTA</div>
+          <div class="hdr-title">Mis visitas</div>
+          <div class="hdr-sub" id="histDate">—</div>
+        </div>
+        <div class="hdr-pill" id="histCount">0 hoy</div>
+      </div>
     </div>
-    <div id="visitList"></div>
+    <div class="body">
+      <div class="stats" id="statsRow">
+        <div class="stat">
+          <div class="stat-n" id="stTotal">0</div>
+          <div class="stat-l">Visitas</div>
+        </div>
+        <div class="stat">
+          <div class="stat-n" id="stMins">0</div>
+          <div class="stat-l">Min total</div>
+        </div>
+        <div class="stat">
+          <div class="stat-n" id="stAvg">0</div>
+          <div class="stat-l">Min prom.</div>
+        </div>
+      </div>
+      <div id="visitList"></div>
+    </div>
+    <nav class="nav">
+      <button class="nav-btn" onclick="goTo('registro')">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="3" y="3" width="14" height="14" rx="3" />
+          <path d="M7 10h6M10 7v6" />
+        </svg>
+        <span>Nueva visita</span>
+      </button>
+      <button class="nav-btn active" onclick="goTo('historial')">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M3 5.5h14M3 10h14M3 14.5h9" />
+        </svg>
+        <span>Mis visitas</span>
+      </button>
+    </nav>
   </div>
-  <nav class="nav">
-    <button class="nav-btn" onclick="goTo('registro')">
-      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="14" height="14" rx="3"/><path d="M7 10h6M10 7v6"/></svg>
-      <span>Nueva visita</span>
-    </button>
-    <button class="nav-btn active" onclick="goTo('historial')">
-      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 5.5h14M3 10h14M3 14.5h9"/></svg>
-      <span>Mis visitas</span>
-    </button>
-  </nav>
-</div>
 
-<script>
-// ── CONFIGURACIÓN HARDCODEADA ──
-var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby41tQeSR8hyKtchFrZ-AVBGWnjJtGs93kim7ZQ70BEtvvxH0yCSbRQLveoJM2SHkdljg/exec'; // se reemplaza al conectar
-var EMPRESA = 'CORFA-BIONESTA';
-var VISITADORES = ['YADIRA CÓRDOBA'];
+  <script>
+    // ── CONFIGURACIÓN HARDCODEADA ──
+    var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby41tQeSR8hyKtchFrZ-AVBGWnjJtGs93kim7ZQ70BEtvvxH0yCSbRQLveoJM2SHkdljg/exec'; // se reemplaza al conectar
+    var EMPRESA = 'CORFA-BIONESTA';
+    var VISITADORES = ['YADIRA CÓRDOBA'];
 
-// ── ESTADO ──
-var secs=0, timerInt=null, gpsData=null, photoUrl=null, stream=null;
-var visits=JSON.parse(localStorage.getItem('cb_visitas')||'[]');
-var visitStart=null;
+    // ── ESTADO ──
+    var secs = 0, timerInt = null, gpsData = null, photoUrl = null, stream = null;
+    var visits = JSON.parse(localStorage.getItem('cb_visitas') || '[]');
+    var visitStart = null;
 
-// ── INIT ──
-document.addEventListener('DOMContentLoaded',function(){
-  setDates();
-  startTimer();
-  getGPS();
-  visitStart=new Date();
-  window.addEventListener('online',function(){document.getElementById('offlineBar').classList.remove('on');syncPending();});
-  window.addEventListener('offline',function(){document.getElementById('offlineBar').classList.add('on');});
-  if(!navigator.onLine) document.getElementById('offlineBar').classList.add('on');
-});
+    // ── INIT ──
+    document.addEventListener('DOMContentLoaded', function () {
+      setDates();
+      startTimer();
+      getGPS();
+      visitStart = new Date();
+      window.addEventListener('online', function () { document.getElementById('offlineBar').classList.remove('on'); syncPending(); });
+      window.addEventListener('offline', function () { document.getElementById('offlineBar').classList.add('on'); });
+      if (!navigator.onLine) document.getElementById('offlineBar').classList.add('on');
+    });
 
-function setDates(){
-  var d=new Date();
-  var opts={weekday:'long',day:'numeric',month:'long'};
-  var s=d.toLocaleDateString('es-EC',opts);
-  s=s.charAt(0).toUpperCase()+s.slice(1);
-  ['hdrDate','histDate','exitoDate'].forEach(function(id){
-    var el=document.getElementById(id);
-    if(el) el.textContent=s;
-  });
-}
+    function setDates() {
+      var d = new Date();
+      var opts = { weekday: 'long', day: 'numeric', month: 'long' };
+      var s = d.toLocaleDateString('es-EC', opts);
+      s = s.charAt(0).toUpperCase() + s.slice(1);
+      ['hdrDate', 'histDate', 'exitoDate'].forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = s;
+      });
+    }
 
-// ── TIMER ──
-function startTimer(){
-  clearInterval(timerInt);
-  timerInt=setInterval(function(){
-    secs++;
-    var m=Math.floor(secs/60),s=secs%60;
-    var str=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
-    document.getElementById('timerNum').textContent=str;
-    document.getElementById('timerPill').textContent='⏱ '+str;
-  },1000);
-}
+    // ── TIMER ──
+    function startTimer() {
+      clearInterval(timerInt);
+      timerInt = setInterval(function () {
+        secs++;
+        var m = Math.floor(secs / 60), s = secs % 60;
+        var str = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+        document.getElementById('timerNum').textContent = str;
+        document.getElementById('timerPill').textContent = '⏱ ' + str;
+      }, 1000);
+    }
 
-// ── GPS ──
-function getGPS(){
-  if(!navigator.geolocation){
-    setGPSBadge('red','GPS no disponible en este dispositivo');
-    return;
-  }
-  setGPSBadge('amber','Obteniendo GPS...',true);
-  navigator.geolocation.getCurrentPosition(
-    function(p){
-      gpsData={lat:p.coords.latitude.toFixed(6),lng:p.coords.longitude.toFixed(6),acc:Math.round(p.coords.accuracy)};
-      setGPSBadge('green','GPS activo · ±'+gpsData.acc+'m');
-      document.getElementById('gpsCoords').textContent=gpsData.lat+', '+gpsData.lng+' · Ecuador';
-    },
-    function(err){
-      setGPSBadge('amber','Permiso GPS denegado');
-      document.getElementById('gpsCoords').textContent='Activa el GPS en tu celular';
-    },
-    {enableHighAccuracy:true,timeout:12000,maximumAge:0}
-  );
-}
+    // ── GPS ──
+    function getGPS() {
+      if (!navigator.geolocation) {
+        setGPSBadge('red', 'GPS no disponible en este dispositivo');
+        return;
+      }
+      setGPSBadge('amber', 'Obteniendo GPS...', true);
+      navigator.geolocation.getCurrentPosition(
+        function (p) {
+          gpsData = { lat: p.coords.latitude.toFixed(6), lng: p.coords.longitude.toFixed(6), acc: Math.round(p.coords.accuracy) };
+          setGPSBadge('green', 'GPS activo · ±' + gpsData.acc + 'm');
+          document.getElementById('gpsCoords').textContent = gpsData.lat + ', ' + gpsData.lng + ' · Ecuador';
+        },
+        function (err) {
+          setGPSBadge('amber', 'Permiso GPS denegado');
+          document.getElementById('gpsCoords').textContent = 'Activa el GPS en tu celular';
+        },
+        { enableHighAccuracy: true, timeout: 12000, maximumAge: 0 }
+      );
+    }
 
-function setGPSBadge(type,text,pulse){
-  var b=document.getElementById('gpsBadge');
-  var colors={green:'badge-green',amber:'badge-amber',red:'badge-red'};
-  var dotColors={green:'var(--g600)',amber:'var(--amber)',red:'var(--red)'};
-  b.className='badge '+colors[type];
-  b.innerHTML='<div class="dot'+(pulse?' pulse':'')+'" style="background:'+dotColors[type]+'"></div>'+text;
-}
+    function setGPSBadge(type, text, pulse) {
+      var b = document.getElementById('gpsBadge');
+      var colors = { green: 'badge-green', amber: 'badge-amber', red: 'badge-red' };
+      var dotColors = { green: 'var(--g600)', amber: 'var(--amber)', red: 'var(--red)' };
+      b.className = 'badge ' + colors[type];
+      b.innerHTML = '<div class="dot' + (pulse ? ' pulse' : '') + '" style="background:' + dotColors[type] + '"></div>' + text;
+    }
 
-// ── CAMERA ──
-function openCamera(){
-  navigator.mediaDevices.getUserMedia({video:{facingMode:'environment',width:{ideal:1280},height:{ideal:960}},audio:false})
-    .then(function(s){
-      stream=s;
-      var v=document.getElementById('videoEl');
-      v.srcObject=s; v.style.display='block';
-      document.getElementById('camPh').style.display='none';
-      document.getElementById('camCtrl').style.display='flex';
-      document.getElementById('btnCam').style.display='none';
-      document.getElementById('btnCancel').style.display='inline-flex';
-    })
-    .catch(function(){alert('No se pudo acceder a la cámara.\nVerifica los permisos del navegador.');});
-}
+    // ── CAMERA ──
+    function openCamera() {
+      navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 960 } }, audio: false })
+        .then(function (s) {
+          stream = s;
+          var v = document.getElementById('videoEl');
+          v.srcObject = s; v.style.display = 'block';
+          document.getElementById('camPh').style.display = 'none';
+          document.getElementById('camCtrl').style.display = 'flex';
+          document.getElementById('btnCam').style.display = 'none';
+          document.getElementById('btnCancel').style.display = 'inline-flex';
+        })
+        .catch(function () { alert('No se pudo acceder a la cámara.\nVerifica los permisos del navegador.'); });
+    }
 
-function takePhoto(){
-  var v=document.getElementById('videoEl');
-  var c=document.getElementById('photoCanvas');
-  c.width=v.videoWidth; c.height=v.videoHeight;
-  c.getContext('2d').drawImage(v,0,0);
-  photoUrl=c.toDataURL('image/jpeg',0.82);
-  stopStream();
-  v.style.display='none';
-  document.getElementById('camCtrl').style.display='none';
-  document.getElementById('camPh').style.display='none';
-  var img=document.getElementById('photoPreviewImg');
-  img.src=photoUrl; img.style.display='block';
-  document.getElementById('btnRetake').style.display='inline-flex';
-  document.getElementById('btnCam').style.display='none';
-  document.getElementById('btnCancel').style.display='none';
-}
+    function takePhoto() {
+      var v = document.getElementById('videoEl');
+      var c = document.getElementById('photoCanvas');
+      c.width = v.videoWidth; c.height = v.videoHeight;
+      c.getContext('2d').drawImage(v, 0, 0);
+      photoUrl = c.toDataURL('image/jpeg', 0.82);
+      stopStream();
+      v.style.display = 'none';
+      document.getElementById('camCtrl').style.display = 'none';
+      document.getElementById('camPh').style.display = 'none';
+      var img = document.getElementById('photoPreviewImg');
+      img.src = photoUrl; img.style.display = 'block';
+      document.getElementById('btnRetake').style.display = 'inline-flex';
+      document.getElementById('btnCam').style.display = 'none';
+      document.getElementById('btnCancel').style.display = 'none';
+    }
 
-function retakePhoto(){
-  photoUrl=null;
-  document.getElementById('photoPreviewImg').style.display='none';
-  document.getElementById('camPh').style.display='flex';
-  document.getElementById('btnRetake').style.display='none';
-  document.getElementById('btnCam').style.display='inline-flex';
-}
+    function retakePhoto() {
+      photoUrl = null;
+      document.getElementById('photoPreviewImg').style.display = 'none';
+      document.getElementById('camPh').style.display = 'flex';
+      document.getElementById('btnRetake').style.display = 'none';
+      document.getElementById('btnCam').style.display = 'inline-flex';
+    }
 
-function closeCamera(){
-  stopStream();
-  document.getElementById('videoEl').style.display='none';
-  document.getElementById('camCtrl').style.display='none';
-  document.getElementById('camPh').style.display='flex';
-  document.getElementById('btnCam').style.display='inline-flex';
-  document.getElementById('btnCancel').style.display='none';
-}
+    function closeCamera() {
+      stopStream();
+      document.getElementById('videoEl').style.display = 'none';
+      document.getElementById('camCtrl').style.display = 'none';
+      document.getElementById('camPh').style.display = 'flex';
+      document.getElementById('btnCam').style.display = 'inline-flex';
+      document.getElementById('btnCancel').style.display = 'none';
+    }
 
-function stopStream(){if(stream){stream.getTracks().forEach(function(t){t.stop();});stream=null;}}
+    function stopStream() { if (stream) { stream.getTracks().forEach(function (t) { t.stop(); }); stream = null; } }
 
-// ── REGISTRAR ──
-function registrarVisita(){
-  var medico=document.getElementById('inMedico').value.trim();
-  if(!medico){
-    document.getElementById('inMedico').style.borderColor='var(--red)';
-    document.getElementById('inMedico').focus();
-    setTimeout(function(){document.getElementById('inMedico').style.borderColor='';},2500);
-    return;
-  }
-  clearInterval(timerInt);
-  stopStream();
-  var dur=Math.round(secs/60);
-  var now=new Date();
-  var v={
-    id:Date.now(),
-    visitador:document.getElementById('selVisitador').value,
-    medico:medico,
-    notas:document.getElementById('inNotas').value.trim(),
-    lat:gpsData?gpsData.lat:'',
-    lng:gpsData?gpsData.lng:'',
-    gpsAcc:gpsData?gpsData.acc:'',
-    duracion:dur,
-    duracionSecs:secs,
-    horaInicio:visitStart?visitStart.toLocaleTimeString('es-EC',{hour:'2-digit',minute:'2-digit'}):now.toLocaleTimeString('es-EC',{hour:'2-digit',minute:'2-digit'}),
-    horaFin:now.toLocaleTimeString('es-EC',{hour:'2-digit',minute:'2-digit'}),
-    fecha:now.toISOString().split('T')[0],
-    fechaDisplay:now.toLocaleDateString('es-EC',{day:'numeric',month:'long',year:'numeric'}),
-    foto:photoUrl?'Sí':'No',
-    sincronia:navigator.onLine?'En línea':'Pendiente',
-    synced:false
-  };
-  visits.push(v);
-  localStorage.setItem('cb_visitas',JSON.stringify(visits));
-  if(navigator.onLine) sendToSheets(v);
+    // ── REGISTRAR ──
+    function registrarVisita() {
+      var medico = document.getElementById('inMedico').value.trim();
+      if (!medico) {
+        document.getElementById('inMedico').style.borderColor = 'var(--red)';
+        document.getElementById('inMedico').focus();
+        setTimeout(function () { document.getElementById('inMedico').style.borderColor = ''; }, 2500);
+        return;
+      }
+      clearInterval(timerInt);
+      stopStream();
+      var dur = Math.round(secs / 60);
+      var now = new Date();
+      var v = {
+        id: Date.now(),
+        visitador: document.getElementById('selVisitador').value,
+        medico: medico,
+        notas: document.getElementById('inNotas').value.trim(),
+        lat: gpsData ? gpsData.lat : '',
+        lng: gpsData ? gpsData.lng : '',
+        gpsAcc: gpsData ? gpsData.acc : '',
+        duracion: dur,
+        duracionSecs: secs,
+        horaInicio: visitStart ? visitStart.toLocaleTimeString('es-EC', { hour: '2-digit', minute: '2-digit' }) : now.toLocaleTimeString('es-EC', { hour: '2-digit', minute: '2-digit' }),
+        horaFin: now.toLocaleTimeString('es-EC', { hour: '2-digit', minute: '2-digit' }),
+        fecha: now.toISOString().split('T')[0],
+        fechaDisplay: now.toLocaleDateString('es-EC', { day: 'numeric', month: 'long', year: 'numeric' }),
+        foto: photoUrl ? 'Sí' : 'No',
+        sincronia: navigator.onLine ? 'En línea' : 'Pendiente',
+        synced: false
+      };
+      visits.push(v);
+      localStorage.setItem('cb_visitas', JSON.stringify(visits));
+      if (navigator.onLine) sendToSheets(v);
 
-  // resumen
-  var rows=[
-    ['Visitador',v.visitador],['Médico',v.medico],
-    ['Fecha',v.fechaDisplay],['Hora inicio',v.horaInicio],
-    ['Hora fin',v.horaFin],['Duración',dur+' min'],
-    ['Foto',v.foto==='Sí'?'✓ Capturada':'— Sin foto'],
-    ['GPS',gpsData?v.lat+', '+v.lng:'— No disponible'],
-    ['Estado',v.sincronia==='En línea'?'● Enviado a Sheets':'⏳ Pendiente de sync']
-  ];
-  document.getElementById('sumCard').innerHTML=rows.map(function(r){
-    return '<div class="sum-row"><span class="sum-k">'+r[0]+'</span><span class="sum-v">'+r[1]+'</span></div>';
-  }).join('');
-  showScreen('exito');
-}
+      // resumen
+      var rows = [
+        ['Visitador', v.visitador], ['Médico', v.medico],
+        ['Fecha', v.fechaDisplay], ['Hora inicio', v.horaInicio],
+        ['Hora fin', v.horaFin], ['Duración', dur + ' min'],
+        ['Foto', v.foto === 'Sí' ? '✓ Capturada' : '— Sin foto'],
+        ['GPS', gpsData ? v.lat + ', ' + v.lng : '— No disponible'],
+        ['Estado', v.sincronia === 'En línea' ? '● Enviado a Sheets' : '⏳ Pendiente de sync']
+      ];
+      document.getElementById('sumCard').innerHTML = rows.map(function (r) {
+        return '<div class="sum-row"><span class="sum-k">' + r[0] + '</span><span class="sum-v">' + r[1] + '</span></div>';
+      }).join('');
+      showScreen('exito');
+    }
 
-// ── SYNC ──
-function sendToSheets(v){
-  if(SCRIPT_URL==='https://script.google.com/macros/s/AKfycby41tQeSR8hyKtchFrZ-AVBGWnjJtGs93kim7ZQ70BEtvvxH0yCSbRQLveoJM2SHkdljg/exec') return;
-  fetch(SCRIPT_URL,{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    mode:'no-cors',
-    body:JSON.stringify(v)
-  }).then(function(){
-    v.synced=true;
-    localStorage.setItem('cb_visitas',JSON.stringify(visits));
-  }).catch(function(){});
-}
+    // ── SYNC ──
+    function sendToSheets(v) {
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        mode: 'no-cors',
+        body: JSON.stringify(v)
+      }).then(function () {
+        v.synced = true;
+        localStorage.setItem('cb_visitas', JSON.stringify(visits));
+      }).catch(function () { });
+    }
 
-function syncPending(){
-  visits.filter(function(v){return !v.synced;}).forEach(function(v){sendToSheets(v);});
-}
+    function syncPending() {
+      visits.filter(function (v) { return !v.synced; }).forEach(function (v) { sendToSheets(v); });
+    }
 
-// ── NUEVA VISITA ──
-function nuevaVisita(){
-  secs=0; photoUrl=null; gpsData=null;
-  visitStart=new Date();
-  document.getElementById('inMedico').value='';
-  document.getElementById('inNotas').value='';
-  document.getElementById('cc').textContent='0/500';
-  document.getElementById('photoPreviewImg').style.display='none';
-  document.getElementById('camPh').style.display='flex';
-  document.getElementById('btnRetake').style.display='none';
-  document.getElementById('btnCam').style.display='inline-flex';
-  document.getElementById('btnCancel').style.display='none';
-  getGPS();
-  startTimer();
-  showScreen('registro');
-}
+    // ── NUEVA VISITA ──
+    function nuevaVisita() {
+      secs = 0; photoUrl = null; gpsData = null;
+      visitStart = new Date();
+      document.getElementById('inMedico').value = '';
+      document.getElementById('inNotas').value = '';
+      document.getElementById('cc').textContent = '0/500';
+      document.getElementById('photoPreviewImg').style.display = 'none';
+      document.getElementById('camPh').style.display = 'flex';
+      document.getElementById('btnRetake').style.display = 'none';
+      document.getElementById('btnCam').style.display = 'inline-flex';
+      document.getElementById('btnCancel').style.display = 'none';
+      getGPS();
+      startTimer();
+      showScreen('registro');
+    }
 
-// ── HISTORIAL ──
-function renderHistorial(){
-  var today=new Date().toISOString().split('T')[0];
-  var tv=visits.filter(function(v){return v.fecha===today;});
-  var tm=tv.reduce(function(a,v){return a+(v.duracion||0);},0);
-  var avg=tv.length?Math.round(tm/tv.length):0;
-  document.getElementById('stTotal').textContent=tv.length;
-  document.getElementById('stMins').textContent=tm;
-  document.getElementById('stAvg').textContent=avg;
-  document.getElementById('histCount').textContent=tv.length+' hoy';
-  var list=document.getElementById('visitList');
-  if(!tv.length){
-    list.innerHTML='<div class="empty"><svg width="44" height="44" viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="7" y="7" width="30" height="30" rx="6"/><path d="M15 22h14M15 29h9"/></svg><p>No hay visitas hoy.<br>Toca Nueva visita para empezar.</p></div>';
-    return;
-  }
-  list.innerHTML=tv.slice().reverse().map(function(v,i){
-    var ini=v.medico.replace(/Dr[a]?\.?\s*/i,'').split(' ').slice(0,2).map(function(w){return w[0]||'';}).join('').toUpperCase()||'?';
-    return '<div class="vcard up" style="animation-delay:'+(i*.04)+'s"><div class="vav">'+ini+'</div><div class="vinfo"><div class="vname">'+v.medico+'</div><div class="vmeta">'+v.horaInicio+(gpsData?'':'')+' · '+v.visitador+'</div>'+(v.notas?'<div class="vnotes">'+v.notas+'</div>':'')+'</div><div class="vdur">'+v.duracion+'m</div></div>';
-  }).join('');
-}
+    // ── HISTORIAL ──
+    function renderHistorial() {
+      var today = new Date().toISOString().split('T')[0];
+      var tv = visits.filter(function (v) { return v.fecha === today; });
+      var tm = tv.reduce(function (a, v) { return a + (v.duracion || 0); }, 0);
+      var avg = tv.length ? Math.round(tm / tv.length) : 0;
+      document.getElementById('stTotal').textContent = tv.length;
+      document.getElementById('stMins').textContent = tm;
+      document.getElementById('stAvg').textContent = avg;
+      document.getElementById('histCount').textContent = tv.length + ' hoy';
+      var list = document.getElementById('visitList');
+      if (!tv.length) {
+        list.innerHTML = '<div class="empty"><svg width="44" height="44" viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="7" y="7" width="30" height="30" rx="6"/><path d="M15 22h14M15 29h9"/></svg><p>No hay visitas hoy.<br>Toca Nueva visita para empezar.</p></div>';
+        return;
+      }
+      list.innerHTML = tv.slice().reverse().map(function (v, i) {
+        var ini = v.medico.replace(/Dr[a]?\.?\s*/i, '').split(' ').slice(0, 2).map(function (w) { return w[0] || ''; }).join('').toUpperCase() || '?';
+        return '<div class="vcard up" style="animation-delay:' + (i * .04) + 's"><div class="vav">' + ini + '</div><div class="vinfo"><div class="vname">' + v.medico + '</div><div class="vmeta">' + v.horaInicio + (gpsData ? '' : '') + ' · ' + v.visitador + '</div>' + (v.notas ? '<div class="vnotes">' + v.notas + '</div>' : '') + '</div><div class="vdur">' + v.duracion + 'm</div></div>';
+      }).join('');
+    }
 
-// ── NAV ──
-function goTo(name){
-  stopStream();
-  if(name==='historial') renderHistorial();
-  showScreen(name);
-  document.querySelectorAll('.nav-btn').forEach(function(b){b.classList.remove('active');});
-}
+    // ── NAV ──
+    function goTo(name) {
+      stopStream();
+      if (name === 'historial') renderHistorial();
+      showScreen(name);
+      document.querySelectorAll('.nav-btn').forEach(function (b) { b.classList.remove('active'); });
+    }
 
-function showScreen(name){
-  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
-  document.getElementById('s-'+name).classList.add('active');
-}
-</script>
-<script>
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('sw-visitador.js').catch(function(){});
-}
-</script>
+    function showScreen(name) {
+      document.querySelectorAll('.screen').forEach(function (s) { s.classList.remove('active'); });
+      document.getElementById('s-' + name).classList.add('active');
+    }
+  </script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw-visitador.js').catch(function () { });
+    }
+  </script>
 </body>
+
 </html>
