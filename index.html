@@ -9,18 +9,19 @@
 <meta name="apple-mobile-web-app-title" content="Visitas CORFA">
 <title>CORFA-BIONESTA · Visitas</title>
 <link rel="manifest" href="manifest-visitador.json">
+<link rel="icon" type="image/png" href="logo 192.png">
+<link rel="apple-touch-icon" href="logo 192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
-  --g900:#071a14;--g800:#0a3d2e;--g700:#0f5c44;--g600:#147a5a;
-  --g500:#1a9870;--g400:#22b88a;--g300:#3dd6a8;--g100:#d0f5eb;--g50:#edfaf5;
+  --g800:#0a3d2e;--g700:#0f5c44;--g600:#147a5a;--g500:#1a9870;
+  --g400:#22b88a;--g300:#3dd6a8;--g100:#d0f5eb;--g50:#edfaf5;
   --ink:#0d1f19;--ink2:#3a5249;--ink3:#6b8f82;
   --bg:#f4f9f7;--bg2:#e8f2ee;--bg3:#fff;
   --bd:rgba(10,61,46,.11);--bd2:rgba(10,61,46,.2);
-  --red:#dc2626;--redbg:#fef2f2;--red2:#991b1b;
+  --red:#dc2626;--redbg:#fef2f2;
   --amber:#d97706;--amberbg:#fffbeb;
-  --blue:#1d4ed8;--bluebg:#eff6ff;
   --r:14px;--r2:10px;--r3:6px;
   --font:'DM Sans',sans-serif;--mono:'DM Mono',monospace;
 }
@@ -30,17 +31,17 @@ body{display:flex;flex-direction:column;max-width:430px;margin:0 auto;min-height
 
 .screen{display:none;flex-direction:column;height:100dvh;overflow:hidden}
 .screen.active{display:flex}
-.body{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;padding-bottom:28px}
+.body{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:11px;padding-bottom:32px}
 .body::-webkit-scrollbar{display:none}
 
 /* HEADER */
 .hdr{background:var(--g800);padding:env(safe-area-inset-top,0px) 0 0;flex-shrink:0}
 .hdr-inner{padding:14px 18px 18px;display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
-.hdr-brand{font-size:9px;font-weight:600;color:rgba(255,255,255,.4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:2px}
-.hdr-title{color:#fff;font-size:19px;font-weight:600;letter-spacing:-.3px}
+.hdr-brand{font-size:9px;font-weight:600;color:rgba(255,255,255,.4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px}
+.hdr-title{color:#fff;font-size:20px;font-weight:600;letter-spacing:-.3px}
 .hdr-sub{color:rgba(255,255,255,.5);font-size:11px;margin-top:2px;font-family:var(--mono)}
-.hdr-pill{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:6px 12px;font-size:11px;color:rgba(255,255,255,.8);font-weight:500;white-space:nowrap;flex-shrink:0;font-family:var(--mono)}
-.hdr-active{background:rgba(34,184,138,.25);border-color:rgba(34,184,138,.4)}
+.hdr-pill{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:5px 12px;font-size:11px;color:rgba(255,255,255,.8);font-weight:500;white-space:nowrap;flex-shrink:0;font-family:var(--mono)}
+.hdr-pill-active{background:rgba(34,184,138,.2);border-color:rgba(34,184,138,.4)}
 
 /* BOTTOM NAV */
 .nav{background:var(--bg3);border-top:1px solid var(--bd);display:flex;padding:6px 0 env(safe-area-inset-bottom,0px);flex-shrink:0}
@@ -51,112 +52,114 @@ body{display:flex;flex-direction:column;max-width:430px;margin:0 auto;min-height
 
 /* CARDS */
 .card{background:var(--bg3);border-radius:var(--r);border:1px solid var(--bd);padding:14px}
-.card.active-card{border-color:var(--g400);background:var(--g50)}
-.lbl{font-size:10px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:7px;display:flex;align-items:center;gap:5px}
-.lbl svg{width:12px;height:12px;opacity:.7;flex-shrink:0}
+.card-active{border-color:var(--g300);background:var(--g50)}
+.lbl{font-size:10px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.lbl svg{width:12px;height:12px;flex-shrink:0}
+.req{color:var(--red);margin-left:1px}
 
 /* INPUTS */
 input[type=text],select,textarea{
   width:100%;border:1.5px solid var(--bd2);border-radius:var(--r2);
-  padding:10px 13px;font-size:15px;font-family:var(--font);color:var(--ink);
+  padding:11px 13px;font-size:15px;font-family:var(--font);color:var(--ink);
   background:var(--bg);outline:none;transition:border-color .15s,box-shadow .15s;-webkit-appearance:none
 }
 input:focus,select:focus,textarea:focus{border-color:var(--g500);box-shadow:0 0 0 3px rgba(26,152,112,.1)}
-textarea{resize:none;line-height:1.5;height:72px}
+input.err{border-color:var(--red)!important;box-shadow:0 0 0 3px rgba(220,38,38,.1)!important}
+textarea{resize:none;line-height:1.5;height:76px}
 select{background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236b8f82' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
 
-/* BUTTONS */
+/* BOTONES */
 .btn{width:100%;border:none;border-radius:var(--r2);padding:15px;font-size:15px;font-weight:600;font-family:var(--font);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity .15s,transform .1s;-webkit-appearance:none;letter-spacing:-.1px}
-.btn:active{transform:scale(.98);opacity:.92}
+.btn:active{transform:scale(.98)}
 .btn-green{background:var(--g700);color:#fff}
 .btn-red{background:var(--red);color:#fff}
 .btn-outline{background:transparent;color:var(--g600);border:1.5px solid var(--g400)}
-.btn-sm{background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r3);padding:7px 11px;font-size:12px;font-weight:500;font-family:var(--font);color:var(--ink2);cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:background .12s}
-.btn-sm:active{background:var(--g100)}
+.btn-sm{background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r3);padding:7px 12px;font-size:12px;font-weight:500;font-family:var(--font);color:var(--ink2);cursor:pointer;display:inline-flex;align-items:center;gap:5px}
 
 /* BADGES */
-.badge{display:inline-flex;align-items:center;gap:5px;border-radius:20px;padding:5px 11px;font-size:12px;font-weight:500}
+.badge{display:inline-flex;align-items:center;gap:5px;border-radius:20px;padding:5px 12px;font-size:12px;font-weight:500}
 .badge-green{background:var(--g50);color:var(--g700)}
 .badge-amber{background:var(--amberbg);color:var(--amber)}
 .badge-red{background:var(--redbg);color:var(--red)}
-.badge-active{background:rgba(34,184,138,.15);color:var(--g700);border:1px solid rgba(34,184,138,.3)}
 .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(1.6)}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(1.6)}}
 .pulse{animation:pulse 1.3s ease-in-out infinite}
 
 /* TIMER GRANDE */
-.timer-wrap{text-align:center;padding:12px 0 4px}
-.timer-big{font-family:var(--mono);font-size:42px;font-weight:500;color:var(--g800);letter-spacing:.03em;line-height:1}
-.timer-sub{font-size:11px;color:var(--ink3);margin-top:4px}
-.timer-inicio{font-family:var(--mono);font-size:12px;color:var(--g600);margin-top:3px;font-weight:500}
+.timer-wrap{text-align:center;padding:10px 0 4px}
+.timer-big{font-family:var(--mono);font-size:44px;font-weight:500;color:var(--g800);letter-spacing:.04em;line-height:1}
+.timer-inicio{font-size:12px;color:var(--g600);margin-top:5px;font-family:var(--mono);font-weight:500}
+.timer-sub{font-size:11px;color:var(--ink3);margin-top:2px}
 
 /* CAMERA */
-.cam-zone{background:#0d1a16;border-radius:var(--r2);overflow:hidden;position:relative;min-height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.cam-ph{display:flex;flex-direction:column;align-items:center;gap:6px;padding:18px}
+.cam-zone{background:#0d1a16;border-radius:var(--r2);overflow:hidden;position:relative;min-height:200px;display:flex;align-items:center;justify-content:center}
+.cam-ph{display:flex;flex-direction:column;align-items:center;gap:8px;padding:24px;text-align:center}
 .cam-ph svg{opacity:.3}
-.cam-ph p{color:rgba(255,255,255,.3);font-size:11px;text-align:center;line-height:1.5}
-.cam-ctrl{display:flex;gap:8px;align-items:center;justify-content:center;padding:10px;background:rgba(0,0,0,.5);width:100%;position:absolute;bottom:0}
-.shutter{width:54px;height:54px;border-radius:50%;background:#fff;border:4px solid rgba(255,255,255,.2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .1s}
+.cam-ph p{color:rgba(255,255,255,.35);font-size:12px;line-height:1.5}
+.cam-ctrl{display:flex;align-items:center;justify-content:center;padding:12px;background:rgba(0,0,0,.5);width:100%;position:absolute;bottom:0}
+.shutter{width:58px;height:58px;border-radius:50%;background:#fff;border:4px solid rgba(255,255,255,.25);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .1s}
 .shutter:active{transform:scale(.88)}
-.shutter-in{width:40px;height:40px;border-radius:50%;background:#fff;border:2px solid #ccc}
-.photo-thumb{width:100%;border-radius:var(--r2);object-fit:cover;max-height:180px;display:none}
-.cam-row{display:flex;gap:7px;margin-top:7px;flex-wrap:wrap}
-.foto-ok{display:flex;align-items:center;gap:6px;background:var(--g50);border-radius:var(--r3);padding:7px 10px;font-size:11px;color:var(--g700);font-weight:500;margin-top:6px}
+.shutter-in{width:44px;height:44px;border-radius:50%;background:#fff;border:2px solid #ccc}
+#photoPreviewImg{width:100%;border-radius:var(--r2);object-fit:cover;max-height:240px;display:none}
+.cam-actions{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.foto-ok{display:flex;align-items:center;gap:7px;background:var(--g50);border:1px solid var(--g300);border-radius:var(--r3);padding:8px 12px;font-size:12px;color:var(--g700);font-weight:500;margin-top:7px}
+
+/* GPS */
+.gps-row{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.gps-coords{font-family:var(--mono);font-size:11px;color:var(--ink3);margin-top:6px;line-height:1.5}
+
+/* ALERTA */
+.req-alert{background:var(--redbg);border:1px solid rgba(220,38,38,.2);border-radius:var(--r3);padding:10px 13px;font-size:12px;color:var(--red);display:none;align-items:center;gap:7px}
+.req-alert.on{display:flex}
+
+/* OFFLINE */
+.offline-bar{background:var(--amberbg);border-bottom:1px solid rgba(217,119,6,.2);padding:7px 16px;font-size:11px;color:var(--amber);display:none;align-items:center;gap:7px;flex-shrink:0}
+.offline-bar.on{display:flex}
 
 /* STATS */
-.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-.stat{background:var(--bg3);border-radius:var(--r2);border:1px solid var(--bd);padding:11px;text-align:center}
-.stat-n{font-size:22px;font-weight:600;color:var(--g800);font-family:var(--mono)}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stat{background:var(--bg3);border-radius:var(--r2);border:1px solid var(--bd);padding:12px;text-align:center}
+.stat-n{font-size:24px;font-weight:600;color:var(--g800);font-family:var(--mono)}
 .stat-l{font-size:10px;color:var(--ink3);margin-top:2px;text-transform:uppercase;letter-spacing:.04em}
 
-/* VISIT CARDS historial */
+/* TARJETAS HISTORIAL */
 .vcard{background:var(--bg3);border-radius:var(--r);border:1px solid var(--bd);padding:13px;display:flex;gap:11px;align-items:flex-start}
-.vav{width:40px;height:40px;border-radius:50%;background:var(--g100);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:var(--g800);flex-shrink:0;font-family:var(--mono)}
+.vav{width:42px;height:42px;border-radius:50%;background:var(--g100);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:var(--g800);flex-shrink:0;font-family:var(--mono)}
 .vinfo{flex:1;min-width:0}
 .vname{font-size:13px;font-weight:600;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.vmeta{font-size:11px;color:var(--ink3);margin-top:1px}
-.vnotes{font-size:11px;color:var(--ink2);margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.vdur{background:var(--g50);color:var(--g700);font-size:11px;font-weight:600;padding:3px 8px;border-radius:20px;font-family:var(--mono);white-space:nowrap}
+.vmeta{font-size:11px;color:var(--ink3);margin-top:2px}
+.vnotes{font-size:11px;color:var(--ink2);margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.4}
+.vgps{font-size:10px;color:var(--g600);margin-top:3px;font-family:var(--mono)}
+.vbadges{display:flex;gap:5px;margin-top:5px;flex-wrap:wrap}
+.vpill{background:var(--g50);color:var(--g700);font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px}
+.vpill-dur{background:var(--bg2);color:var(--ink2);font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;font-family:var(--mono)}
 
 /* SUCCESS */
 .suc-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 20px;gap:16px;background:var(--bg)}
-.suc-ring{width:74px;height:74px;border-radius:50%;background:var(--g100);display:flex;align-items:center;justify-content:center}
+.suc-ring{width:76px;height:76px;border-radius:50%;background:var(--g100);display:flex;align-items:center;justify-content:center}
 @keyframes pop{0%{transform:scale(0)}70%{transform:scale(1.15)}100%{transform:scale(1)}}
 .pop{animation:pop .4s cubic-bezier(.175,.885,.32,1.275) .05s both}
 .sum-card{background:var(--bg3);border-radius:var(--r);border:1px solid var(--bd);width:100%;overflow:hidden}
-.sum-row{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid var(--bd)}
+.sum-row{display:flex;justify-content:space-between;align-items:flex-start;padding:10px 14px;border-bottom:1px solid var(--bd);gap:12px}
 .sum-row:last-child{border-bottom:none}
-.sum-k{font-size:11px;color:var(--ink3)}
-.sum-v{font-size:12px;font-weight:500;color:var(--ink);text-align:right;max-width:58%}
+.sum-k{font-size:11px;color:var(--ink3);flex-shrink:0}
+.sum-v{font-size:12px;font-weight:500;color:var(--ink);text-align:right}
 
-/* OFFLINE */
-.offline-bar{background:var(--amberbg);border-bottom:1px solid rgba(217,119,6,.2);padding:7px 16px;font-size:11px;color:var(--amber);display:none;align-items:center;gap:7px}
-.offline-bar.on{display:flex}
+/* UPLOAD PROGRESS */
+.upload-bar{background:var(--bg2);border-radius:var(--r3);padding:10px 13px;font-size:12px;color:var(--ink2);display:none;align-items:center;gap:8px}
+.upload-bar.on{display:flex}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spinner{width:14px;height:14px;border:2px solid var(--g300);border-top-color:var(--g700);border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0}
 
 /* CHAR COUNT */
 .ta-wrap{position:relative}
-.cc{position:absolute;bottom:7px;right:9px;font-size:10px;color:var(--ink3);font-family:var(--mono);pointer-events:none}
+.cc{position:absolute;bottom:8px;right:10px;font-size:10px;color:var(--ink3);font-family:var(--mono);pointer-events:none}
 
-/* ANIM */
 @keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .up{animation:up .22s ease-out both}
-
-/* EMPTY */
 .empty{display:flex;flex-direction:column;align-items:center;padding:44px 20px;gap:10px;color:var(--ink3);text-align:center}
 .empty svg{opacity:.2}
 .empty p{font-size:13px;line-height:1.5}
-
-/* STEP INDICATOR */
-.steps{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:4px}
-.step-item{display:flex;align-items:center;gap:0}
-.step-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;border:2px solid var(--bd2);color:var(--ink3);background:var(--bg3)}
-.step-dot.done{background:var(--g700);border-color:var(--g700);color:#fff}
-.step-dot.current{background:var(--bg3);border-color:var(--g600);color:var(--g700)}
-.step-line{width:36px;height:2px;background:var(--bd2)}
-.step-line.done{background:var(--g400)}
-.step-lbl-row{display:flex;justify-content:space-between;padding:0 2px;margin-top:4px}
-.step-lbl-txt{font-size:9px;color:var(--ink3);text-align:center;width:28px}
-.step-lbl-txt.current{color:var(--g700);font-weight:600}
 </style>
 </head>
 <body>
@@ -166,7 +169,9 @@ select{background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' vie
   Sin conexión — guardando localmente
 </div>
 
-<!-- ═══ SCREEN: FORMULARIO INICIO ═══ -->
+<!-- ══════════════════════════════════════
+     PANTALLA 1: FORMULARIO INICIO VISITA
+══════════════════════════════════════ -->
 <div class="screen active" id="s-form">
   <div class="hdr">
     <div class="hdr-inner">
@@ -175,34 +180,16 @@ select{background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' vie
         <div class="hdr-title">Nueva visita</div>
         <div class="hdr-sub" id="hdrDate">—</div>
       </div>
-      <div class="hdr-pill" id="hdrStep">Paso 1 de 3</div>
     </div>
   </div>
-
   <div class="body">
 
-    <!-- INDICADOR DE PASOS -->
-    <div class="card" style="padding:12px 14px">
-      <div class="steps" id="stepsIndicator">
-        <div class="step-item">
-          <div class="step-dot current" id="sd1">1</div>
-          <div class="step-line" id="sl1"></div>
-        </div>
-        <div class="step-item">
-          <div class="step-dot" id="sd2">2</div>
-          <div class="step-line" id="sl2"></div>
-        </div>
-        <div class="step-item">
-          <div class="step-dot" id="sd3">3</div>
-        </div>
-      </div>
-      <div class="step-lbl-row" style="margin-top:6px;display:flex;justify-content:space-around">
-        <div style="font-size:9px;color:var(--g700);font-weight:600;text-align:center">Datos</div>
-        <div style="font-size:9px;color:var(--ink3);text-align:center">Entrada</div>
-        <div style="font-size:9px;color:var(--ink3);text-align:center">Salida</div>
-      </div>
+    <div class="req-alert" id="reqAlert">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.3"/><path d="M7 4v3.5M7 9.5v.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      <span id="reqMsg">Completa todos los campos obligatorios</span>
     </div>
 
+    <!-- VISITADOR -->
     <div class="card up" style="animation-delay:.04s">
       <div class="lbl">
         <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="6" cy="4" r="2.5"/><path d="M1.5 11c0-2.5 2-4 4.5-4s4.5 1.5 4.5 4"/></svg>
@@ -213,33 +200,91 @@ select{background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' vie
       </select>
     </div>
 
+    <!-- MÉDICO -->
     <div class="card up" style="animation-delay:.08s">
       <div class="lbl">
         <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="1" y="2" width="10" height="8" rx="1.5"/><path d="M3.5 5.5h5M3.5 7.5h3"/></svg>
-        Médico a visitar
+        Médico visitado <span class="req">*</span>
       </div>
-      <input type="text" id="inMedico" placeholder="Ej: Dr. Carlos Mejía — Clínica San José" autocomplete="off" autocorrect="off">
+      <input type="text" id="inMedico" placeholder="Ej: Dr. Carlos Mejía — Clínica San José" autocomplete="off" autocapitalize="words">
     </div>
 
+    <!-- FOTO OBLIGATORIA -->
     <div class="card up" style="animation-delay:.12s">
       <div class="lbl">
-        <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M2 3h9M2 6h6M2 9h7"/></svg>
-        Notas previas
-        <span style="font-size:9px;color:var(--ink3);font-weight:400;margin-left:4px">(opcional)</span>
+        <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="1" y="3" width="10" height="7.5" rx="1.5"/><circle cx="6" cy="6.5" r="1.8"/><path d="M3.5 3l.7-1.5h3.6L8.5 3"/></svg>
+        Foto del médico / consultorio <span class="req">*</span>
+      </div>
+      <div class="cam-zone" id="camZone">
+        <div class="cam-ph" id="camPh">
+          <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="white" stroke-width="1.5"><rect x="2" y="8" width="32" height="22" rx="4"/><circle cx="18" cy="19" r="5.5"/><path d="M11 8l2-4h10l2 4"/></svg>
+          <p>Toca "Abrir cámara" para capturar<br>foto del médico o consultorio</p>
+        </div>
+        <video id="videoEl" autoplay playsinline muted style="display:none;width:100%;max-height:260px;object-fit:cover"></video>
+        <canvas id="photoCanvas" style="display:none"></canvas>
+        <img id="photoPreviewImg" alt="Foto capturada">
+        <div class="cam-ctrl" id="camCtrl" style="display:none">
+          <button class="shutter" onclick="takePhoto()"><div class="shutter-in"></div></button>
+        </div>
+      </div>
+      <div id="fotoOk" class="foto-ok" style="display:none">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--g600)" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg>
+        Foto capturada correctamente
+      </div>
+      <div class="cam-actions">
+        <button class="btn-sm" id="btnCam" onclick="openCamera()">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="1" y="3" width="11" height="8" rx="1.5"/><circle cx="6.5" cy="7" r="2"/><path d="M4 3l.8-1.5h2.4L8 3"/></svg>
+          Abrir cámara
+        </button>
+        <button class="btn-sm" id="btnRetake" onclick="retakePhoto()" style="display:none">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M1.5 6.5A5 5 0 1 0 3.5 3M1.5 1v3h3"/></svg>
+          Repetir
+        </button>
+        <button class="btn-sm" id="btnCancelCam" onclick="closeCamera()" style="display:none">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M2 2l9 9M11 2L2 11"/></svg>
+          Cancelar
+        </button>
+      </div>
+    </div>
+
+    <!-- GPS OBLIGATORIO -->
+    <div class="card up" style="animation-delay:.16s">
+      <div class="lbl">
+        <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M6 1C3.8 1 2 2.8 2 5c0 3 4 7 4 7s4-4 4-7c0-2.2-1.8-4-4-4z"/><circle cx="6" cy="5" r="1.3"/></svg>
+        Ubicación GPS <span class="req">*</span>
+      </div>
+      <div class="gps-row">
+        <div id="gpsBadge" class="badge badge-amber">
+          <div class="dot pulse" style="background:var(--amber)"></div>
+          Obteniendo ubicación...
+        </div>
+        <button class="btn-sm" onclick="getGPS()">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M1.5 6A4.5 4.5 0 1 0 3 3M1.5 1v3h3"/></svg>
+          Actualizar
+        </button>
+      </div>
+      <div class="gps-coords" id="gpsCoords">Buscando señal GPS...</div>
+    </div>
+
+    <!-- NOTAS -->
+    <div class="card up" style="animation-delay:.20s">
+      <div class="lbl">
+        <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M2 3h8M2 6h6M2 9h7"/></svg>
+        Notas <span style="font-size:9px;color:var(--ink3);font-weight:400;margin-left:2px">(opcional)</span>
       </div>
       <div class="ta-wrap">
-        <textarea id="inNotas" placeholder="Objetivo de la visita, productos a presentar..." maxlength="500" oninput="document.getElementById('cc').textContent=this.value.length+'/500'"></textarea>
+        <textarea id="inNotas" placeholder="Productos presentados, observaciones, acuerdos..." maxlength="500" oninput="document.getElementById('cc').textContent=this.value.length+'/500'"></textarea>
         <div class="cc" id="cc">0/500</div>
       </div>
     </div>
 
-    <button class="btn btn-green up" style="animation-delay:.16s" onclick="irAFotoEntrada()">
-      <svg width="17" height="17" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="4" width="13" height="10" rx="2"/><circle cx="8.5" cy="9" r="2.5"/><path d="M6 4l.8-1.5h3.4L11 4"/></svg>
-      Siguiente — tomar foto de entrada
+    <!-- BOTÓN INICIAR VISITA -->
+    <button class="btn btn-green up" style="animation-delay:.24s" onclick="iniciarVisita()">
+      <svg width="17" height="17" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="4,2 15,8.5 4,15"/></svg>
+      Iniciar visita
     </button>
 
   </div>
-
   <nav class="nav">
     <button class="nav-btn active" onclick="goTo('form')">
       <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="14" height="14" rx="3"/><path d="M7 10h6M10 7v6"/></svg>
@@ -252,229 +297,99 @@ select{background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' vie
   </nav>
 </div>
 
-<!-- ═══ SCREEN: FOTO ENTRADA ═══ -->
-<div class="screen" id="s-foto-entrada">
-  <div class="hdr">
-    <div class="hdr-inner">
-      <div>
-        <div class="hdr-brand">CORFA-BIONESTA</div>
-        <div class="hdr-title">Foto de entrada</div>
-        <div class="hdr-sub">Captura al llegar al consultorio</div>
-      </div>
-      <div class="hdr-pill">Paso 2 de 3</div>
-    </div>
-  </div>
-  <div class="body">
-
-    <div class="card" style="background:var(--g50);border-color:var(--g300)">
-      <div style="font-size:12px;color:var(--g800);font-weight:500;line-height:1.5">
-        Toma una foto del médico, consultorio o clínica. Esta foto confirma tu llegada con hora y GPS exactos.
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="lbl">
-        <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="1" y="3" width="10" height="7.5" rx="1.5"/><circle cx="6" cy="6.5" r="1.8"/><path d="M3.5 3l.7-1.5h3.6L8.5 3"/></svg>
-        Foto de entrada — obligatoria
-      </div>
-      <div class="cam-zone" id="camZone1">
-        <div class="cam-ph" id="camPh1">
-          <svg width="30" height="30" viewBox="0 0 30 30" fill="none" stroke="white" stroke-width="1.5"><rect x="2" y="7" width="26" height="18" rx="4"/><circle cx="15" cy="16" r="4.5"/><path d="M9 7l2-4h8l2 4"/></svg>
-          <p>Toca "Abrir cámara"<br>para capturar foto</p>
-        </div>
-        <video id="video1" autoplay playsinline muted style="display:none;width:100%;max-height:220px;object-fit:cover"></video>
-        <canvas id="canvas1" style="display:none"></canvas>
-        <img id="preview1" class="photo-thumb" alt="Foto entrada">
-        <div class="cam-ctrl" id="ctrl1" style="display:none">
-          <button class="shutter" onclick="takePhoto(1)"><div class="shutter-in"></div></button>
-        </div>
-      </div>
-      <div id="fotoOk1" style="display:none" class="foto-ok">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--g700)" stroke-width="1.8"><path d="M2 7l4 4 6-6"/></svg>
-        Foto de entrada capturada
-      </div>
-      <div class="cam-row">
-        <button class="btn-sm" id="btnCam1" onclick="openCam(1)">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="1" y="3" width="10" height="7" rx="1.5"/><circle cx="6" cy="6.5" r="1.8"/><path d="M3.5 3l.7-1.3h3.6L8.5 3"/></svg>
-          Abrir cámara
-        </button>
-        <button class="btn-sm" id="btnRetake1" onclick="retake(1)" style="display:none">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M1.5 6A4.5 4.5 0 1 0 3 3M1.5 1v3h3"/></svg>
-          Repetir
-        </button>
-        <button class="btn-sm" id="btnCancel1" onclick="closeCam(1)" style="display:none">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M2 2l8 8M10 2L2 10"/></svg>
-          Cancelar
-        </button>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="lbl">
-        <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M6 1C3.8 1 2 2.8 2 5c0 3 4 7 4 7s4-4 4-7c0-2.2-1.8-4-4-4z"/><circle cx="6" cy="5" r="1.3"/></svg>
-        GPS de entrada
-      </div>
-      <div id="gpsBadge1" class="badge badge-amber"><div class="dot pulse" style="background:var(--amber)"></div>Obteniendo ubicación...</div>
-      <div id="gpsCoords1" style="font-family:var(--mono);font-size:11px;color:var(--ink3);margin-top:5px">Esperando señal GPS...</div>
-    </div>
-
-    <button class="btn btn-green" id="btnIniciarVisita" onclick="iniciarVisita()" style="opacity:.5;pointer-events:none">
-      <svg width="17" height="17" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="5,3 14,8.5 5,14"/></svg>
-      Iniciar visita — registrar entrada
-    </button>
-    <button class="btn btn-outline" onclick="goTo('form')" style="margin-top:-4px">
-      <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 3L4 7.5 9 12"/></svg>
-      Volver
-    </button>
-
-  </div>
-</div>
-
-<!-- ═══ SCREEN: VISITA EN CURSO ═══ -->
+<!-- ══════════════════════════════════════
+     PANTALLA 2: VISITA EN CURSO (cronómetro)
+══════════════════════════════════════ -->
 <div class="screen" id="s-curso">
   <div class="hdr" id="hdrCurso" style="background:var(--g600)">
     <div class="hdr-inner">
       <div>
         <div class="hdr-brand">CORFA-BIONESTA</div>
-        <div class="hdr-title">Visita en curso</div>
-        <div class="hdr-sub" id="hdrMedicoCurso">—</div>
+        <div class="hdr-title" id="cursoMedico">Visita en curso</div>
+        <div class="hdr-sub" id="cursoVisitador">—</div>
       </div>
-      <div class="hdr-pill hdr-active" id="timerPill">00:00</div>
+      <div class="hdr-pill hdr-pill-active" id="timerPill">00:00</div>
     </div>
   </div>
-
   <div class="body">
 
-    <div class="card active-card">
+    <!-- CRONÓMETRO BIOMÉTRICO -->
+    <div class="card card-active">
       <div class="lbl">
         <div class="dot pulse" style="background:var(--g500)"></div>
         Tiempo en consulta
       </div>
       <div class="timer-wrap">
         <div class="timer-big" id="timerBig">00:00</div>
-        <div class="timer-inicio" id="timerInicio">Entrada: —</div>
-        <div class="timer-sub">Cronómetro biométrico activo</div>
+        <div class="timer-inicio" id="timerInicio">Inicio: —</div>
+        <div class="timer-sub">Cronómetro guardado — resistente a apagado</div>
       </div>
     </div>
 
+    <!-- FOTO DE ENTRADA (miniatura) -->
     <div class="card">
-      <div class="lbl">GPS de entrada registrado</div>
-      <div id="gpsEntradaResumen" class="badge badge-green" style="font-size:11px;font-family:var(--mono)">—</div>
-    </div>
-
-    <div class="card">
-      <div class="lbl">Foto de entrada</div>
-      <img id="fotoEntradaThumb" style="width:100%;border-radius:8px;max-height:120px;object-fit:cover;display:none" alt="">
-      <div id="fotoEntradaOk" class="foto-ok" style="display:none">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--g700)" stroke-width="1.8"><path d="M2 7l4 4 6-6"/></svg>
+      <div class="lbl">
+        <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="1" y="3" width="10" height="7.5" rx="1.5"/><circle cx="6" cy="6.5" r="1.8"/></svg>
+        Foto de entrada registrada
+      </div>
+      <img id="fotoEntradaThumb" style="width:100%;border-radius:8px;max-height:130px;object-fit:cover;display:none" alt="">
+      <div class="foto-ok" id="fotoEntradaOk" style="display:none">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--g600)" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg>
         Foto de entrada guardada
       </div>
     </div>
 
+    <!-- GPS DE ENTRADA -->
     <div class="card">
-      <div class="lbl">Notas adicionales durante visita <span style="font-size:9px;color:var(--ink3);font-weight:400">(opcional)</span></div>
+      <div class="lbl">GPS de entrada registrado</div>
+      <div id="gpsEntradaLabel" class="badge badge-green" style="font-size:11px;font-family:var(--mono)">—</div>
+    </div>
+
+    <!-- NOTAS ADICIONALES EN CURSO -->
+    <div class="card">
+      <div class="lbl">
+        <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M2 3h8M2 6h6M2 9h7"/></svg>
+        Notas durante la visita <span style="font-size:9px;color:var(--ink3);font-weight:400;margin-left:2px">(opcional)</span>
+      </div>
       <div class="ta-wrap">
-        <textarea id="inNotasCurso" placeholder="Observaciones durante la visita..." maxlength="500" oninput="document.getElementById('cc2').textContent=this.value.length+'/500'"></textarea>
+        <textarea id="inNotasCurso" placeholder="Observaciones adicionales durante la visita..." maxlength="500" oninput="document.getElementById('cc2').textContent=this.value.length+'/500'"></textarea>
         <div class="cc" id="cc2">0/500</div>
       </div>
     </div>
 
-    <button class="btn btn-red" onclick="irAFotoSalida()">
+    <!-- BOTÓN FINALIZAR -->
+    <button class="btn btn-red" onclick="finalizarVisita()">
       <svg width="17" height="17" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="11" height="11" rx="2"/></svg>
-      Finalizar — tomar foto de salida
+      Finalizar visita
     </button>
 
   </div>
 </div>
 
-<!-- ═══ SCREEN: FOTO SALIDA ═══ -->
-<div class="screen" id="s-foto-salida">
-  <div class="hdr" style="background:var(--red2)">
-    <div class="hdr-inner">
-      <div>
-        <div class="hdr-brand">CORFA-BIONESTA</div>
-        <div class="hdr-title">Foto de salida</div>
-        <div class="hdr-sub">Captura al terminar la visita</div>
-      </div>
-      <div class="hdr-pill">Paso 3 de 3</div>
-    </div>
-  </div>
-  <div class="body">
-
-    <div class="card" style="background:var(--redbg);border-color:rgba(220,38,38,.2)">
-      <div style="font-size:12px;color:var(--red2);font-weight:500;line-height:1.5">
-        Toma la foto de salida para confirmar el cierre de la visita. El tiempo se detendrá automáticamente.
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="lbl">
-        <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="1" y="3" width="10" height="7.5" rx="1.5"/><circle cx="6" cy="6.5" r="1.8"/><path d="M3.5 3l.7-1.5h3.6L8.5 3"/></svg>
-        Foto de salida — obligatoria
-      </div>
-      <div class="cam-zone" id="camZone2">
-        <div class="cam-ph" id="camPh2">
-          <svg width="30" height="30" viewBox="0 0 30 30" fill="none" stroke="white" stroke-width="1.5"><rect x="2" y="7" width="26" height="18" rx="4"/><circle cx="15" cy="16" r="4.5"/><path d="M9 7l2-4h8l2 4"/></svg>
-          <p>Toca "Abrir cámara"<br>para foto de salida</p>
-        </div>
-        <video id="video2" autoplay playsinline muted style="display:none;width:100%;max-height:220px;object-fit:cover"></video>
-        <canvas id="canvas2" style="display:none"></canvas>
-        <img id="preview2" class="photo-thumb" alt="Foto salida">
-        <div class="cam-ctrl" id="ctrl2" style="display:none">
-          <button class="shutter" onclick="takePhoto(2)"><div class="shutter-in"></div></button>
-        </div>
-      </div>
-      <div id="fotoOk2" style="display:none" class="foto-ok" style="background:var(--redbg)">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--g700)" stroke-width="1.8"><path d="M2 7l4 4 6-6"/></svg>
-        Foto de salida capturada
-      </div>
-      <div class="cam-row">
-        <button class="btn-sm" id="btnCam2" onclick="openCam(2)">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="1" y="3" width="10" height="7" rx="1.5"/><circle cx="6" cy="6.5" r="1.8"/></svg>
-          Abrir cámara
-        </button>
-        <button class="btn-sm" id="btnRetake2" onclick="retake(2)" style="display:none">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M1.5 6A4.5 4.5 0 1 0 3 3M1.5 1v3h3"/></svg>
-          Repetir
-        </button>
-        <button class="btn-sm" id="btnCancel2" onclick="closeCam(2)" style="display:none">Cancelar</button>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="lbl">GPS de salida</div>
-      <div id="gpsBadge2" class="badge badge-amber"><div class="dot pulse" style="background:var(--amber)"></div>Obteniendo ubicación...</div>
-      <div id="gpsCoords2" style="font-family:var(--mono);font-size:11px;color:var(--ink3);margin-top:5px">—</div>
-    </div>
-
-    <button class="btn btn-red" id="btnFinalizar" onclick="finalizarVisita()" style="opacity:.5;pointer-events:none">
-      <svg width="17" height="17" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 8.5l5 5 8-8"/></svg>
-      Registrar salida y cerrar visita
-    </button>
-    <button class="btn btn-outline" onclick="showScreen('curso')" style="margin-top:-4px">Volver a visita en curso</button>
-
-  </div>
-</div>
-
-<!-- ═══ SCREEN: ÉXITO ═══ -->
+<!-- ══════════════════════════════════════
+     PANTALLA 3: ÉXITO
+══════════════════════════════════════ -->
 <div class="screen" id="s-exito">
   <div class="hdr">
     <div class="hdr-inner">
       <div>
         <div class="hdr-brand">CORFA-BIONESTA</div>
-        <div class="hdr-title">Visita cerrada</div>
+        <div class="hdr-title">Visita registrada</div>
         <div class="hdr-sub" id="exitoDate">—</div>
       </div>
-      <div class="hdr-pill">✓ Guardado</div>
     </div>
   </div>
   <div class="suc-body">
     <div class="suc-ring pop">
-      <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="var(--g600)" stroke-width="2.5" stroke-linecap="round"><path d="M6 18l7 7 17-17"/></svg>
+      <svg width="38" height="38" viewBox="0 0 38 38" fill="none" stroke="var(--g600)" stroke-width="2.5" stroke-linecap="round"><path d="M6 19l8 8 18-18"/></svg>
     </div>
     <div style="text-align:center">
-      <div style="font-size:21px;font-weight:600;letter-spacing:-.3px">¡Visita registrada!</div>
-      <div style="font-size:13px;color:var(--ink3);margin-top:5px;line-height:1.6">Entrada, salida y ambas fotos<br>enviadas a Google Sheets.</div>
+      <div style="font-size:21px;font-weight:600;letter-spacing:-.3px">¡Visita completada!</div>
+      <div style="font-size:13px;color:var(--ink3);margin-top:5px;line-height:1.6">Datos y foto enviados a Google Sheets.</div>
+    </div>
+    <div class="upload-bar" id="uploadBar">
+      <div class="spinner"></div>
+      <span>Subiendo foto a Drive...</span>
     </div>
     <div class="sum-card" id="sumCard"></div>
     <div style="width:100%;display:flex;flex-direction:column;gap:9px">
@@ -487,7 +402,9 @@ select{background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' vie
   </div>
 </div>
 
-<!-- ═══ SCREEN: HISTORIAL ═══ -->
+<!-- ══════════════════════════════════════
+     PANTALLA 4: HISTORIAL
+══════════════════════════════════════ -->
 <div class="screen" id="s-historial">
   <div class="hdr">
     <div class="hdr-inner">
@@ -501,9 +418,8 @@ select{background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' vie
   </div>
   <div class="body">
     <div class="stats">
-      <div class="stat"><div class="stat-n" id="stTotal">0</div><div class="stat-l">Visitas</div></div>
-      <div class="stat"><div class="stat-n" id="stMins">0</div><div class="stat-l">Min total</div></div>
-      <div class="stat"><div class="stat-n" id="stAvg">0</div><div class="stat-l">Min prom.</div></div>
+      <div class="stat"><div class="stat-n" id="stTotal">0</div><div class="stat-l">Visitas hoy</div></div>
+      <div class="stat"><div class="stat-n" id="stFotos">0</div><div class="stat-l">Con foto</div></div>
     </div>
     <div id="visitList"></div>
   </div>
@@ -521,330 +437,407 @@ select{background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' vie
 
 <script>
 // ── CONFIG HARDCODEADA ──
-var SCRIPT_URL='https://script.google.com/macros/s/AKfycbypiEibuyrV0xpEp118ScqdPlONRO3uI7wPwu-ij18qWDJUL2HQjbgFtCOncQUhWOKaeA/exec';
-var EMPRESA='CORFA-BIONESTA';
+var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbypiEibuyrV0xpEp118ScqdPlONRO3uI7wPwu-ij18qWDJUL2HQjbgFtCOncQUhWOKaeA/exec';
 
-// ── ESTADO BIOMÉTRICO ──
-var visits=JSON.parse(localStorage.getItem('cb_visitas')||'[]');
-var streams={1:null,2:null};
-var photos={1:null,2:null};
-var gps={entrada:null,salida:null};
-var visitActiva=null;
-var timerInt=null;
-var timerSecs=0;
+// ── ESTADO ──
+var visits  = JSON.parse(localStorage.getItem('cb_visitas') || '[]');
+var gpsData = null;
+var photoB64= null;   // base64 de la foto
+var stream  = null;
+var timerInt= null;
+
+// ── CLAVES localStorage para visita activa (sobrevive apagado) ──
+var LS_ACTIVA = 'cb_visita_activa';
 
 // ── INIT ──
-document.addEventListener('DOMContentLoaded',function(){
+document.addEventListener('DOMContentLoaded', function() {
   setDates();
-  getGPS(1);
-  window.addEventListener('online',function(){document.getElementById('offlineBar').classList.remove('on');syncPending();});
-  window.addEventListener('offline',function(){document.getElementById('offlineBar').classList.add('on');});
-  if(!navigator.onLine) document.getElementById('offlineBar').classList.add('on');
+  getGPS();
+  window.addEventListener('online',  function(){ document.getElementById('offlineBar').classList.remove('on'); syncPending(); });
+  window.addEventListener('offline', function(){ document.getElementById('offlineBar').classList.add('on'); });
+  if (!navigator.onLine) document.getElementById('offlineBar').classList.add('on');
+
+  // Recuperar visita activa si el teléfono se apagó
+  recuperarVisitaActiva();
 });
 
-function setDates(){
-  var d=new Date();
-  var s=d.toLocaleDateString('es-EC',{weekday:'long',day:'numeric',month:'long'});
-  s=s.charAt(0).toUpperCase()+s.slice(1);
-  ['hdrDate','histDate','exitoDate'].forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=s;});
+function setDates() {
+  var d = new Date();
+  var s = d.toLocaleDateString('es-EC', {weekday:'long', day:'numeric', month:'long'});
+  s = s.charAt(0).toUpperCase() + s.slice(1);
+  ['hdrDate','histDate','exitoDate'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.textContent = s;
+  });
 }
 
 // ── GPS ──
-function getGPS(slot){
-  if(!navigator.geolocation) return;
-  var badge=document.getElementById('gpsBadge'+slot);
-  var coords=document.getElementById('gpsCoords'+slot);
-  badge.className='badge badge-amber';
-  badge.innerHTML='<div class="dot pulse" style="background:var(--amber)"></div>Obteniendo GPS...';
+function getGPS() {
+  var badge  = document.getElementById('gpsBadge');
+  var coords = document.getElementById('gpsCoords');
+  gpsData = null;
+  if (!navigator.geolocation) {
+    badge.className = 'badge badge-red';
+    badge.innerHTML = '<div class="dot" style="background:var(--red)"></div>GPS no disponible';
+    return;
+  }
+  badge.className = 'badge badge-amber';
+  badge.innerHTML = '<div class="dot pulse" style="background:var(--amber)"></div>Obteniendo ubicación...';
+  coords.textContent = 'Buscando señal GPS...';
+
   navigator.geolocation.getCurrentPosition(
-    function(p){
-      var data={lat:p.coords.latitude.toFixed(6),lng:p.coords.longitude.toFixed(6),acc:Math.round(p.coords.accuracy)};
-      if(slot===1) gps.entrada=data; else gps.salida=data;
-      badge.className='badge badge-green';
-      badge.innerHTML='<div class="dot" style="background:var(--g600)"></div>GPS ±'+data.acc+'m';
-      coords.textContent=data.lat+', '+data.lng;
-      checkCanStart();
+    function(pos) {
+      gpsData = {
+        lat: pos.coords.latitude.toFixed(6),
+        lng: pos.coords.longitude.toFixed(6),
+        acc: Math.round(pos.coords.accuracy)
+      };
+      badge.className = 'badge badge-green';
+      badge.innerHTML = '<div class="dot" style="background:var(--g600)"></div>Ubicación obtenida · ±' + gpsData.acc + 'm';
+      coords.textContent = gpsData.lat + ', ' + gpsData.lng + ' · Ecuador';
     },
-    function(){
-      badge.className='badge badge-amber';
-      badge.innerHTML='<div class="dot" style="background:var(--amber)"></div>Sin permiso GPS';
-      coords.textContent='Activa el GPS en tu celular';
+    function() {
+      badge.className = 'badge badge-red';
+      badge.innerHTML = '<div class="dot" style="background:var(--red)"></div>Sin permiso de GPS';
+      coords.textContent = 'Activa el GPS y permite el acceso';
     },
-    {enableHighAccuracy:true,timeout:12000,maximumAge:0}
+    { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
   );
 }
 
 // ── CAMERA ──
-function openCam(slot){
-  navigator.mediaDevices.getUserMedia({video:{facingMode:'environment',width:{ideal:1280},height:{ideal:960}},audio:false})
-    .then(function(s){
-      streams[slot]=s;
-      var v=document.getElementById('video'+slot);
-      v.srcObject=s; v.style.display='block';
-      document.getElementById('camPh'+slot).style.display='none';
-      document.getElementById('ctrl'+slot).style.display='flex';
-      document.getElementById('btnCam'+slot).style.display='none';
-      document.getElementById('btnCancel'+slot).style.display='inline-flex';
-    })
-    .catch(function(){alert('No se pudo acceder a la cámara. Verifica los permisos.');});
+function openCamera() {
+  navigator.mediaDevices.getUserMedia({
+    video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 960 } },
+    audio: false
+  }).then(function(s) {
+    stream = s;
+    var v = document.getElementById('videoEl');
+    v.srcObject = s; v.style.display = 'block';
+    document.getElementById('camPh').style.display = 'none';
+    document.getElementById('camCtrl').style.display = 'flex';
+    document.getElementById('btnCam').style.display = 'none';
+    document.getElementById('btnCancelCam').style.display = 'inline-flex';
+  }).catch(function() {
+    alert('No se pudo acceder a la cámara.\nVerifica los permisos del navegador.');
+  });
 }
 
-function takePhoto(slot){
-  var v=document.getElementById('video'+slot);
-  var c=document.getElementById('canvas'+slot);
-  c.width=v.videoWidth; c.height=v.videoHeight;
-  c.getContext('2d').drawImage(v,0,0);
-  photos[slot]=c.toDataURL('image/jpeg',0.82);
-  stopStream(slot);
-  v.style.display='none';
-  document.getElementById('ctrl'+slot).style.display='none';
-  document.getElementById('camPh'+slot).style.display='none';
-  var img=document.getElementById('preview'+slot);
-  img.src=photos[slot]; img.style.display='block';
-  document.getElementById('fotoOk'+slot).style.display='flex';
-  document.getElementById('btnRetake'+slot).style.display='inline-flex';
-  document.getElementById('btnCam'+slot).style.display='none';
-  document.getElementById('btnCancel'+slot).style.display='none';
-  checkCanStart();
-  if(slot===2) checkCanFinish();
+function takePhoto() {
+  var v = document.getElementById('videoEl');
+  var c = document.getElementById('photoCanvas');
+  c.width = v.videoWidth; c.height = v.videoHeight;
+  c.getContext('2d').drawImage(v, 0, 0);
+  photoB64 = c.toDataURL('image/jpeg', 0.80);
+  stopStream();
+  v.style.display = 'none';
+  document.getElementById('camPh').style.display = 'none';
+  document.getElementById('camCtrl').style.display = 'none';
+  var img = document.getElementById('photoPreviewImg');
+  img.src = photoB64; img.style.display = 'block';
+  document.getElementById('fotoOk').style.display = 'flex';
+  document.getElementById('btnCam').style.display = 'none';
+  document.getElementById('btnRetake').style.display = 'inline-flex';
+  document.getElementById('btnCancelCam').style.display = 'none';
 }
 
-function retake(slot){
-  photos[slot]=null;
-  document.getElementById('preview'+slot).style.display='none';
-  document.getElementById('fotoOk'+slot).style.display='none';
-  document.getElementById('btnRetake'+slot).style.display='none';
-  document.getElementById('btnCam'+slot).style.display='inline-flex';
-  document.getElementById('camPh'+slot).style.display='flex';
-  checkCanStart(); checkCanFinish();
+function retakePhoto() {
+  photoB64 = null;
+  document.getElementById('photoPreviewImg').style.display = 'none';
+  document.getElementById('fotoOk').style.display = 'none';
+  document.getElementById('btnRetake').style.display = 'none';
+  document.getElementById('btnCam').style.display = 'inline-flex';
+  document.getElementById('camPh').style.display = 'flex';
 }
 
-function closeCam(slot){
-  stopStream(slot);
-  document.getElementById('video'+slot).style.display='none';
-  document.getElementById('ctrl'+slot).style.display='none';
-  document.getElementById('camPh'+slot).style.display='flex';
-  document.getElementById('btnCam'+slot).style.display='inline-flex';
-  document.getElementById('btnCancel'+slot).style.display='none';
+function closeCamera() {
+  stopStream();
+  document.getElementById('videoEl').style.display = 'none';
+  document.getElementById('camCtrl').style.display = 'none';
+  document.getElementById('camPh').style.display = 'flex';
+  document.getElementById('btnCam').style.display = 'inline-flex';
+  document.getElementById('btnCancelCam').style.display = 'none';
 }
 
-function stopStream(slot){
-  if(streams[slot]){streams[slot].getTracks().forEach(function(t){t.stop();});streams[slot]=null;}
+function stopStream() {
+  if (stream) { stream.getTracks().forEach(function(t){ t.stop(); }); stream = null; }
 }
 
-function stopAllStreams(){stopStream(1);stopStream(2);}
+// ── VALIDACIÓN ──
+function validar() {
+  var medico = document.getElementById('inMedico').value.trim();
+  var errores = [];
+  document.getElementById('inMedico').classList.remove('err');
+  document.getElementById('reqAlert').classList.remove('on');
 
-// ── VALIDACIONES ──
-function checkCanStart(){
-  var ok=photos[1]!==null;
-  var btn=document.getElementById('btnIniciarVisita');
-  btn.style.opacity=ok?'1':'0.5';
-  btn.style.pointerEvents=ok?'auto':'none';
-}
-
-function checkCanFinish(){
-  var ok=photos[2]!==null;
-  var btn=document.getElementById('btnFinalizar');
-  btn.style.opacity=ok?'1':'0.5';
-  btn.style.pointerEvents=ok?'auto':'none';
-}
-
-// ── FLUJO BIOMÉTRICO ──
-function irAFotoEntrada(){
-  var medico=document.getElementById('inMedico').value.trim();
-  if(!medico){
-    document.getElementById('inMedico').style.borderColor='var(--red)';
-    document.getElementById('inMedico').focus();
-    setTimeout(function(){document.getElementById('inMedico').style.borderColor='';},2500);
-    return;
+  if (!medico) {
+    errores.push('Nombre del médico');
+    document.getElementById('inMedico').classList.add('err');
   }
-  showScreen('foto-entrada');
+  if (!photoB64) errores.push('Foto obligatoria');
+  if (!gpsData)  errores.push('Ubicación GPS');
+
+  if (errores.length > 0) {
+    document.getElementById('reqMsg').textContent = 'Faltan: ' + errores.join(', ');
+    document.getElementById('reqAlert').classList.add('on');
+    document.getElementById('reqAlert').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return false;
+  }
+  return true;
 }
 
-function iniciarVisita(){
-  var now=new Date();
-  stopStream(1);
-  visitActiva={
-    id:Date.now(),
-    visitador:document.getElementById('selVisitador').value,
-    medico:document.getElementById('inMedico').value.trim(),
-    notasIniciales:document.getElementById('inNotas').value.trim(),
-    notasCurso:'',
-    horaEntrada:now.toLocaleTimeString('es-EC',{hour:'2-digit',minute:'2-digit',second:'2-digit'}),
-    horaEntradaTs:now.getTime(),
-    fecha:now.toISOString().split('T')[0],
-    fechaDisplay:now.toLocaleDateString('es-EC',{day:'numeric',month:'long',year:'numeric'}),
-    latEntrada:gps.entrada?gps.entrada.lat:'',
-    lngEntrada:gps.entrada?gps.entrada.lng:'',
-    accEntrada:gps.entrada?gps.entrada.acc:'',
-    fotoEntrada:photos[1]?'Sí':'No',
-    horaSalida:'',
-    horaSalidaTs:null,
-    latSalida:'',lngSalida:'',accSalida:'',
-    fotoSalida:'No',
-    duracion:0,
-    sincronia:navigator.onLine?'En línea':'Pendiente',
-    synced:false
+// ── INICIAR VISITA — guarda timestamp en localStorage ──
+function iniciarVisita() {
+  if (!validar()) return;
+
+  var now = new Date();
+  var activa = {
+    id:          Date.now(),
+    visitador:   document.getElementById('selVisitador').value,
+    medico:      document.getElementById('inMedico').value.trim(),
+    notasIniciales: document.getElementById('inNotas').value.trim(),
+    fecha:       now.toISOString().split('T')[0],
+    fechaDisplay: now.toLocaleDateString('es-EC', {day:'numeric', month:'long', year:'numeric'}),
+    horaInicio:  now.toLocaleTimeString('es-EC', {hour:'2-digit', minute:'2-digit', second:'2-digit'}),
+    tsInicio:    now.getTime(),   // ← CLAVE: timestamp para resistir apagado
+    lat:         gpsData.lat,
+    lng:         gpsData.lng,
+    gpsAcc:      gpsData.acc,
+    fotoB64:     photoB64         // guardamos la foto también
   };
 
-  // Actualizar pantalla en curso
-  document.getElementById('hdrMedicoCurso').textContent=visitActiva.medico;
-  document.getElementById('timerInicio').textContent='Entrada: '+visitActiva.horaEntrada;
-  if(gps.entrada) document.getElementById('gpsEntradaResumen').textContent=gps.entrada.lat+', '+gps.entrada.lng;
-  var thumb=document.getElementById('fotoEntradaThumb');
-  if(photos[1]){thumb.src=photos[1];thumb.style.display='block';document.getElementById('fotoEntradaOk').style.display='flex';}
+  // Guardar en localStorage — sobrevive apagado del teléfono
+  localStorage.setItem(LS_ACTIVA, JSON.stringify(activa));
 
-  // Timer
-  timerSecs=0;
-  clearInterval(timerInt);
-  timerInt=setInterval(function(){
-    timerSecs++;
-    var m=Math.floor(timerSecs/60),s=timerSecs%60;
-    var str=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
-    document.getElementById('timerBig').textContent=str;
-    document.getElementById('timerPill').textContent=str;
-  },1000);
-
-  // Obtener GPS de salida en background
-  getGPS(2);
+  mostrarPantallaCurso(activa);
   showScreen('curso');
 }
 
-function irAFotoSalida(){
-  visitActiva.notasCurso=document.getElementById('inNotasCurso').value.trim();
-  showScreen('foto-salida');
-}
+function mostrarPantallaCurso(activa) {
+  document.getElementById('cursoMedico').textContent   = activa.medico;
+  document.getElementById('cursoVisitador').textContent = activa.visitador;
+  document.getElementById('timerInicio').textContent   = 'Inicio: ' + activa.horaInicio;
 
-function finalizarVisita(){
+  // Mostrar foto de entrada
+  if (activa.fotoB64) {
+    var t = document.getElementById('fotoEntradaThumb');
+    t.src = activa.fotoB64; t.style.display = 'block';
+    document.getElementById('fotoEntradaOk').style.display = 'flex';
+  }
+  // GPS de entrada
+  document.getElementById('gpsEntradaLabel').textContent = activa.lat + ', ' + activa.lng + ' · ±' + activa.gpsAcc + 'm';
+
+  // Iniciar cronómetro basado en tsInicio — correcto aunque el teléfono se haya apagado
   clearInterval(timerInt);
-  var now=new Date();
-  stopAllStreams();
+  timerInt = setInterval(function() {
+    var elapsed = Math.floor((Date.now() - activa.tsInicio) / 1000);
+    var h = Math.floor(elapsed / 3600);
+    var m = Math.floor((elapsed % 3600) / 60);
+    var s = elapsed % 60;
+    var str = h > 0
+      ? (h<10?'0':'')+h+':'+(m<10?'0':'')+m+':'+(s<10?'0':'')+s
+      : (m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+    document.getElementById('timerBig').textContent  = str;
+    document.getElementById('timerPill').textContent = str;
+  }, 1000);
+}
 
-  visitActiva.horaSalida=now.toLocaleTimeString('es-EC',{hour:'2-digit',minute:'2-digit',second:'2-digit'}),
-  visitActiva.horaSalidaTs=now.getTime();
-  visitActiva.duracion=Math.round((visitActiva.horaSalidaTs-visitActiva.horaEntradaTs)/60000);
-  visitActiva.latSalida=gps.salida?gps.salida.lat:'';
-  visitActiva.lngSalida=gps.salida?gps.salida.lng:'';
-  visitActiva.accSalida=gps.salida?gps.salida.acc:'';
-  visitActiva.fotoSalida=photos[2]?'Sí':'No';
-  visitActiva.sincronia=navigator.onLine?'En línea':'Pendiente';
+// ── RECUPERAR visita activa si el teléfono se apagó ──
+function recuperarVisitaActiva() {
+  var saved = localStorage.getItem(LS_ACTIVA);
+  if (!saved) return;
+  try {
+    var activa = JSON.parse(saved);
+    if (!activa.tsInicio) return;
+    // Hay visita activa — retomar
+    mostrarPantallaCurso(activa);
+    showScreen('curso');
+  } catch(e) {
+    localStorage.removeItem(LS_ACTIVA);
+  }
+}
 
-  visits.push(visitActiva);
-  localStorage.setItem('cb_visitas',JSON.stringify(visits));
-  if(navigator.onLine) sendToSheets(visitActiva);
+// ── FINALIZAR VISITA ──
+function finalizarVisita() {
+  clearInterval(timerInt);
+  var saved = localStorage.getItem(LS_ACTIVA);
+  if (!saved) { alert('No hay visita activa.'); return; }
+  var activa = JSON.parse(saved);
 
-  // Resumen
-  var notas=[visitActiva.notasIniciales,visitActiva.notasCurso].filter(Boolean).join(' | ');
-  var rows=[
-    ['Visitador',visitActiva.visitador],
-    ['Médico',visitActiva.medico],
-    ['Fecha',visitActiva.fechaDisplay],
-    ['Entrada biométrica',visitActiva.horaEntrada],
-    ['Salida biométrica',visitActiva.horaSalida],
-    ['Duración real',visitActiva.duracion+' minutos'],
-    ['GPS entrada',visitActiva.latEntrada?visitActiva.latEntrada+', '+visitActiva.lngEntrada:'—'],
-    ['GPS salida',visitActiva.latSalida?visitActiva.latSalida+', '+visitActiva.lngSalida:'—'],
-    ['Foto entrada',visitActiva.fotoEntrada==='Sí'?'✓ Capturada':'—'],
-    ['Foto salida',visitActiva.fotoSalida==='Sí'?'✓ Capturada':'—'],
-    ['Estado',visitActiva.sincronia==='En línea'?'● Enviado a Sheets':'⏳ Pendiente'],
-  ];
-  document.getElementById('sumCard').innerHTML=rows.map(function(r){
-    return '<div class="sum-row"><span class="sum-k">'+r[0]+'</span><span class="sum-v">'+r[1]+'</span></div>';
-  }).join('');
+  var now       = new Date();
+  var tsInicio  = activa.tsInicio;
+  var tsFin     = now.getTime();
+  var durMin    = Math.round((tsFin - tsInicio) / 60000);
+  var notasCurso= document.getElementById('inNotasCurso').value.trim();
+  var notasFinal= [activa.notasIniciales, notasCurso].filter(Boolean).join(' | ');
 
+  var v = {
+    id:          activa.id,
+    visitador:   activa.visitador,
+    medico:      activa.medico,
+    fecha:       activa.fecha,
+    fechaDisplay: activa.fechaDisplay,
+    hora:        activa.horaInicio,
+    horaFin:     now.toLocaleTimeString('es-EC', {hour:'2-digit', minute:'2-digit', second:'2-digit'}),
+    duracion:    durMin,
+    lat:         activa.lat,
+    lng:         activa.lng,
+    gpsAcc:      activa.gpsAcc,
+    notas:       notasFinal,
+    fotoB64:     activa.fotoB64,
+    foto:        activa.fotoB64 ? 'Sí' : 'No',
+    fotoLink:    '',
+    sincronia:   navigator.onLine ? 'En línea' : 'Pendiente',
+    synced:      false
+  };
+
+  visits.push(v);
+  localStorage.setItem('cb_visitas', JSON.stringify(visits));
+  localStorage.removeItem(LS_ACTIVA);  // limpiar visita activa
+
+  // Mostrar resumen inmediatamente
+  mostrarResumen(v);
   showScreen('exito');
+
+  // Enviar a Sheets (con foto a Drive) en background
+  if (navigator.onLine) sendToSheets(v);
 }
 
-// ── SYNC ──
-function sendToSheets(v){
-  fetch(SCRIPT_URL,{
-    method:'POST',
-    headers:{'Content-Type':'text/plain'},
-    body:JSON.stringify({
-      id:v.id, visitador:v.visitador, medico:v.medico,
-      fecha:v.fecha, horaInicio:v.horaEntrada, horaFin:v.horaSalida,
-      duracion:v.duracion,
-      latEntrada:v.latEntrada, lngEntrada:v.lngEntrada, accEntrada:v.accEntrada,
-      latSalida:v.latSalida, lngSalida:v.lngSalida, accSalida:v.accSalida,
-      fotoEntrada:v.fotoEntrada, fotoSalida:v.fotoSalida,
-      notas:[v.notasIniciales,v.notasCurso].filter(Boolean).join(' | '),
-      sincronia:v.sincronia
+function mostrarResumen(v) {
+  var rows = [
+    ['Visitador', v.visitador],
+    ['Médico',    v.medico],
+    ['Fecha',     v.fechaDisplay],
+    ['Inicio',    v.hora],
+    ['Fin',       v.horaFin],
+    ['Duración',  v.duracion + ' min'],
+    ['GPS',       v.lat + ', ' + v.lng + ' (±' + v.gpsAcc + 'm)'],
+    ['Foto',      v.foto === 'Sí' ? '✓ Capturada — subiendo a Drive...' : '—'],
+    ['Estado',    v.sincronia === 'En línea' ? '● Enviando...' : '⏳ Pendiente de sync'],
+  ];
+  if (v.notas) rows.splice(4, 0, ['Notas', v.notas]);
+  document.getElementById('sumCard').innerHTML = rows.map(function(r) {
+    return '<div class="sum-row"><span class="sum-k">'+r[0]+'</span><span class="sum-v" id="sum-'+r[0].toLowerCase().replace(/\s/g,'-')+'">'+r[1]+'</span></div>';
+  }).join('');
+}
+
+// ── SYNC A SHEETS (foto va a Drive) ──
+function sendToSheets(v) {
+  if (v.foto === 'Sí') {
+    document.getElementById('uploadBar').classList.add('on');
+  }
+  fetch(SCRIPT_URL, {
+    method:  'POST',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify({
+      id:        v.id,
+      visitador: v.visitador,
+      medico:    v.medico,
+      fecha:     v.fecha,
+      hora:      v.hora,
+      lat:       v.lat,
+      lng:       v.lng,
+      gpsAcc:    v.gpsAcc,
+      duracion:  v.duracion,
+      notas:     v.notas,
+      sincronia: v.sincronia,
+      fotoBase64: v.fotoB64 || ''  // ← la foto va como base64 al script
     })
-  }).then(function(){v.synced=true;localStorage.setItem('cb_visitas',JSON.stringify(visits));}).catch(function(){});
+  }).then(function(r) { return r.json(); })
+    .then(function(data) {
+      document.getElementById('uploadBar').classList.remove('on');
+      v.synced   = true;
+      v.fotoLink = data.fotoLink || '';
+      // Actualizar resumen con link real
+      var fotoEl = document.getElementById('sum-foto');
+      if (fotoEl && v.fotoLink) {
+        fotoEl.innerHTML = '<a href="'+v.fotoLink+'" target="_blank" style="color:var(--g700)">Ver foto en Drive ↗</a>';
+      }
+      // Quitar base64 del localStorage para ahorrar espacio
+      v.fotoB64 = null;
+      localStorage.setItem('cb_visitas', JSON.stringify(visits));
+    })
+    .catch(function() {
+      document.getElementById('uploadBar').classList.remove('on');
+    });
 }
 
-function syncPending(){
-  visits.filter(function(v){return !v.synced;}).forEach(function(v){sendToSheets(v);});
+function syncPending() {
+  visits.filter(function(v){ return !v.synced; }).forEach(sendToSheets);
 }
 
 // ── NUEVA VISITA ──
-function nuevaVisita(){
-  photos={1:null,2:null};
-  gps={entrada:null,salida:null};
-  visitActiva=null;
-  timerSecs=0;
-  clearInterval(timerInt);
-  stopAllStreams();
-
-  document.getElementById('inMedico').value='';
-  document.getElementById('inNotas').value='';
-  document.getElementById('inNotasCurso').value='';
-  document.getElementById('cc').textContent='0/500';
-  document.getElementById('cc2').textContent='0/500';
-
-  [1,2].forEach(function(s){
-    document.getElementById('preview'+s).style.display='none';
-    document.getElementById('fotoOk'+s).style.display='none';
-    document.getElementById('camPh'+s).style.display='flex';
-    document.getElementById('btnRetake'+s).style.display='none';
-    document.getElementById('btnCam'+s).style.display='inline-flex';
-    document.getElementById('btnCancel'+s).style.display='none';
-  });
-  document.getElementById('fotoEntradaThumb').style.display='none';
-  document.getElementById('fotoEntradaOk').style.display='none';
-  checkCanStart(); checkCanFinish();
-  getGPS(1);
+function nuevaVisita() {
+  photoB64 = null; gpsData = null;
+  stopStream(); clearInterval(timerInt);
+  document.getElementById('inMedico').value = '';
+  document.getElementById('inMedico').classList.remove('err');
+  document.getElementById('inNotas').value = '';
+  document.getElementById('inNotasCurso').value = '';
+  document.getElementById('cc').textContent  = '0/500';
+  document.getElementById('cc2').textContent = '0/500';
+  document.getElementById('photoPreviewImg').style.display = 'none';
+  document.getElementById('fotoOk').style.display = 'none';
+  document.getElementById('camPh').style.display  = 'flex';
+  document.getElementById('btnRetake').style.display   = 'none';
+  document.getElementById('btnCam').style.display      = 'inline-flex';
+  document.getElementById('btnCancelCam').style.display= 'none';
+  document.getElementById('reqAlert').classList.remove('on');
+  document.getElementById('fotoEntradaThumb').style.display = 'none';
+  document.getElementById('fotoEntradaOk').style.display    = 'none';
+  getGPS();
   showScreen('form');
 }
 
 // ── HISTORIAL ──
-function renderHistorial(){
-  var today=new Date().toISOString().split('T')[0];
-  var tv=visits.filter(function(v){return v.fecha===today;});
-  var tm=tv.reduce(function(a,v){return a+(parseInt(v.duracion)||0);},0);
-  var avg=tv.length?Math.round(tm/tv.length):0;
-  document.getElementById('stTotal').textContent=tv.length;
-  document.getElementById('stMins').textContent=tm;
-  document.getElementById('stAvg').textContent=avg;
-  document.getElementById('histCount').textContent=tv.length+' hoy';
-  var list=document.getElementById('visitList');
-  if(!tv.length){
-    list.innerHTML='<div class="empty"><svg width="44" height="44" viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="7" y="7" width="30" height="30" rx="6"/><path d="M15 22h14M15 29h9"/></svg><p>Sin visitas hoy.<br>Toca Nueva visita para empezar.</p></div>';
+function renderHistorial() {
+  var today = new Date().toISOString().split('T')[0];
+  var tv    = visits.filter(function(v){ return v.fecha === today; });
+  var cf    = tv.filter(function(v){ return v.foto === 'Sí'; }).length;
+  document.getElementById('stTotal').textContent = tv.length;
+  document.getElementById('stFotos').textContent = cf;
+  document.getElementById('histCount').textContent = tv.length + ' hoy';
+  var list = document.getElementById('visitList');
+  if (!tv.length) {
+    list.innerHTML = '<div class="empty"><svg width="44" height="44" viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="7" y="7" width="30" height="30" rx="6"/><path d="M15 22h14M15 29h9"/></svg><p>Sin visitas hoy.<br>Toca Nueva visita para comenzar.</p></div>';
     return;
   }
-  list.innerHTML=tv.slice().reverse().map(function(v,i){
-    var ini=v.medico.replace(/Dr[a]?\.?\s*/i,'').split(' ').slice(0,2).map(function(w){return w[0]||'';}).join('').toUpperCase()||'?';
-    var notas=[v.notasIniciales,v.notasCurso].filter(Boolean).join(' | ');
-    return '<div class="vcard up" style="animation-delay:'+(i*.04)+'s"><div class="vav">'+ini+'</div><div class="vinfo"><div class="vname">'+v.medico+'</div><div class="vmeta">'+v.horaEntrada+' → '+v.horaSalida+' · '+(v.fotoEntrada==='Sí'?'📷 ':'')+(v.visitador||'')+'</div>'+(notas?'<div class="vnotes">'+notas+'</div>':'')+'</div><div class="vdur">'+v.duracion+'m</div></div>';
+  list.innerHTML = tv.slice().reverse().map(function(v, i) {
+    var ini = (v.medico||'').replace(/Dr[a]?\.?\s*/i,'').split(' ').slice(0,2).map(function(w){return w[0]||'';}).join('').toUpperCase() || '?';
+    var fotoBtn = v.fotoLink
+      ? '<a href="'+v.fotoLink+'" target="_blank" style="background:var(--g50);color:var(--g700);font-size:10px;font-weight:600;padding:3px 8px;border-radius:10px;text-decoration:none">📷 Ver foto</a>'
+      : (v.foto==='Sí' ? '<span class="vpill">📷 Subiendo...</span>' : '');
+    return '<div class="vcard up" style="animation-delay:'+(i*.04)+'s">'+
+      '<div class="vav">'+ini+'</div>'+
+      '<div class="vinfo">'+
+        '<div class="vname">'+v.medico+'</div>'+
+        '<div class="vmeta">'+v.hora+' → '+(v.horaFin||'?')+' · '+v.visitador+'</div>'+
+        (v.notas ? '<div class="vnotes">'+v.notas+'</div>' : '')+
+        '<div class="vgps">📍 '+v.lat+', '+v.lng+'</div>'+
+        '<div class="vbadges">'+
+          '<span class="vpill-dur">'+v.duracion+' min</span>'+
+          fotoBtn+
+        '</div>'+
+      '</div>'+
+    '</div>';
   }).join('');
 }
 
 // ── NAV ──
-function goTo(name){
-  stopAllStreams();
-  if(name==='historial') renderHistorial();
-  if(name==='form'){photos={1:null,2:null};gps={entrada:null,salida:null};getGPS(1);}
+function goTo(name) {
+  stopStream();
+  if (name === 'historial') renderHistorial();
+  if (name === 'form')      getGPS();
   showScreen(name);
 }
 
-function showScreen(name){
-  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
   document.getElementById('s-'+name).classList.add('active');
-  document.querySelectorAll('.nav-btn').forEach(function(b){b.classList.remove('active');});
 }
 </script>
 <script>
-if('serviceWorker' in navigator){
+if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw-visitador.js').catch(function(){});
 }
 </script>
