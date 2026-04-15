@@ -9,8 +9,6 @@
 <meta name="apple-mobile-web-app-title" content="Visitas CORFA">
 <title>CORFA-BIONESTA · Visitas</title>
 <link rel="manifest" href="manifest-visitador.json">
-<link rel="icon" type="image/png" href="logo 192.png">
-<link rel="apple-touch-icon" href="logo 192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -150,6 +148,11 @@ select{background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' vie
 .upload-bar.on{display:flex}
 @keyframes spin{to{transform:rotate(360deg)}}
 .spinner{width:14px;height:14px;border:2px solid var(--g300);border-top-color:var(--g700);border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0}
+
+
+.hist-loading{display:flex;flex-direction:column;align-items:center;gap:8px}
+@keyframes spin-hist{to{transform:rotate(360deg)}}
+.spinner-hist{width:16px;height:16px;border:2px solid var(--g100);border-top-color:var(--g600);border-radius:50%;animation:spin-hist .7s linear infinite;flex-shrink:0}
 
 /* CHAR COUNT */
 .ta-wrap{position:relative}
@@ -664,26 +667,23 @@ function finalizarVisita() {
   if (!saved) { alert('No hay visita activa.'); return; }
   var activa = JSON.parse(saved);
 
-  var now       = new Date();
-  var tsInicio  = activa.tsInicio;
-  var tsFin     = now.getTime();
-  var durMin    = Math.round((tsFin - tsInicio) / 60000);
-  var notasCurso= document.getElementById('inNotasCurso').value.trim();
-  var notasFinal= [activa.notasIniciales, notasCurso].filter(Boolean).join(' | ');
+  var now      = new Date();
+  var durMin   = Math.max(0, Math.round((now.getTime() - activa.tsInicio) / 60000));
+  var notas    = [activa.notasIniciales, document.getElementById('inNotasCurso').value.trim()].filter(Boolean).join(' | ');
 
   var v = {
     id:          activa.id,
     visitador:   activa.visitador,
     medico:      activa.medico,
     fecha:       activa.fecha,
-    fechaDisplay: activa.fechaDisplay,
+    fechaDisplay:activa.fechaDisplay,
     hora:        activa.horaInicio,
-    horaFin:     now.toLocaleTimeString('es-EC', {hour:'2-digit', minute:'2-digit', second:'2-digit'}),
+    horaFin:     now.toLocaleTimeString('es-EC',{hour:'2-digit',minute:'2-digit',second:'2-digit'}),
     duracion:    durMin,
     lat:         activa.lat,
     lng:         activa.lng,
     gpsAcc:      activa.gpsAcc,
-    notas:       notasFinal,
+    notas:       notas,
     fotoB64:     activa.fotoB64,
     foto:        activa.fotoB64 ? 'Sí' : 'No',
     fotoLink:    '',
@@ -693,14 +693,20 @@ function finalizarVisita() {
 
   visits.push(v);
   localStorage.setItem('cb_visitas', JSON.stringify(visits));
-  localStorage.removeItem(LS_ACTIVA);  // limpiar visita activa
+  localStorage.removeItem(LS_ACTIVA);
 
-  // Mostrar resumen inmediatamente
+  // 1. Mostrar éxito INMEDIATAMENTE — sin esperar Drive
   mostrarResumen(v);
   showScreen('exito');
 
-  // Enviar a Sheets (con foto a Drive) en background
-  if (navigator.onLine) sendToSheets(v);
+  // 2. Subir foto + datos a Sheets EN SEGUNDO PLANO
+  // No bloqueamos la UI — la foto aparece en el historial cuando esté lista
+  if (navigator.onLine) {
+    sendToSheets(v);
+  } else {
+    // Sin internet: guardar para sync posterior
+    // El banner offline ya informa a la usuaria
+  }
 }
 
 function mostrarResumen(v) {
@@ -712,54 +718,76 @@ function mostrarResumen(v) {
     ['Fin',       v.horaFin],
     ['Duración',  v.duracion + ' min'],
     ['GPS',       v.lat + ', ' + v.lng + ' (±' + v.gpsAcc + 'm)'],
-    ['Foto',      v.foto === 'Sí' ? '✓ Capturada — subiendo a Drive...' : '—'],
+    ['Foto',      v.foto === 'Sí' ? '✓ Capturada — aparece en historial al subir' : '—'],
     ['Estado',    v.sincronia === 'En línea' ? '● Enviando...' : '⏳ Pendiente de sync'],
   ];
   if (v.notas) rows.splice(4, 0, ['Notas', v.notas]);
   document.getElementById('sumCard').innerHTML = rows.map(function(r) {
-    return '<div class="sum-row"><span class="sum-k">'+r[0]+'</span><span class="sum-v" id="sum-'+r[0].toLowerCase().replace(/\s/g,'-')+'">'+r[1]+'</span></div>';
+    return '<div class="sum-row"><span class="sum-k">'+r[0]+'</span><span class="sum-v" id="sum-'+r[0].toLowerCase().replace(/[^a-z]/g,'-')+'">'+r[1]+'</span></div>';
   }).join('');
 }
 
-// ── SYNC A SHEETS (foto va a Drive) ──
+// ── SYNC A SHEETS — foto en segundo plano ──
 function sendToSheets(v) {
-  if (v.foto === 'Sí') {
-    document.getElementById('uploadBar').classList.add('on');
+  // Comprimir foto antes de enviar (reduce tamaño ~60%)
+  var fotoParaEnviar = '';
+  if (v.fotoB64 && v.fotoB64.length > 100) {
+    fotoParaEnviar = comprimirFoto(v.fotoB64, 800, 0.65);
   }
+
   fetch(SCRIPT_URL, {
     method:  'POST',
-    headers: { 'Content-Type': 'text/plain' },
+    headers: {'Content-Type': 'text/plain'},
     body: JSON.stringify({
-      id:        v.id,
-      visitador: v.visitador,
-      medico:    v.medico,
-      fecha:     v.fecha,
-      hora:      v.hora,
-      lat:       v.lat,
-      lng:       v.lng,
-      gpsAcc:    v.gpsAcc,
-      duracion:  v.duracion,
-      notas:     v.notas,
-      sincronia: v.sincronia,
-      fotoBase64: v.fotoB64 || ''  // ← la foto va como base64 al script
+      id:         v.id,
+      visitador:  v.visitador,
+      medico:     v.medico,
+      fecha:      v.fecha,
+      hora:       v.hora,
+      lat:        v.lat,
+      lng:        v.lng,
+      gpsAcc:     v.gpsAcc,
+      duracion:   v.duracion,
+      notas:      v.notas,
+      sincronia:  v.sincronia,
+      fotoBase64: fotoParaEnviar
     })
-  }).then(function(r) { return r.json(); })
-    .then(function(data) {
-      document.getElementById('uploadBar').classList.remove('on');
-      v.synced   = true;
-      v.fotoLink = data.fotoLink || '';
-      // Actualizar resumen con link real
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(data){
+    v.synced   = true;
+    v.fotoLink = data.fotoLink || '';
+    v.fotoB64  = null; // Liberar memoria — ya está en Drive
+    // Actualizar índice local
+    var idx = visits.findIndex ? visits.findIndex(function(lv){ return lv.id === v.id; }) : -1;
+    if (idx > -1) visits[idx] = v;
+    localStorage.setItem('cb_visitas', JSON.stringify(visits));
+    // Si el link llegó, actualizar resumen en pantalla éxito si sigue abierta
+    if (v.fotoLink && v.fotoLink.startsWith('http')) {
       var fotoEl = document.getElementById('sum-foto');
-      if (fotoEl && v.fotoLink) {
-        fotoEl.innerHTML = '<a href="'+v.fotoLink+'" target="_blank" style="color:var(--g700)">Ver foto en Drive ↗</a>';
-      }
-      // Quitar base64 del localStorage para ahorrar espacio
-      v.fotoB64 = null;
-      localStorage.setItem('cb_visitas', JSON.stringify(visits));
-    })
-    .catch(function() {
-      document.getElementById('uploadBar').classList.remove('on');
-    });
+      if (fotoEl) fotoEl.innerHTML = '<a href="'+v.fotoLink+'" target="_blank" style="color:var(--g700);text-decoration:underline">Ver foto en Drive ↗</a>';
+    }
+  })
+  .catch(function(){
+    // Fallo silencioso — quedó en localStorage, syncPending lo reintentará
+  });
+}
+
+// Comprimir foto antes de enviar — reduce de ~2MB a ~300KB
+function comprimirFoto(base64, maxWidth, calidad) {
+  try {
+    var img  = new Image();
+    img.src  = base64;
+    var w = img.width  || maxWidth;
+    var h = img.height || maxWidth;
+    if (w > maxWidth) { h = Math.round(h * maxWidth / w); w = maxWidth; }
+    var c   = document.createElement('canvas');
+    c.width = w; c.height = h;
+    c.getContext('2d').drawImage(img, 0, 0, w, h);
+    return c.toDataURL('image/jpeg', calidad);
+  } catch(e) {
+    return base64; // Si falla, enviar original
+  }
 }
 
 function syncPending() {
@@ -790,37 +818,92 @@ function nuevaVisita() {
 }
 
 // ── HISTORIAL ──
+var VISITADOR_ACTIVO = 'YADIRA CÓRDOBA';
+
 function renderHistorial() {
+  var list = document.getElementById('visitList');
+  list.innerHTML = '<div class="empty"><div class="hist-loading"><div class="spinner-hist"></div><p style="font-size:12px;color:var(--ink3)">Cargando visitas...</p></div></div>';
+
   var today = new Date().toISOString().split('T')[0];
-  var tv    = visits.filter(function(v){ return v.fecha === today; });
-  var cf    = tv.filter(function(v){ return v.foto === 'Sí'; }).length;
-  document.getElementById('stTotal').textContent = tv.length;
-  document.getElementById('stFotos').textContent = cf;
+  var localHoy = visits.filter(function(v){ return v.fecha === today; });
+
+  // Mostrar local inmediatamente como caché
+  if (localHoy.length > 0) pintarHistorial(localHoy, true);
+
+  // Cargar desde Sheets si hay internet
+  if (navigator.onLine) {
+    fetch(SCRIPT_URL)
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        if (!d.ok || !d.data) { pintarHistorial(localHoy, false); return; }
+        var sheetsHoy = d.data.map(function(v){
+          var fecha = String(v['Fecha'] || v.fecha || '');
+          if (fecha.indexOf('/') > -1) {
+            var p = fecha.split('/');
+            if (p.length === 3) fecha = p[2]+'-'+(p[1].length<2?'0':'')+p[1]+'-'+(p[0].length<2?'0':'')+p[0];
+          }
+          var fl = String(v['Foto (link)'] || v.fotoLink || '');
+          return {
+            id:        v['ID']             || v.id        || '',
+            visitador: v['Visitador']      || v.visitador || '',
+            medico:    v['Médico visitado']|| v.medico    || '',
+            fecha:     fecha,
+            hora:      String(v['Hora']    || v.hora      || v.horaInicio || ''),
+            horaFin:   String(v['Hora fin']|| v.horaFin   || ''),
+            duracion:  parseInt(v['Duración (min)'] || v.duracion || 0),
+            lat:       String(v['Latitud'] || v.lat || ''),
+            lng:       String(v['Longitud']|| v.lng || ''),
+            notas:     String(v['Notas']   || v.notas || ''),
+            fotoLink:  fl,
+            foto:      fl.startsWith('http') ? 'Sí' : (v.foto || 'No'),
+            synced:    true
+          };
+        }).filter(function(v){ return v.fecha === today && v.visitador === VISITADOR_ACTIVO; });
+
+        var pendientes = visits.filter(function(v){ return v.fecha === today && !v.synced; });
+        var seen = {}; var merged = sheetsHoy.concat(pendientes).filter(function(v){
+          if (seen[v.id]) return false; seen[v.id] = true; return true;
+        });
+        pintarHistorial(merged, false);
+      })
+      .catch(function(){ pintarHistorial(localHoy, false); });
+  } else {
+    pintarHistorial(localHoy, false);
+  }
+}
+
+function pintarHistorial(tv, cargando) {
+  var cf = tv.filter(function(v){ return v.foto === 'Sí'; }).length;
+  document.getElementById('stTotal').textContent  = tv.length;
+  document.getElementById('stFotos').textContent  = cf;
   document.getElementById('histCount').textContent = tv.length + ' hoy';
   var list = document.getElementById('visitList');
-  if (!tv.length) {
-    list.innerHTML = '<div class="empty"><svg width="44" height="44" viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="7" y="7" width="30" height="30" rx="6"/><path d="M15 22h14M15 29h9"/></svg><p>Sin visitas hoy.<br>Toca Nueva visita para comenzar.</p></div>';
-    return;
-  }
-  list.innerHTML = tv.slice().reverse().map(function(v, i) {
-    var ini = (v.medico||'').replace(/Dr[a]?\.?\s*/i,'').split(' ').slice(0,2).map(function(w){return w[0]||'';}).join('').toUpperCase() || '?';
-    var fotoBtn = v.fotoLink
-      ? '<a href="'+v.fotoLink+'" target="_blank" style="background:var(--g50);color:var(--g700);font-size:10px;font-weight:600;padding:3px 8px;border-radius:10px;text-decoration:none">📷 Ver foto</a>'
-      : (v.foto==='Sí' ? '<span class="vpill">📷 Subiendo...</span>' : '');
-    return '<div class="vcard up" style="animation-delay:'+(i*.04)+'s">'+
-      '<div class="vav">'+ini+'</div>'+
-      '<div class="vinfo">'+
-        '<div class="vname">'+v.medico+'</div>'+
-        '<div class="vmeta">'+v.hora+' → '+(v.horaFin||'?')+' · '+v.visitador+'</div>'+
-        (v.notas ? '<div class="vnotes">'+v.notas+'</div>' : '')+
-        '<div class="vgps">📍 '+v.lat+', '+v.lng+'</div>'+
-        '<div class="vbadges">'+
-          '<span class="vpill-dur">'+v.duracion+' min</span>'+
-          fotoBtn+
+  var html = '';
+  if (tv.length === 0 && !cargando) {
+    html = '<div class="empty"><svg width="44" height="44" viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="7" y="7" width="30" height="30" rx="6"/><path d="M15 22h14M15 29h9"/></svg><p>Sin visitas hoy.<br>Toca Nueva visita para comenzar.</p></div>';
+  } else {
+    var sorted = tv.slice().sort(function(a,b){ return (b.hora||'') > (a.hora||'') ? 1 : -1; });
+    html = sorted.map(function(v, i) {
+      var ini = (v.medico||'').replace(/Dra?\.?\s*/i,'').split(' ').slice(0,2).map(function(w){return w[0]||'';}).join('').toUpperCase() || '?';
+      var fl  = String(v.fotoLink || '');
+      var fotoBtn = fl.startsWith('http')
+        ? '<a href="'+fl+'" target="_blank" style="background:var(--g50);color:var(--g700);font-size:10px;font-weight:600;padding:3px 8px;border-radius:10px;text-decoration:none">📷 Ver foto</a>'
+        : (v.foto==='Sí' ? '<span class="vpill">📷 Subiendo...</span>' : '');
+      var gpsStr = (v.lat && v.lat !== '' && v.lat !== 'undefined') ? '📍 '+v.lat+', '+v.lng : '';
+      return '<div class="vcard up" style="animation-delay:'+(i*.04)+'s">'+
+        '<div class="vav">'+ini+'</div>'+
+        '<div class="vinfo">'+
+          '<div class="vname">'+v.medico+'</div>'+
+          '<div class="vmeta">'+v.hora+(v.horaFin?' → '+v.horaFin:'')+' · '+v.visitador+'</div>'+
+          (v.notas?'<div class="vnotes">'+v.notas+'</div>':'')+
+          (gpsStr?'<div class="vgps">'+gpsStr+'</div>':'')+
+          '<div class="vbadges"><span class="vpill-dur">'+(v.duracion||0)+' min</span>'+fotoBtn+'</div>'+
         '</div>'+
-      '</div>'+
-    '</div>';
-  }).join('');
+      '</div>';
+    }).join('');
+    if (cargando) html += '<div style="text-align:center;padding:10px;font-size:11px;color:var(--ink3);display:flex;align-items:center;justify-content:center;gap:6px"><div class="spinner-hist"></div>Actualizando desde Sheets...</div>';
+  }
+  list.innerHTML = html;
 }
 
 // ── NAV ──
