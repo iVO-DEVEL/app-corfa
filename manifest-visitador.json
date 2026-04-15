@@ -1,6 +1,6 @@
 {
   "name": "Visitas CORFA-BIONESTA",
-  "short_name": "Visitas CB",
+  "short_name": "BIONESTA-VD",
   "description": "Registro de visitas médicas CORFA-BIONESTA con GPS y foto",
   "start_url": "/",
   "scope": "/",
