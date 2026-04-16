@@ -818,59 +818,105 @@ function nuevaVisita(){
 }
 
 // ── HISTORIAL ──
+// ── Convierte cualquier valor de fecha/Sheets a formato yyyy-MM-dd ──
+function parseFechaSheets(raw){
+  if(!raw) return '';
+  var s=String(raw);
+  // Formato dd/MM/yyyy
+  if(/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(s)){
+    var p=s.split('/');
+    return p[2]+'-'+(p[1].length<2?'0':'')+p[1]+'-'+(p[0].length<2?'0':'')+p[0];
+  }
+  // Formato yyyy-MM-dd ya correcto
+  if(/^\d{4}-\d{2}-\d{2}/.test(s)) return s.substring(0,10);
+  // Date object o ISO string con T
+  if(s.indexOf('T')>-1 || s.indexOf('GMT')>-1 || s.indexOf('UTC')>-1){
+    var d=new Date(s);
+    if(!isNaN(d.getTime())){
+      // Ajustar a zona Ecuador para evitar desfase de día
+      var ec=new Date(d.toLocaleString('en-US',{timeZone:'America/Guayaquil'}));
+      return ec.getFullYear()+'-'+(ec.getMonth()<9?'0':'')+(ec.getMonth()+1)+'-'+(ec.getDate()<10?'0':'')+ec.getDate();
+    }
+  }
+  return s;
+}
+
+// ── Convierte cualquier valor de hora/Sheets a formato HH:mm ──
+function parseHoraSheets(raw){
+  if(!raw) return '';
+  var s=String(raw);
+  // Ya es HH:mm
+  if(/^\d{1,2}:\d{2}$/.test(s)) return (s.length===4?'0':'')+s;
+  // ISO con T: '1899-12-30T14:41:00.000Z' → extraer hora UTC
+  if(s.indexOf('T')>-1){
+    var match=s.match(/T(\d{2}):(\d{2})/);
+    if(match) return match[1]+':'+match[2];
+  }
+  return s;
+}
+
 function renderHistorial(){
   var list=document.getElementById('visitList');
-  list.innerHTML='<div class="empty"><div class="hist-loading"><div class="spinner-hist"></div><p>Cargando visitas...</p></div></div>';
-  // Fecha de hoy en Ecuador (GMT-5) — evitar que a las 7PM diga que es "mañana" UTC
-  var nowEC = new Date(new Date().toLocaleString('en-US', {timeZone:'America/Guayaquil'}));
-  var today = nowEC.getFullYear()+'-'+(nowEC.getMonth()<9?'0':'')+(nowEC.getMonth()+1)+'-'+(nowEC.getDate()<10?'0':'')+nowEC.getDate();
+
+  // Fecha de hoy en Ecuador
+  var nowEC=new Date(new Date().toLocaleString('en-US',{timeZone:'America/Guayaquil'}));
+  var today=nowEC.getFullYear()+'-'+(nowEC.getMonth()<9?'0':'')+(nowEC.getMonth()+1)+'-'+(nowEC.getDate()<10?'0':'')+nowEC.getDate();
+
+  // Mostrar local pendiente inmediatamente
   var localHoy=visits.filter(function(v){return v.fecha===today&&!v.synced;});
-  if(localHoy.length>0) pintarHistorial(localHoy,true);
-  if(navigator.onLine){
-    fetch(SCRIPT_URL).then(function(r){return r.json();})
+  if(localHoy.length>0){
+    pintarHistorial(localHoy,navigator.onLine);
+  } else {
+    list.innerHTML='<div class="empty"><div class="hist-loading"><div class="spinner-hist"></div><p style="color:rgba(255,255,255,.7)">Cargando visitas...</p></div></div>';
+  }
+
+  if(!navigator.onLine){ pintarHistorial(localHoy,false); return; }
+
+  fetch(SCRIPT_URL)
+    .then(function(r){ return r.json(); })
     .then(function(d){
-      if(!d.ok||!d.data){pintarHistorial(localHoy,false);return;}
-      var sheetsHoy=d.data.map(function(v){
-        var fecha=String(v['Fecha']||v.fecha||'');
-        if(fecha.indexOf('/')>-1){var p=fecha.split('/');if(p.length===3) fecha=p[2]+'-'+(p[1].length<2?'0':'')+p[1]+'-'+(p[0].length<2?'0':'')+p[0];}
-        var fl=String(v['Foto (link)']||v.fotoLink||'');
-        // Normalizar hora — Sheets puede devolver objeto Date o string HH:mm
-        var horaRaw = v['Hora']||v.hora||'';
-        var horaStr = '';
-        if(horaRaw instanceof Date || (typeof horaRaw==='object' && horaRaw)){
-          var hd=new Date(horaRaw);
-          horaStr=(hd.getHours()<10?'0':'')+hd.getHours()+':'+(hd.getMinutes()<10?'0':'')+hd.getMinutes();
-        } else {
-          horaStr=String(horaRaw);
-          // Si viene como '1899-12-30T09:41:00.000Z' extraer HH:mm
-          if(horaStr.indexOf('T')>-1 && horaStr.indexOf(':')>-1){
-            var parts=horaStr.split('T');
-            if(parts[1]) horaStr=parts[1].substring(0,5);
-          }
-        }
-        // Normalizar fecha — igual puede venir como Date object
-        var fechaFinal=fecha;
-        if(v['Fecha'] instanceof Date || (typeof v['Fecha']==='object' && v['Fecha'])){
-          var fd=new Date(v['Fecha']);
-          fechaFinal=fd.getFullYear()+'-'+(fd.getMonth()<9?'0':'')+(fd.getMonth()+1)+'-'+(fd.getDate()<10?'0':'')+fd.getDate();
-        }
-        return{id:String(v['ID']||v.id||''),visitador:v['Visitador']||v.visitador||'',medico:v['Médico visitado']||v.medico||'',
-          fecha:fechaFinal,hora:horaStr,horaFin:String(v['Hora fin']||v.horaFin||''),
-          duracion:parseInt(v['Duración (min)']||v.duracion||0),lat:String(v['Latitud']||v.lat||''),
-          lng:String(v['Longitud']||v.lng||''),notas:String(v['Notas']||v.notas||''),
-          direccion:String(v['Dirección']||v.direccion||''),
-          fotoLink:fl,foto:fl.startsWith('http')?'Sí':(v.foto||'No'),synced:true};
-      }).filter(function(v){
-        return v.fecha===today && norm(v.visitador)===norm(VISITADOR_ACTIVO);
-      });
+      if(!d.ok||!d.data){ pintarHistorial(localHoy,false); return; }
+
+      var sheetsHoy=d.data
+        .map(function(row){
+          var fechaStr = parseFechaSheets(row['Fecha']||row.fecha);
+          var horaStr  = parseHoraSheets(row['Hora']||row.hora);
+          var fl       = String(row['Foto (link)']||row.fotoLink||'');
+          return {
+            id:        String(row['ID']||row.id||''),
+            visitador: String(row['Visitador']||row.visitador||''),
+            medico:    String(row['Médico visitado']||row.medico||''),
+            fecha:     fechaStr,
+            hora:      horaStr,
+            horaFin:   parseHoraSheets(row['Hora fin']||row.horaFin),
+            duracion:  parseInt(row['Duración (min)']||row.duracion||0)||0,
+            lat:       String(row['Latitud']||row.lat||''),
+            lng:       String(row['Longitud']||row.lng||''),
+            notas:     String(row['Notas']||row.notas||''),
+            direccion: String(row['Dirección']||row.direccion||''),
+            fotoLink:  fl,
+            foto:      fl.startsWith('http')?'Sí':(row.foto||'No'),
+            synced:    true
+          };
+        })
+        .filter(function(v){
+          return v.fecha===today && norm(v.visitador)===norm(VISITADOR_ACTIVO);
+        });
+
+      // Merge: Sheets + locales pendientes sin duplicados
       var pendientes=visits.filter(function(v){return v.fecha===today&&!v.synced;});
-      var seen={};var merged=sheetsHoy.concat(pendientes).filter(function(v){
-        var key=String(v.id);
-        if(seen[key])return false;seen[key]=true;return true;
+      var seen={};
+      var merged=sheetsHoy.concat(pendientes).filter(function(v){
+        var k=String(v.id||v.medico+v.hora); // fallback por medico+hora si no hay id
+        if(seen[k]) return false; seen[k]=true; return true;
       });
+
       pintarHistorial(merged,false);
-    }).catch(function(){pintarHistorial(localHoy,false);});
-  } else { pintarHistorial(localHoy,false); }
+    })
+    .catch(function(err){
+      console.error('Error cargando historial:', err);
+      pintarHistorial(localHoy,false);
+    });
 }
 
 function pintarHistorial(tv,cargando){
