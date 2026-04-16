@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0f766e">
+<title>CORFA-BIONESTA · Supervisor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --g800:#0f766e;--g700:#0f766e;--g600:#14b8a6;--g500:#2dd4bf;
+  --g400:#5eead4;--g300:#99f6e4;--g100:#ccfbf1;--g50:#f0fdfa;
+  --ink:#1e293b;--ink2:#334155;--ink3:#64748b;
+  --bg:#f8fafc;--bg2:#f1f5f9;--bg3:#fff;
+  --bd:rgba(15,118,110,.12);
+  --red:#ef4444;--redbg:#fef2f2;
+  --amber:#f59e0b;--amberbg:#fffbeb;
+  --blue:#3b82f6;--bluebg:#eff6ff;
+  --r:16px;--r2:12px;--r3:8px;
+  --font:'Outfit',sans-serif;--mono:'DM Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{height:100%;background:linear-gradient(160deg,#0f4f3a 0%,#0f766e 40%,#14b8a6 70%,#ccfbf1 100%) fixed}
+body{font-family:var(--font);color:var(--ink);min-height:100vh;-webkit-font-smoothing:antialiased}
+
+/* ── LOGIN ── */
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.login-card{background:rgba(255,255,255,.92);backdrop-filter:blur(20px);border-radius:24px;border:1px solid rgba(255,255,255,.7);padding:36px 32px;width:100%;max-width:380px;box-shadow:0 24px 64px rgba(10,50,42,.2)}
+.login-logo{text-align:center;margin-bottom:24px}
+.login-logo img{width:60px;height:60px;border-radius:14px;object-fit:contain}
+.login-brand{font-size:11px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:.1em;margin-top:10px}
+.login-title{font-size:22px;font-weight:700;color:var(--ink);margin-top:4px;letter-spacing:-.3px}
+.login-field{margin-bottom:14px}
+.login-field label{font-size:11px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:6px}
+.login-field input{width:100%;border:1.5px solid var(--bd);border-radius:var(--r2);padding:12px 14px;font-size:15px;font-family:var(--font);color:var(--ink);background:var(--bg);outline:none;transition:border-color .15s}
+.login-field input:focus{border-color:var(--g500);box-shadow:0 0 0 3px rgba(45,212,191,.15)}
+.login-err{background:var(--redbg);border:1px solid rgba(239,68,68,.2);border-radius:var(--r3);padding:10px 13px;font-size:12px;color:var(--red);display:none;margin-bottom:12px}
+.login-err.on{display:block}
+.btn-login{width:100%;background:var(--g700);color:#fff;border:none;border-radius:var(--r2);padding:14px;font-size:15px;font-weight:600;font-family:var(--font);cursor:pointer;box-shadow:0 4px 16px rgba(15,118,110,.3);transition:all .2s}
+.btn-login:active{transform:scale(.98)}
+
+/* ── APP ── */
+.app{display:none;flex-direction:column;min-height:100vh}
+.app.active{display:flex}
+
+/* HEADER */
+.hdr{background:rgba(10,50,42,.55);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.12);padding:0;flex-shrink:0}
+.hdr-inner{padding:16px 24px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.hdr-left{display:flex;align-items:center;gap:14px}
+.hdr-logo{width:44px;height:44px;border-radius:10px;object-fit:contain;flex-shrink:0}
+.hdr-brand{font-size:9px;font-weight:600;color:rgba(255,255,255,.5);letter-spacing:.1em;text-transform:uppercase;margin-bottom:2px}
+.hdr-title{color:#fff;font-size:19px;font-weight:600;letter-spacing:-.3px}
+.hdr-sub{color:rgba(255,255,255,.6);font-size:11px;margin-top:1px;font-family:var(--mono)}
+.hdr-right{display:flex;align-items:center;gap:10px}
+.btn-sm{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:var(--r3);padding:7px 14px;font-size:12px;font-weight:500;font-family:var(--font);color:rgba(255,255,255,.9);cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:background .15s;text-decoration:none;white-space:nowrap}
+.btn-sm:hover{background:rgba(255,255,255,.2)}
+.btn-sm-green{background:rgba(45,212,191,.2);border-color:rgba(45,212,191,.3);color:#fff}
+.btn-sm-red{background:rgba(239,68,68,.15);border-color:rgba(239,68,68,.25);color:#fca5a5}
+
+/* MAIN */
+.main{flex:1;padding:20px 24px 40px;max-width:1400px;margin:0 auto;width:100%}
+
+/* KPIs */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px}
+.kpi{background:rgba(255,255,255,.85);backdrop-filter:blur(10px);border-radius:var(--r);border:1px solid rgba(255,255,255,.6);padding:16px 18px;box-shadow:0 4px 20px rgba(10,50,42,.08)}
+.kpi-n{font-size:32px;font-weight:700;color:var(--g700);font-family:var(--mono);line-height:1;letter-spacing:-.02em}
+.kpi-l{font-size:11px;color:var(--ink3);margin-top:5px;text-transform:uppercase;letter-spacing:.05em;font-weight:500}
+.kpi-sub{font-size:11px;color:var(--ink3);margin-top:2px;font-family:var(--mono)}
+
+/* FILTROS */
+.filtros{background:rgba(255,255,255,.85);backdrop-filter:blur(10px);border-radius:var(--r);border:1px solid rgba(255,255,255,.6);padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;box-shadow:0 4px 20px rgba(10,50,42,.06)}
+.filtro-label{font-size:11px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
+.filtro-select,.filtro-input{border:1.5px solid var(--bd);border-radius:var(--r3);padding:7px 11px;font-size:13px;font-family:var(--font);color:var(--ink);background:rgba(255,255,255,.9);outline:none;transition:border-color .15s;-webkit-appearance:none}
+.filtro-select:focus,.filtro-input:focus{border-color:var(--g500)}
+.filtro-input{width:110px}
+.filtro-sep{height:24px;width:1px;background:var(--bd);flex-shrink:0}
+.btn-filtro{background:var(--g700);color:#fff;border:none;border-radius:var(--r3);padding:7px 14px;font-size:12px;font-weight:600;font-family:var(--font);cursor:pointer;transition:opacity .15s}
+.btn-filtro:hover{opacity:.85}
+.btn-filtro-out{background:transparent;color:var(--ink3);border:1px solid var(--bd);border-radius:var(--r3);padding:7px 14px;font-size:12px;font-weight:500;font-family:var(--font);cursor:pointer}
+
+/* TABLA */
+.tabla-wrap{background:rgba(255,255,255,.88);backdrop-filter:blur(10px);border-radius:var(--r);border:1px solid rgba(255,255,255,.6);overflow:hidden;box-shadow:0 4px 24px rgba(10,50,42,.08)}
+.tabla-hdr{padding:14px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--bd);gap:10px;flex-wrap:wrap}
+.tabla-title{font-size:14px;font-weight:600;color:var(--ink);display:flex;align-items:center;gap:8px}
+.tabla-count{background:var(--g100);color:var(--g700);font-size:11px;font-weight:600;padding:2px 8px;border-radius:10px;font-family:var(--mono)}
+.tabla-scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:900px}
+thead tr{background:linear-gradient(90deg,rgba(15,118,110,.08),rgba(15,118,110,.04))}
+th{padding:10px 14px;text-align:left;font-size:10px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--bd);cursor:pointer;white-space:nowrap;user-select:none}
+th:hover{color:var(--g700)}
+th .arr{margin-left:4px;opacity:.4;font-size:9px}
+th.sorted .arr{opacity:1;color:var(--g600)}
+td{padding:10px 14px;border-bottom:1px solid rgba(15,118,110,.06);color:var(--ink2);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(15,118,110,.03)}
+.pill{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600;font-family:var(--mono)}
+.pill-dur{background:var(--bg2);color:var(--ink3)}
+.pill-online{background:rgba(34,197,94,.12);color:#15803d}
+.pill-pend{background:var(--amberbg);color:var(--amber)}
+.link-foto{color:var(--g700);text-decoration:none;font-size:11px;font-weight:600;display:inline-flex;align-items:center;gap:3px;background:var(--g50);padding:3px 8px;border-radius:8px;transition:background .15s}
+.link-foto:hover{background:var(--g100)}
+.link-gps{color:var(--blue);text-decoration:none;font-size:11px;display:inline-flex;align-items:center;gap:3px}
+.link-gps:hover{text-decoration:underline}
+.dir-text{font-size:11px;color:var(--ink2);max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.empty-row td{text-align:center;padding:40px;color:var(--ink3);font-size:13px}
+
+/* LOADING */
+.loading{display:flex;align-items:center;justify-content:center;padding:48px;gap:10px;color:rgba(255,255,255,.7);font-size:13px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spinner{width:18px;height:18px;border:2px solid rgba(255,255,255,.2);border-top-color:rgba(255,255,255,.8);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--ink);color:#fff;padding:12px 18px;border-radius:var(--r2);font-size:13px;font-weight:500;display:none;align-items:center;gap:8px;z-index:999;box-shadow:0 8px 32px rgba(0,0,0,.2)}
+.toast.on{display:flex}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.toast.on{animation:fadeInUp .2s ease-out}
+</style>
+</head>
+<body>
+
+<!-- ── LOGIN ── -->
+<div class="login-wrap" id="loginWrap">
+  <div class="login-card">
+    <div class="login-logo">
+      <img src="https://raw.githubusercontent.com/iVO-DEVEL/app-corfa/main/icon-192.png" alt="Logo Bionesta">
+      <div class="login-brand">CORFA-BIONESTA</div>
+      <div class="login-title">Panel Supervisor</div>
+    </div>
+    <div class="login-err" id="loginErr">Clave incorrecta. Intenta de nuevo.</div>
+    <div class="login-field">
+      <label>Clave de acceso</label>
+      <input type="password" id="inputClave" placeholder="Ingresa la clave" onkeydown="if(event.key==='Enter') doLogin()">
+    </div>
+    <button class="btn-login" onclick="doLogin()">Ingresar al panel</button>
+  </div>
+</div>
+
+<!-- ── APP ── -->
+<div class="app" id="appWrap">
+
+  <div class="hdr">
+    <div class="hdr-inner">
+      <div class="hdr-left">
+        <img src="https://raw.githubusercontent.com/iVO-DEVEL/app-corfa/main/icon-192.png" alt="Logo" class="hdr-logo">
+        <div>
+          <div class="hdr-brand">CORFA-BIONESTA</div>
+          <div class="hdr-title">Panel Supervisor</div>
+          <div class="hdr-sub" id="hdrFecha">—</div>
+        </div>
+      </div>
+      <div class="hdr-right">
+        <button class="btn-sm btn-sm-green" onclick="cargarDatos()">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1.5 6.5A5 5 0 1 0 3.5 3M1.5 1v3h3"/></svg>
+          Actualizar
+        </button>
+        <button class="btn-sm" onclick="exportarCSV()">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6.5 1v8M4 7l2.5 2.5L9 7"/><path d="M2 10v1.5h9V10"/></svg>
+          Exportar CSV
+        </button>
+        <button class="btn-sm btn-sm-red" onclick="cerrarSesion()">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2h3v9H8M5 9.5L1.5 6.5 5 3.5M1.5 6.5H9"/></svg>
+          Salir
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="main">
+
+    <!-- KPIs -->
+    <div class="kpis" id="kpiWrap">
+      <div class="kpi"><div class="kpi-n" id="kTotal">—</div><div class="kpi-l">Total visitas</div></div>
+      <div class="kpi"><div class="kpi-n" id="kHoy">—</div><div class="kpi-l">Visitas hoy</div></div>
+      <div class="kpi"><div class="kpi-n" id="kSemana">—</div><div class="kpi-l">Esta semana</div></div>
+      <div class="kpi"><div class="kpi-n" id="kProm">—</div><div class="kpi-l">Min. promedio</div><div class="kpi-sub" id="kPromSub"></div></div>
+      <div class="kpi"><div class="kpi-n" id="kFotos">—</div><div class="kpi-l">Con foto</div></div>
+    </div>
+
+    <!-- FILTROS -->
+    <div class="filtros">
+      <span class="filtro-label">Filtrar por:</span>
+      <select class="filtro-select" id="filtVisitador" onchange="aplicarFiltros()">
+        <option value="">Todos los visitadores</option>
+      </select>
+      <div class="filtro-sep"></div>
+      <span class="filtro-label">Desde:</span>
+      <input type="date" class="filtro-input" id="filtDesde" onchange="aplicarFiltros()">
+      <span class="filtro-label">Hasta:</span>
+      <input type="date" class="filtro-input" id="filtHasta" onchange="aplicarFiltros()">
+      <div class="filtro-sep"></div>
+      <button class="btn-filtro" onclick="filtrarHoy()">Hoy</button>
+      <button class="btn-filtro" onclick="filtrarSemana()">Esta semana</button>
+      <button class="btn-filtro-out" onclick="limpiarFiltros()">Limpiar</button>
+    </div>
+
+    <!-- TABLA -->
+    <div class="tabla-wrap">
+      <div class="tabla-hdr">
+        <div class="tabla-title">
+          Registro de visitas
+          <span class="tabla-count" id="tablaCount">0</span>
+        </div>
+      </div>
+      <div id="loadingWrap" class="loading">
+        <div class="spinner"></div>
+        Cargando datos desde Sheets...
+      </div>
+      <div class="tabla-scroll" id="tablaScroll" style="display:none">
+        <table>
+          <thead>
+            <tr>
+              <th onclick="sortBy('visitador')">Visitador <span class="arr">↕</span></th>
+              <th onclick="sortBy('medico')">Médico <span class="arr">↕</span></th>
+              <th onclick="sortBy('fecha')">Fecha <span class="arr">↕</span></th>
+              <th onclick="sortBy('hora')">Hora <span class="arr">↕</span></th>
+              <th onclick="sortBy('duracion')">Min <span class="arr">↕</span></th>
+              <th>Dirección</th>
+              <th>GPS</th>
+              <th>Foto</th>
+              <th>Notas</th>
+              <th onclick="sortBy('sincronia')">Estado <span class="arr">↕</span></th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var SCRIPT_URL='https://script.google.com/macros/s/AKfycbypiEibuyrV0xpEp118ScqdPlONRO3uI7wPwu-ij18qWDJUL2HQjbgFtCOncQUhWOKaeA/exec';
+var CLAVE='IVO.2026';
+var allData=[], filtered=[], sortCol='fecha', sortDir=-1;
+
+// ── FECHA ──
+function setFecha(){
+  var d=new Date();
+  var dias=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+  var meses=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  var el=document.getElementById('hdrFecha');
+  if(el) el.textContent=dias[d.getDay()]+' '+d.getDate()+' de '+meses[d.getMonth()]+' · '+d.getFullYear();
+}
+setFecha();
+
+// ── LOGIN ──
+function doLogin(){
+  var v=document.getElementById('inputClave').value;
+  if(v===CLAVE){
+    sessionStorage.setItem('sup_auth','1');
+    document.getElementById('loginWrap').style.display='none';
+    document.getElementById('appWrap').classList.add('active');
+    setFecha();
+    cargarDatos();
+  } else {
+    document.getElementById('loginErr').classList.add('on');
+    document.getElementById('inputClave').value='';
+    document.getElementById('inputClave').focus();
+  }
+}
+function cerrarSesion(){
+  sessionStorage.removeItem('sup_auth');
+  location.reload();
+}
+
+// ── CARGAR DATOS ──
+function cargarDatos(){
+  document.getElementById('loadingWrap').style.display='flex';
+  document.getElementById('tablaScroll').style.display='none';
+  fetch(SCRIPT_URL)
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if(!d.ok||!d.data){showToast('Error al cargar datos');return;}
+      allData=d.data.map(normalizar).filter(function(v){return v.visitador;});
+      poblarFiltroVisitador();
+      filtrarHoy();
+      document.getElementById('loadingWrap').style.display='none';
+      document.getElementById('tablaScroll').style.display='block';
+    })
+    .catch(function(){
+      document.getElementById('loadingWrap').innerHTML='<p style="color:rgba(255,255,255,.6)">Error de conexión. Verifica que el script esté publicado.</p>';
+    });
+}
+
+function normalizar(v){
+  var fecha=String(v['Fecha']||v.fecha||'');
+  var fechaISO=fecha;
+  if(fecha.indexOf('/')>-1){
+    var p=fecha.split('/');
+    if(p.length===3) fechaISO=p[2]+'-'+(p[1].length<2?'0':'')+p[1]+'-'+(p[0].length<2?'0':'')+p[0];
+  }
+  var fl=String(v['Foto (link)']||v.fotoLink||'');
+  // Limpiar fórmula HYPERLINK si viene de Sheets
+  var flClean=fl.replace(/=?HYPERLINK\("[^"]+","([^"]+)"\)/,'$1');
+  var flUrl=fl.match(/https?:\/\/[^\s"')]+/);
+  return{
+    id:       v['ID']||v.id||'',
+    visitador:v['Visitador']||v.visitador||'',
+    medico:   v['Médico visitado']||v.medico||'',
+    fecha:    fecha,
+    fechaISO: fechaISO,
+    hora:     String(v['Hora']||v.hora||''),
+    duracion: parseInt(v['Duración (min)']||v.duracion||0)||0,
+    lat:      String(v['Latitud']||v.lat||''),
+    lng:      String(v['Longitud']||v.lng||''),
+    gpsAcc:   String(v['Precisión GPS (m)']||v.gpsAcc||''),
+    direccion:String(v['Dirección']||v.direccion||''),
+    fotoLink: flUrl?flUrl[0]:'',
+    notas:    String(v['Notas']||v.notas||''),
+    sincronia:String(v['Sincronía']||v.sincronia||''),
+  };
+}
+
+// ── FILTROS ──
+function poblarFiltroVisitador(){
+  var sel=document.getElementById('filtVisitador');
+  var vals={};
+  allData.forEach(function(v){if(v.visitador) vals[v.visitador]=1;});
+  var current=sel.value;
+  while(sel.options.length>1) sel.remove(1);
+  Object.keys(vals).sort().forEach(function(n){
+    var o=document.createElement('option');o.value=n;o.textContent=n;sel.appendChild(o);
+  });
+  if(current) sel.value=current;
+}
+
+function aplicarFiltros(){
+  var vis=document.getElementById('filtVisitador').value;
+  var desde=document.getElementById('filtDesde').value;
+  var hasta=document.getElementById('filtHasta').value;
+  filtered=allData.filter(function(v){
+    if(vis&&v.visitador!==vis) return false;
+    if(desde&&v.fechaISO<desde) return false;
+    if(hasta&&v.fechaISO>hasta) return false;
+    return true;
+  });
+  actualizarKPIs();
+  renderTabla();
+}
+
+function filtrarHoy(){
+  var hoy=new Date().toISOString().split('T')[0];
+  document.getElementById('filtDesde').value=hoy;
+  document.getElementById('filtHasta').value=hoy;
+  aplicarFiltros();
+}
+function filtrarSemana(){
+  var hoy=new Date();
+  var lunes=new Date(hoy);lunes.setDate(hoy.getDate()-hoy.getDay()+1);
+  document.getElementById('filtDesde').value=lunes.toISOString().split('T')[0];
+  document.getElementById('filtHasta').value=hoy.toISOString().split('T')[0];
+  aplicarFiltros();
+}
+function limpiarFiltros(){
+  document.getElementById('filtVisitador').value='';
+  document.getElementById('filtDesde').value='';
+  document.getElementById('filtHasta').value='';
+  aplicarFiltros();
+}
+
+// ── KPIs ──
+function actualizarKPIs(){
+  var hoy=new Date().toISOString().split('T')[0];
+  var lunesDate=new Date();lunesDate.setDate(lunesDate.getDate()-lunesDate.getDay()+1);
+  var lunes=lunesDate.toISOString().split('T')[0];
+  var totalMins=0,countMins=0;
+  var hoyCount=0,semCount=0,fotosCount=0;
+  allData.forEach(function(v){
+    if(v.fechaISO===hoy) hoyCount++;
+    if(v.fechaISO>=lunes) semCount++;
+    if(v.fotoLink&&v.fotoLink.startsWith('http')) fotosCount++;
+    if(v.duracion>0){totalMins+=v.duracion;countMins++;}
+  });
+  document.getElementById('kTotal').textContent=allData.length;
+  document.getElementById('kHoy').textContent=hoyCount;
+  document.getElementById('kSemana').textContent=semCount;
+  document.getElementById('kProm').textContent=countMins?Math.round(totalMins/countMins)+'m':'—';
+  document.getElementById('kFotos').textContent=fotosCount;
+}
+
+// ── TABLA ──
+var sortCol='fechaISO', sortDir=-1;
+function sortBy(col){
+  if(sortCol===col) sortDir*=-1; else{sortCol=col;sortDir=-1;}
+  document.querySelectorAll('th').forEach(function(th){th.classList.remove('sorted');});
+  var ths=document.querySelectorAll('th');
+  var cols=['visitador','medico','fecha','hora','duracion','direccion','lat','fotoLink','notas','sincronia'];
+  var idx=cols.indexOf(col);
+  if(idx>-1) ths[idx].classList.add('sorted');
+  renderTabla();
+}
+
+function renderTabla(){
+  document.getElementById('tablaCount').textContent=filtered.length;
+  var sorted=filtered.slice().sort(function(a,b){
+    var av=a[sortCol]||'',bv=b[sortCol]||'';
+    if(sortCol==='duracion'){av=parseInt(av)||0;bv=parseInt(bv)||0;}
+    return av>bv?sortDir:av<bv?-sortDir:0;
+  });
+  var tbody=document.getElementById('tbody');
+  if(!sorted.length){
+    tbody.innerHTML='<tr class="empty-row"><td colspan="10">Sin visitas en este período</td></tr>';
+    return;
+  }
+  tbody.innerHTML=sorted.map(function(v){
+    var gpsLink=(v.lat&&v.lat!=='undefined'&&v.lat!=='')?
+      '<a href="https://maps.google.com/?q='+v.lat+','+v.lng+'" target="_blank" class="link-gps">📍 Ver ↗</a>':'—';
+    var fotoLink=v.fotoLink&&v.fotoLink.startsWith('http')?
+      '<a href="'+v.fotoLink+'" target="_blank" class="link-foto">📷 Ver foto</a>':'<span style="color:var(--ink3);font-size:11px">—</span>';
+    var dir=v.direccion?'<span class="dir-text" title="'+v.direccion+'">'+v.direccion+'</span>':
+      (v.lat&&v.lat!==''?'<span style="font-size:10px;color:var(--ink3);font-family:var(--mono)">'+v.lat+','+v.lng+'</span>':'—');
+    var estado=v.sincronia==='En línea'?
+      '<span class="pill pill-online">● En línea</span>':
+      '<span class="pill pill-pend">⏳ Pendiente</span>';
+    var notas=v.notas?'<span title="'+v.notas.replace(/"/g,'&quot;')+'" style="max-width:120px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px">'+v.notas+'</span>':'—';
+    return '<tr>'+
+      '<td style="font-weight:600;white-space:nowrap;font-size:12px">'+v.visitador+'</td>'+
+      '<td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px">'+v.medico+'</td>'+
+      '<td style="white-space:nowrap;font-family:var(--mono);font-size:11px">'+v.fecha+'</td>'+
+      '<td style="white-space:nowrap;font-family:var(--mono);font-size:11px">'+v.hora+'</td>'+
+      '<td style="text-align:center"><span class="pill pill-dur">'+v.duracion+'m</span></td>'+
+      '<td>'+dir+'</td>'+
+      '<td>'+gpsLink+'</td>'+
+      '<td>'+fotoLink+'</td>'+
+      '<td>'+notas+'</td>'+
+      '<td>'+estado+'</td>'+
+    '</tr>';
+  }).join('');
+}
+
+// ── EXPORTAR CSV ──
+function exportarCSV(){
+  var cols=['ID','Visitador','Médico','Fecha','Hora','Duración (min)','Dirección','Latitud','Longitud','GPS Acc','Foto Link','Notas','Sincronía'];
+  var rows=[cols.join(',')];
+  var data=filtered.length?filtered:allData;
+  data.forEach(function(v){
+    rows.push([v.id,v.visitador,v.medico,v.fecha,v.hora,v.duracion,v.direccion,v.lat,v.lng,v.gpsAcc,v.fotoLink,v.notas,v.sincronia]
+      .map(function(c){return'"'+String(c||'').replace(/"/g,'""')+'"';}).join(','));
+  });
+  var blob=new Blob(['\uFEFF'+rows.join('\n')],{type:'text/csv;charset=utf-8;'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');a.href=url;
+  a.download='visitas_corfa_'+new Date().toISOString().split('T')[0]+'.csv';
+  a.click();URL.revokeObjectURL(url);
+  showToast('CSV exportado correctamente');
+}
+
+// ── TOAST ──
+function showToast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('on');
+  setTimeout(function(){t.classList.remove('on');},2800);
+}
+
+// ── INIT ──
+if(sessionStorage.getItem('sup_auth')==='1'){
+  document.getElementById('loginWrap').style.display='none';
+  document.getElementById('appWrap').classList.add('active');
+  cargarDatos();
+}
+</script>
+</body>
+</html>
