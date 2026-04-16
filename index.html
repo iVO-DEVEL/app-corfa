@@ -733,7 +733,11 @@ function finalizarVisita(){
   localStorage.setItem('cb_visitas',JSON.stringify(visits));
   localStorage.removeItem(LS_ACTIVA);
   mostrarResumen(v);showScreen('exito');
-  if(navigator.onLine) sendToSheets(v);
+  if(navigator.onLine){
+    sendToSheets(v);
+    // Pre-cargar historial en background para que esté listo al navegar
+    setTimeout(function(){ renderHistorial(); }, 6000);
+  }
 }
 
 function mostrarResumen(v){
@@ -840,7 +844,9 @@ function pintarHistorial(tv,cargando){
   var cf=tv.filter(function(v){return v.foto==='Sí';}).length;
   document.getElementById('stTotal').textContent=tv.length;
   document.getElementById('stFotos').textContent=cf;
-  document.getElementById('histCount').textContent=tv.length+' hoy';
+  var ahora=new Date();
+  var hhmm=(ahora.getHours()<10?'0':'')+ahora.getHours()+':'+(ahora.getMinutes()<10?'0':'')+ahora.getMinutes();
+  document.getElementById('histCount').textContent=tv.length+' hoy · '+hhmm;
   var list=document.getElementById('visitList');
   var html='';
   if(tv.length===0&&!cargando){
@@ -862,9 +868,21 @@ function pintarHistorial(tv,cargando){
 }
 
 // ── NAV ──
+var historialTimer = null;
+
 function goTo(name){
   stopStream();
-  if(name==='historial') renderHistorial();
+  // Limpiar timer anterior
+  if(historialTimer){ clearInterval(historialTimer); historialTimer=null; }
+
+  if(name==='historial'){
+    renderHistorial(); // carga inmediata
+    // Auto-refresh cada 30 segundos mientras está en historial
+    historialTimer = setInterval(function(){
+      var activa = document.getElementById('s-historial');
+      if(activa && activa.classList.contains('active')) renderHistorial();
+    }, 30000);
+  }
   if(name==='form') getGPS();
   showScreen(name);
 }

@@ -110,6 +110,10 @@ tr:hover td{background:rgba(15,118,110,.03)}
 @keyframes spin{to{transform:rotate(360deg)}}
 .spinner{width:18px;height:18px;border:2px solid rgba(255,255,255,.2);border-top-color:rgba(255,255,255,.8);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
 
+/* AUTO-REFRESH DOT */
+.dot-live{width:6px;height:6px;border-radius:50%;background:#5eead4;flex-shrink:0;animation:pulse-live 2s ease-in-out infinite}
+@keyframes pulse-live{0%,100%{opacity:1}50%{opacity:.3}}
+
 /* TOAST */
 .toast{position:fixed;bottom:24px;right:24px;background:var(--ink);color:#fff;padding:12px 18px;border-radius:var(--r2);font-size:13px;font-weight:500;display:none;align-items:center;gap:8px;z-index:999;box-shadow:0 8px 32px rgba(0,0,0,.2)}
 .toast.on{display:flex}
@@ -150,10 +154,13 @@ tr:hover td{background:rgba(15,118,110,.03)}
         </div>
       </div>
       <div class="hdr-right">
-        <button class="btn-sm btn-sm-green" onclick="cargarDatos()">
+        <button class="btn-sm btn-sm-green" onclick="cargarDatos(true)">
           <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1.5 6.5A5 5 0 1 0 3.5 3M1.5 1v3h3"/></svg>
           Actualizar
         </button>
+        <div style="font-size:11px;color:rgba(255,255,255,.5);display:flex;align-items:center;gap:4px;font-family:var(--mono)">
+          <div class="dot-live"></div>Auto 60s
+        </div>
         <button class="btn-sm" onclick="exportarCSV()">
           <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6.5 1v8M4 7l2.5 2.5L9 7"/><path d="M2 10v1.5h9V10"/></svg>
           Exportar CSV
@@ -256,6 +263,7 @@ function doLogin(){
     document.getElementById('appWrap').classList.add('active');
     setFecha();
     cargarDatos();
+    iniciarAutoRefresh();
   } else {
     document.getElementById('loginErr').classList.add('on');
     document.getElementById('inputClave').value='';
@@ -268,22 +276,49 @@ function cerrarSesion(){
 }
 
 // ── CARGAR DATOS ──
-function cargarDatos(){
-  document.getElementById('loadingWrap').style.display='flex';
-  document.getElementById('tablaScroll').style.display='none';
+var autoRefreshTimer = null;
+var ultimaActualizacion = null;
+
+function cargarDatos(silencioso){
+  if(!silencioso){
+    document.getElementById('loadingWrap').style.display='flex';
+    document.getElementById('tablaScroll').style.display='none';
+  }
   fetch(SCRIPT_URL)
     .then(function(r){return r.json();})
     .then(function(d){
-      if(!d.ok||!d.data){showToast('Error al cargar datos');return;}
+      if(!d.ok||!d.data){
+        if(!silencioso) showToast('Error al cargar datos');
+        return;
+      }
       allData=d.data.map(normalizar).filter(function(v){return v.visitador;});
       poblarFiltroVisitador();
-      filtrarHoy();
+      aplicarFiltros();
       document.getElementById('loadingWrap').style.display='none';
       document.getElementById('tablaScroll').style.display='block';
+      // Actualizar timestamp
+      ultimaActualizacion=new Date();
+      var hhmm=(ultimaActualizacion.getHours()<10?'0':'')+ultimaActualizacion.getHours()+':'+(ultimaActualizacion.getMinutes()<10?'0':'')+ultimaActualizacion.getMinutes();
+      var el=document.getElementById('hdrFecha');
+      if(el){
+        var dias=['Domingo','Lunes','Martes','Miercoles','Jueves','Viernes','Sabado'];
+        var meses=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+        var d2=ultimaActualizacion;
+        el.textContent=dias[d2.getDay()]+' '+d2.getDate()+' de '+meses[d2.getMonth()]+' · Actualizado '+hhmm;
+      }
+      if(silencioso) showToast('Datos actualizados · '+hhmm);
     })
     .catch(function(){
-      document.getElementById('loadingWrap').innerHTML='<p style="color:rgba(255,255,255,.6)">Error de conexión. Verifica que el script esté publicado.</p>';
+      if(!silencioso) document.getElementById('loadingWrap').innerHTML='<p style="color:rgba(255,255,255,.6)">Error de conexion. Verifica que el script este publicado.</p>';
     });
+}
+
+function iniciarAutoRefresh(){
+  if(autoRefreshTimer) clearInterval(autoRefreshTimer);
+  // Auto-refresh cada 60 segundos en silencio
+  autoRefreshTimer = setInterval(function(){
+    cargarDatos(true);
+  }, 60000);
 }
 
 function normalizar(v){
@@ -461,6 +496,7 @@ if(sessionStorage.getItem('sup_auth')==='1'){
   document.getElementById('loginWrap').style.display='none';
   document.getElementById('appWrap').classList.add('active');
   cargarDatos();
+  iniciarAutoRefresh();
 }
 </script>
 </body>
