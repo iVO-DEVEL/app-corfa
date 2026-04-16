@@ -466,6 +466,11 @@ var alertaActivada= false;
 var alertaInterval= null;
 var alertaSecs    = 300;
 var LS_ACTIVA     = 'cb_visita_activa';
+// Normalizar texto para comparaciones — ignora tildes y mayúsculas
+function norm(s){
+  return String(s||'').trim().toUpperCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g,'');
+}
 var VISITADOR_ACTIVO = 'YADIRA CÓRDOBA';
 
 // ── FECHA — corre inmediatamente ──
@@ -639,7 +644,7 @@ function iniciarVisita(){
     id:Date.now(),visitador:document.getElementById('selVisitador').value,
     medico:document.getElementById('inMedico').value.trim(),
     notasIniciales:document.getElementById('inNotas').value.trim(),
-    fecha:now.toISOString().split('T')[0],
+    fecha:(function(){var n=new Date(new Date().toLocaleString('en-US',{timeZone:'America/Guayaquil'}));return n.getFullYear()+'-'+(n.getMonth()<9?'0':'')+(n.getMonth()+1)+'-'+(n.getDate()<10?'0':'')+n.getDate();})(),
     fechaDisplay:now.toLocaleDateString('es-EC',{day:'numeric',month:'long',year:'numeric'}),
     horaInicio:now.toLocaleTimeString('es-EC',{hour:'2-digit',minute:'2-digit',second:'2-digit'}),
     tsInicio:now.getTime(),
@@ -816,7 +821,9 @@ function nuevaVisita(){
 function renderHistorial(){
   var list=document.getElementById('visitList');
   list.innerHTML='<div class="empty"><div class="hist-loading"><div class="spinner-hist"></div><p>Cargando visitas...</p></div></div>';
-  var today=new Date().toISOString().split('T')[0];
+  // Fecha de hoy en Ecuador (GMT-5) — evitar que a las 7PM diga que es "mañana" UTC
+  var nowEC = new Date(new Date().toLocaleString('en-US', {timeZone:'America/Guayaquil'}));
+  var today = nowEC.getFullYear()+'-'+(nowEC.getMonth()<9?'0':'')+(nowEC.getMonth()+1)+'-'+(nowEC.getDate()<10?'0':'')+nowEC.getDate();
   var localHoy=visits.filter(function(v){return v.fecha===today&&!v.synced;});
   if(localHoy.length>0) pintarHistorial(localHoy,true);
   if(navigator.onLine){
@@ -827,14 +834,40 @@ function renderHistorial(){
         var fecha=String(v['Fecha']||v.fecha||'');
         if(fecha.indexOf('/')>-1){var p=fecha.split('/');if(p.length===3) fecha=p[2]+'-'+(p[1].length<2?'0':'')+p[1]+'-'+(p[0].length<2?'0':'')+p[0];}
         var fl=String(v['Foto (link)']||v.fotoLink||'');
-        return{id:v['ID']||v.id||'',visitador:v['Visitador']||v.visitador||'',medico:v['Médico visitado']||v.medico||'',
-          fecha:fecha,hora:String(v['Hora']||v.hora||''),horaFin:String(v['Hora fin']||v.horaFin||''),
+        // Normalizar hora — Sheets puede devolver objeto Date o string HH:mm
+        var horaRaw = v['Hora']||v.hora||'';
+        var horaStr = '';
+        if(horaRaw instanceof Date || (typeof horaRaw==='object' && horaRaw)){
+          var hd=new Date(horaRaw);
+          horaStr=(hd.getHours()<10?'0':'')+hd.getHours()+':'+(hd.getMinutes()<10?'0':'')+hd.getMinutes();
+        } else {
+          horaStr=String(horaRaw);
+          // Si viene como '1899-12-30T09:41:00.000Z' extraer HH:mm
+          if(horaStr.indexOf('T')>-1 && horaStr.indexOf(':')>-1){
+            var parts=horaStr.split('T');
+            if(parts[1]) horaStr=parts[1].substring(0,5);
+          }
+        }
+        // Normalizar fecha — igual puede venir como Date object
+        var fechaFinal=fecha;
+        if(v['Fecha'] instanceof Date || (typeof v['Fecha']==='object' && v['Fecha'])){
+          var fd=new Date(v['Fecha']);
+          fechaFinal=fd.getFullYear()+'-'+(fd.getMonth()<9?'0':'')+(fd.getMonth()+1)+'-'+(fd.getDate()<10?'0':'')+fd.getDate();
+        }
+        return{id:String(v['ID']||v.id||''),visitador:v['Visitador']||v.visitador||'',medico:v['Médico visitado']||v.medico||'',
+          fecha:fechaFinal,hora:horaStr,horaFin:String(v['Hora fin']||v.horaFin||''),
           duracion:parseInt(v['Duración (min)']||v.duracion||0),lat:String(v['Latitud']||v.lat||''),
           lng:String(v['Longitud']||v.lng||''),notas:String(v['Notas']||v.notas||''),
+          direccion:String(v['Dirección']||v.direccion||''),
           fotoLink:fl,foto:fl.startsWith('http')?'Sí':(v.foto||'No'),synced:true};
-      }).filter(function(v){return v.fecha===today&&v.visitador===VISITADOR_ACTIVO;});
+      }).filter(function(v){
+        return v.fecha===today && norm(v.visitador)===norm(VISITADOR_ACTIVO);
+      });
       var pendientes=visits.filter(function(v){return v.fecha===today&&!v.synced;});
-      var seen={};var merged=sheetsHoy.concat(pendientes).filter(function(v){if(seen[v.id])return false;seen[v.id]=true;return true;});
+      var seen={};var merged=sheetsHoy.concat(pendientes).filter(function(v){
+        var key=String(v.id);
+        if(seen[key])return false;seen[key]=true;return true;
+      });
       pintarHistorial(merged,false);
     }).catch(function(){pintarHistorial(localHoy,false);});
   } else { pintarHistorial(localHoy,false); }
