@@ -322,18 +322,39 @@ function iniciarAutoRefresh(){
 }
 
 function normalizar(v){
-  var fecha=String(v['Fecha']||v.fecha||'');
-  var fechaISO=fecha;
-  if(fecha.indexOf('/')>-1){
-    var p=fecha.split('/');
-    if(p.length===3) fechaISO=p[2]+'-'+(p[1].length<2?'0':'')+p[1]+'-'+(p[0].length<2?'0':'')+p[0];
+  var fechaRaw=v['Fecha']||v.fecha||'';
+  var fecha='', fechaISO='';
+  // Puede venir como Date object de Sheets, string dd/MM/yyyy, o yyyy-MM-dd
+  if(fechaRaw instanceof Date || (typeof fechaRaw==='object' && fechaRaw)){
+    var d=new Date(fechaRaw);
+    fecha=(d.getDate()<10?'0':'')+d.getDate()+'/'+(d.getMonth()<9?'0':'')+(d.getMonth()+1)+'/'+d.getFullYear();
+    fechaISO=d.getFullYear()+'-'+(d.getMonth()<9?'0':'')+(d.getMonth()+1)+'-'+(d.getDate()<10?'0':'')+d.getDate();
+  } else {
+    fecha=String(fechaRaw);
+    if(fecha.indexOf('/')>-1){
+      var p=fecha.split('/');
+      if(p.length===3){
+        var dd=p[0].length<2?'0'+p[0]:p[0];
+        var mm=p[1].length<2?'0'+p[1]:p[1];
+        var yy=p[2].length===4?p[2]:'20'+p[2];
+        fechaISO=yy+'-'+mm+'-'+dd;
+      }
+    } else if(fecha.match(/^\d{4}-\d{2}-\d{2}/)){
+      fechaISO=fecha.substring(0,10);
+    } else {
+      fechaISO=fecha;
+    }
   }
   var fl=String(v['Foto (link)']||v.fotoLink||'');
   // Limpiar fórmula HYPERLINK si viene de Sheets
   var flClean=fl.replace(/=?HYPERLINK\("[^"]+","([^"]+)"\)/,'$1');
   var flUrl=fl.match(/https?:\/\/[^\s"')]+/);
+  var idStr=String(v['ID']||v.id||'');
+  var visStr=String(v['Visitador']||v.visitador||'');
+  var medStr=String(v['Médico visitado']||v.medico||'');
+  var esTest=/TEST|prueba|test/i.test(idStr+visStr+medStr);
   return{
-    id:       v['ID']||v.id||'',
+    id:       idStr,
     visitador:v['Visitador']||v.visitador||'',
     medico:   v['Médico visitado']||v.medico||'',
     fecha:    fecha,
@@ -347,18 +368,34 @@ function normalizar(v){
     fotoLink: flUrl?flUrl[0]:'',
     notas:    String(v['Notas']||v.notas||''),
     sincronia:String(v['Sincronía']||v.sincronia||''),
+    esTest:   esTest,
   };
 }
 
 // ── FILTROS ──
+function normS(s){
+  return String(s||'').trim().toUpperCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g,'');
+}
+
 function poblarFiltroVisitador(){
   var sel=document.getElementById('filtVisitador');
   var vals={};
-  allData.forEach(function(v){if(v.visitador) vals[v.visitador]=1;});
+  allData.forEach(function(v){
+    if(v.visitador){
+      // Usar el nombre original pero indexado por forma normalizada
+      var key = normS(v.visitador);
+      if(!vals[key]) vals[key] = v.visitador; // guarda el primero que encuentre
+    }
+  });
   var current=sel.value;
   while(sel.options.length>1) sel.remove(1);
-  Object.keys(vals).sort().forEach(function(n){
-    var o=document.createElement('option');o.value=n;o.textContent=n;sel.appendChild(o);
+  Object.keys(vals).sort().forEach(function(key){
+    var nombre=vals[key];
+    var o=document.createElement('option');
+    o.value=nombre; // valor real con tildes
+    o.textContent=nombre;
+    sel.appendChild(o);
   });
   if(current) sel.value=current;
 }
@@ -368,9 +405,9 @@ function aplicarFiltros(){
   var desde=document.getElementById('filtDesde').value;
   var hasta=document.getElementById('filtHasta').value;
   filtered=allData.filter(function(v){
-    if(vis&&v.visitador!==vis) return false;
-    if(desde&&v.fechaISO<desde) return false;
-    if(hasta&&v.fechaISO>hasta) return false;
+    if(vis && normS(v.visitador)!==normS(vis)) return false;
+    if(desde && v.fechaISO && v.fechaISO<desde) return false;
+    if(hasta && v.fechaISO && v.fechaISO>hasta) return false;
     return true;
   });
   actualizarKPIs();
@@ -453,7 +490,7 @@ function renderTabla(){
       '<span class="pill pill-pend">⏳ Pendiente</span>';
     var notas=v.notas?'<span title="'+v.notas.replace(/"/g,'&quot;')+'" style="max-width:120px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px">'+v.notas+'</span>':'—';
     return '<tr>'+
-      '<td style="font-weight:600;white-space:nowrap;font-size:12px">'+v.visitador+'</td>'+
+      '<td style="font-weight:600;white-space:nowrap;font-size:12px'+(v.esTest?' color:#ef4444':'')+'">'+(v.esTest?'🧪 ':'')+v.visitador+'</td>'+
       '<td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px">'+v.medico+'</td>'+
       '<td style="white-space:nowrap;font-family:var(--mono);font-size:11px">'+v.fecha+'</td>'+
       '<td style="white-space:nowrap;font-family:var(--mono);font-size:11px">'+v.hora+'</td>'+
