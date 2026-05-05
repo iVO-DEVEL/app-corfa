@@ -1,979 +1,1817 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#0f766e">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Visitas CORFA">
-<title>CORFA-BIONESTA · Visitas</title>
-<link rel="manifest" href="manifest-visitador.json">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-:root{
-  --g800:#0f766e;--g700:#0f766e;--g600:#14b8a6;--g500:#2dd4bf;
-  --g400:#5eead4;--g300:#99f6e4;--g100:#ccfbf1;--g50:#f0fdfa;
-  --ink:#334155;--ink2:#475569;--ink3:#64748b;
-  --bg:#f8fafc;--bg2:#f1f5f9;--bg3:#ffffff;
-  --bd:rgba(15,118,110,.12);--bd2:rgba(15,118,110,.22);
-  --red:#ef4444;--redbg:#fef2f2;
-  --amber:#f59e0b;--amberbg:#fffbeb;
-  --r:16px;--r2:12px;--r3:8px;
-  --font:'Outfit',sans-serif;--mono:'DM Mono',monospace;
-}
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html{height:100%;background:linear-gradient(160deg,#0f4f3a 0%,#0f766e 40%,#14b8a6 70%,#ccfbf1 100%) fixed;}
-body{font-family:var(--font);color:var(--ink);overscroll-behavior:none;-webkit-font-smoothing:antialiased}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="theme-color" content="#0f766e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Visitas CORFA">
+  <title>CORFA-BIONESTA · Visitas</title>
+  <link rel="manifest" href="manifest-visitador.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --g800: #0f766e;
+      --g700: #0f766e;
+      --g600: #14b8a6;
+      --g500: #2dd4bf;
+      --g400: #5eead4;
+      --g300: #99f6e4;
+      --g100: #ccfbf1;
+      --g50: #f0fdfa;
+      --ink: #334155;
+      --ink2: #475569;
+      --ink3: #64748b;
+      --bg: #f8fafc;
+      --bg2: #f1f5f9;
+      --bg3: #ffffff;
+      --bd: rgba(15, 118, 110, .12);
+      --bd2: rgba(15, 118, 110, .22);
+      --red: #ef4444;
+      --redbg: #fef2f2;
+      --amber: #f59e0b;
+      --amberbg: #fffbeb;
+      --r: 16px;
+      --r2: 12px;
+      --r3: 8px;
+      --font: 'Outfit', sans-serif;
+      --mono: 'DM Mono', monospace;
+    }
 
-body{
-  display:flex;flex-direction:column;max-width:430px;margin:0 auto;
-  min-height:100dvh;
-  background:linear-gradient(160deg,#0f4f3a 0%,#0f766e 40%,#14b8a6 70%,#ccfbf1 100%) center/cover;
-}
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent
+    }
 
-.screen{display:none;flex-direction:column;height:100dvh;overflow:hidden;background:transparent}
-.screen.active{display:flex}
-.body{
-  flex:1;overflow-y:auto;padding:14px;
-  display:flex;flex-direction:column;gap:11px;padding-bottom:32px;
-}
-.body::-webkit-scrollbar{display:none}
+    html {
+      height: 100%;
+      background: linear-gradient(160deg, #0f4f3a 0%, #0f766e 40%, #14b8a6 70%, #ccfbf1 100%) fixed;
+    }
 
-/* HEADER */
-.hdr{
-  background:rgba(10,50,42,.55);
-  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
-  border-bottom:1px solid rgba(255,255,255,.12);
-  padding:env(safe-area-inset-top,0px) 0 0;flex-shrink:0;
-}
-.hdr-inner{padding:14px 18px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px}
-.hdr-brand{font-size:9px;font-weight:600;color:rgba(255,255,255,.5);letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px}
-.hdr-title{color:#fff;font-size:20px;font-weight:600;letter-spacing:-.3px}
-.hdr-sub{color:rgba(255,255,255,.75);font-size:11px;margin-top:2px;font-family:var(--mono)}
-.hdr-pill{
-  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);
-  border-radius:20px;padding:5px 12px;font-size:11px;
-  color:rgba(255,255,255,.9);font-weight:500;white-space:nowrap;
-  flex-shrink:0;font-family:var(--mono)
-}
-.hdr-pill-active{background:rgba(45,212,191,.2);border-color:rgba(45,212,191,.4)}
+    body {
+      font-family: var(--font);
+      color: var(--ink);
+      overscroll-behavior: none;
+      -webkit-font-smoothing: antialiased
+    }
 
-/* BOTTOM NAV */
-.nav{
-  background:rgba(255,255,255,.15);
-  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  border-top:1px solid rgba(255,255,255,.15);
-  display:flex;padding:6px 0 env(safe-area-inset-bottom,0px);
-  flex-shrink:0;position:sticky;bottom:0;z-index:50;
-}
-.nav-btn{
-  flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
-  padding:7px 4px;cursor:pointer;border:none;background:none;
-  color:rgba(255,255,255,.55);font-family:var(--font);transition:color .15s
-}
-.nav-btn.active{color:#fff}
-.nav-btn svg{width:20px;height:20px}
-.nav-btn span{font-size:10px;font-weight:500}
+    body {
+      display: flex;
+      flex-direction: column;
+      max-width: 430px;
+      margin: 0 auto;
+      min-height: 100dvh;
+      background: linear-gradient(160deg, #0f4f3a 0%, #0f766e 40%, #14b8a6 70%, #ccfbf1 100%) center/cover;
+    }
 
-/* CARDS — glassmorphism */
-.card{
-  background:rgba(255,255,255,.85);
-  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
-  border-radius:var(--r);border:1px solid rgba(255,255,255,.6);
-  padding:14px;box-shadow:0 4px 20px rgba(10,50,42,.10);
-}
-.card-active{
-  background:rgba(255,255,255,.95);
-  border-color:var(--g400);
-  box-shadow:0 8px 32px rgba(20,184,166,.18);
-}
-.lbl{font-size:10px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px;display:flex;align-items:center;gap:6px}
-.lbl svg{width:12px;height:12px;flex-shrink:0}
-.req{color:var(--red);margin-left:1px}
+    .screen {
+      display: none;
+      flex-direction: column;
+      height: 100dvh;
+      overflow: hidden;
+      background: transparent
+    }
 
-/* INPUTS */
-input[type=text],select,textarea{
-  width:100%;border:1.5px solid var(--bd2);border-radius:var(--r2);
-  padding:11px 13px;font-size:15px;font-family:var(--font);color:var(--ink);
-  background:rgba(255,255,255,.9);outline:none;
-  transition:border-color .15s,box-shadow .15s;-webkit-appearance:none
-}
-input:focus,select:focus,textarea:focus{
-  border-color:var(--g500);box-shadow:0 0 0 3px rgba(45,212,191,.15)
-}
-input.err{border-color:var(--red)!important;box-shadow:0 0 0 3px rgba(239,68,68,.1)!important}
-textarea{resize:none;line-height:1.5;height:76px}
-select{
-  background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2364748b' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-  background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;
-  background-color:rgba(255,255,255,.9);
-}
+    .screen.active {
+      display: flex
+    }
 
-/* BOTONES */
-.btn{
-  width:100%;border:none;border-radius:var(--r2);padding:15px;
-  font-size:15px;font-weight:600;font-family:var(--font);cursor:pointer;
-  display:flex;align-items:center;justify-content:center;gap:8px;
-  transition:all .2s cubic-bezier(.4,0,.2,1);-webkit-appearance:none;
-  letter-spacing:-.1px;
-}
-.btn:active{transform:scale(.98)}
-.btn-green{background:var(--g700);color:#fff;box-shadow:0 4px 16px rgba(15,118,110,.35)}
-.btn-red{background:var(--red);color:#fff;box-shadow:0 4px 16px rgba(239,68,68,.3)}
-.btn-outline{background:rgba(255,255,255,.2);color:#fff;border:1.5px solid rgba(255,255,255,.4);backdrop-filter:blur(8px)}
-.btn-sm{
-  background:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.5);
-  border-radius:var(--r3);padding:7px 12px;font-size:12px;font-weight:500;
-  font-family:var(--font);color:var(--ink2);cursor:pointer;
-  display:inline-flex;align-items:center;gap:5px;backdrop-filter:blur(8px);
-}
+    .body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+      padding-bottom: 32px;
+    }
 
-/* BADGES */
-.badge{display:inline-flex;align-items:center;gap:5px;border-radius:20px;padding:5px 12px;font-size:12px;font-weight:500}
-.badge-green{background:rgba(204,251,241,.8);color:var(--g700)}
-.badge-amber{background:rgba(255,251,235,.9);color:var(--amber)}
-.badge-red{background:rgba(254,242,242,.9);color:var(--red)}
-.dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(1.6)}}
-.pulse{animation:pulse 1.3s ease-in-out infinite}
+    .body::-webkit-scrollbar {
+      display: none
+    }
 
-/* TIMER */
-.timer-wrap{text-align:center;padding:10px 0 4px}
-.timer-big{font-family:var(--mono);font-size:44px;font-weight:500;color:var(--g700);letter-spacing:.04em;line-height:1}
-.timer-inicio{font-size:12px;color:var(--g600);margin-top:5px;font-family:var(--mono);font-weight:500}
-.timer-sub{font-size:11px;color:var(--ink3);margin-top:2px}
+    /* HEADER */
+    .hdr {
+      background: rgba(10, 50, 42, .55);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255, 255, 255, .12);
+      padding: env(safe-area-inset-top, 0px) 0 0;
+      flex-shrink: 0;
+    }
 
-/* CAMERA */
-.cam-zone{
-  background:#0d1a16;border-radius:var(--r2);overflow:hidden;
-  position:relative;min-height:200px;display:flex;align-items:center;justify-content:center
-}
-.cam-ph{display:flex;flex-direction:column;align-items:center;gap:8px;padding:24px;text-align:center}
-.cam-ph svg{opacity:.3}
-.cam-ph p{color:rgba(255,255,255,.35);font-size:12px;line-height:1.5}
-.cam-ctrl{display:flex;align-items:center;justify-content:center;padding:12px;background:rgba(0,0,0,.5);width:100%;position:absolute;bottom:0}
-.shutter{width:58px;height:58px;border-radius:50%;background:#fff;border:4px solid rgba(255,255,255,.25);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .1s}
-.shutter:active{transform:scale(.88)}
-.shutter-in{width:44px;height:44px;border-radius:50%;background:#fff;border:2px solid #ccc}
-#photoPreviewImg{width:100%;border-radius:var(--r2);object-fit:cover;max-height:240px;display:none}
-.cam-actions{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
-.foto-ok{display:flex;align-items:center;gap:7px;background:rgba(204,251,241,.6);border:1px solid var(--g300);border-radius:var(--r3);padding:8px 12px;font-size:12px;color:var(--g700);font-weight:500;margin-top:7px}
+    .hdr-inner {
+      padding: 14px 18px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px
+    }
 
-/* BOTÓN CAMBIAR CÁMARA */
-.btn-switch-cam{position:absolute;top:8px;right:8px;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:7px 9px;cursor:pointer;display:none;align-items:center;gap:5px;color:#fff;font-size:11px;font-weight:500;font-family:var(--font);z-index:10}
-.btn-switch-cam.visible{display:flex}
+    .hdr-brand {
+      font-size: 9px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, .5);
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-bottom: 3px
+    }
 
-/* GPS */
-.gps-row{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
-.gps-coords{font-family:var(--mono);font-size:11px;color:var(--ink3);margin-top:6px;line-height:1.5}
+    .hdr-title {
+      color: #fff;
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -.3px
+    }
 
-/* ALERTAS */
-.req-alert{background:rgba(254,242,242,.9);border:1px solid rgba(239,68,68,.2);border-radius:var(--r3);padding:10px 13px;font-size:12px;color:var(--red);display:none;align-items:center;gap:7px;backdrop-filter:blur(8px)}
-.req-alert.on{display:flex}
-.offline-bar{background:rgba(255,251,235,.9);border-bottom:1px solid rgba(245,158,11,.2);padding:7px 16px;font-size:11px;color:var(--amber);display:none;align-items:center;gap:7px;flex-shrink:0}
-.offline-bar.on{display:flex}
+    .hdr-sub {
+      color: rgba(255, 255, 255, .75);
+      font-size: 11px;
+      margin-top: 2px;
+      font-family: var(--mono)
+    }
 
-/* BANNER ALERTA TIEMPO */
-.alerta-tiempo{background:rgba(10,50,42,.92);backdrop-filter:blur(16px);border:1px solid rgba(94,234,212,.3);border-radius:var(--r);padding:16px;display:none;flex-direction:column;gap:10px;margin:8px}
-.alerta-tiempo.visible{display:flex}
-.alerta-titulo{color:#fff;font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px}
-.alerta-sub{color:rgba(255,255,255,.7);font-size:12px;line-height:1.5}
-.alerta-countdown{font-family:var(--mono);font-size:28px;font-weight:500;color:#5eead4;text-align:center;padding:4px 0}
-.alerta-btns{display:flex;gap:8px}
-.alerta-btn-si{flex:1;background:var(--g500);color:#fff;border:none;border-radius:8px;padding:12px;font-size:14px;font-weight:600;font-family:var(--font);cursor:pointer}
-.alerta-btn-no{flex:1;background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:12px;font-size:14px;font-weight:600;font-family:var(--font);cursor:pointer}
+    .hdr-pill {
+      background: rgba(255, 255, 255, .12);
+      border: 1px solid rgba(255, 255, 255, .2);
+      border-radius: 20px;
+      padding: 5px 12px;
+      font-size: 11px;
+      color: rgba(255, 255, 255, .9);
+      font-weight: 500;
+      white-space: nowrap;
+      flex-shrink: 0;
+      font-family: var(--mono)
+    }
 
-/* STATS */
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.stat{background:rgba(255,255,255,.75);backdrop-filter:blur(8px);border-radius:var(--r2);border:1px solid rgba(255,255,255,.5);padding:12px;text-align:center}
-.stat-n{font-size:24px;font-weight:600;color:var(--g700);font-family:var(--mono)}
-.stat-l{font-size:10px;color:var(--ink3);margin-top:2px;text-transform:uppercase;letter-spacing:.04em}
+    .hdr-pill-active {
+      background: rgba(45, 212, 191, .2);
+      border-color: rgba(45, 212, 191, .4)
+    }
 
-/* TARJETAS HISTORIAL */
-.vcard{background:rgba(255,255,255,.85);backdrop-filter:blur(10px);border-radius:var(--r);border:1px solid rgba(255,255,255,.6);padding:13px;display:flex;gap:11px;align-items:flex-start;box-shadow:0 2px 12px rgba(10,50,42,.08)}
-.vav{width:42px;height:42px;border-radius:50%;background:var(--g100);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:var(--g700);flex-shrink:0;font-family:var(--mono)}
-.vinfo{flex:1;min-width:0}
-.vname{font-size:13px;font-weight:600;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.vmeta{font-size:11px;color:var(--ink3);margin-top:2px}
-.vnotes{font-size:11px;color:var(--ink2);margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.4}
-.vgps{font-size:10px;color:var(--g600);margin-top:3px;font-family:var(--mono)}
-.vbadges{display:flex;gap:5px;margin-top:5px;flex-wrap:wrap}
-.vpill{background:rgba(204,251,241,.7);color:var(--g700);font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px}
-.vpill-dur{background:rgba(255,255,255,.6);color:var(--ink2);font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;font-family:var(--mono)}
+    /* BOTTOM NAV */
+    .nav {
+      background: rgba(255, 255, 255, .15);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(255, 255, 255, .15);
+      display: flex;
+      padding: 6px 0 env(safe-area-inset-bottom, 0px);
+      flex-shrink: 0;
+      position: sticky;
+      bottom: 0;
+      z-index: 50;
+    }
 
-/* SUCCESS */
-.suc-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 20px;gap:16px}
-.suc-ring{width:76px;height:76px;border-radius:50%;background:rgba(255,255,255,.25);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.4);display:flex;align-items:center;justify-content:center}
-@keyframes pop{0%{transform:scale(0)}70%{transform:scale(1.15)}100%{transform:scale(1)}}
-.pop{animation:pop .4s cubic-bezier(.175,.885,.32,1.275) .05s both}
-.sum-card{background:rgba(255,255,255,.85);backdrop-filter:blur(10px);border-radius:var(--r);border:1px solid rgba(255,255,255,.6);width:100%;overflow:hidden;box-shadow:0 4px 20px rgba(10,50,42,.10)}
-.sum-row{display:flex;justify-content:space-between;align-items:flex-start;padding:10px 14px;border-bottom:1px solid rgba(15,118,110,.08);gap:12px}
-.sum-row:last-child{border-bottom:none}
-.sum-k{font-size:11px;color:var(--ink3);flex-shrink:0}
-.sum-v{font-size:12px;font-weight:500;color:var(--ink);text-align:right}
+    .nav-btn {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      padding: 7px 4px;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: rgba(255, 255, 255, .55);
+      font-family: var(--font);
+      transition: color .15s
+    }
 
-/* UPLOAD / SPINNER */
-.upload-bar{background:rgba(255,255,255,.75);border-radius:var(--r3);padding:10px 13px;font-size:12px;color:var(--ink2);display:none;align-items:center;gap:8px;backdrop-filter:blur(8px)}
-.upload-bar.on{display:flex}
-@keyframes spin{to{transform:rotate(360deg)}}
-.spinner{width:14px;height:14px;border:2px solid var(--g300);border-top-color:var(--g700);border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0}
-.hist-loading{display:flex;flex-direction:column;align-items:center;gap:8px}
-@keyframes spin-hist{to{transform:rotate(360deg)}}
-.spinner-hist{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin-hist .7s linear infinite;flex-shrink:0}
+    .nav-btn.active {
+      color: #fff
+    }
 
-/* CHAR COUNT */
-.ta-wrap{position:relative}
-.cc{position:absolute;bottom:8px;right:10px;font-size:10px;color:var(--ink3);font-family:var(--mono);pointer-events:none}
+    .nav-btn svg {
+      width: 20px;
+      height: 20px
+    }
 
-@keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-.up{animation:up .22s ease-out both}
-.empty{display:flex;flex-direction:column;align-items:center;padding:44px 20px;gap:10px;color:rgba(255,255,255,.6);text-align:center}
-.empty svg{opacity:.4}
-.empty p{font-size:13px;line-height:1.5;color:rgba(255,255,255,.7)}
-</style>
+    .nav-btn span {
+      font-size: 10px;
+      font-weight: 500
+    }
+
+    /* CARDS — glassmorphism */
+    .card {
+      background: rgba(255, 255, 255, .85);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: var(--r);
+      border: 1px solid rgba(255, 255, 255, .6);
+      padding: 14px;
+      box-shadow: 0 4px 20px rgba(10, 50, 42, .10);
+    }
+
+    .card-active {
+      background: rgba(255, 255, 255, .95);
+      border-color: var(--g400);
+      box-shadow: 0 8px 32px rgba(20, 184, 166, .18);
+    }
+
+    .lbl {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--ink3);
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px
+    }
+
+    .lbl svg {
+      width: 12px;
+      height: 12px;
+      flex-shrink: 0
+    }
+
+    .req {
+      color: var(--red);
+      margin-left: 1px
+    }
+
+    /* INPUTS */
+    input[type=text],
+    select,
+    textarea {
+      width: 100%;
+      border: 1.5px solid var(--bd2);
+      border-radius: var(--r2);
+      padding: 11px 13px;
+      font-size: 15px;
+      font-family: var(--font);
+      color: var(--ink);
+      background: rgba(255, 255, 255, .9);
+      outline: none;
+      transition: border-color .15s, box-shadow .15s;
+      -webkit-appearance: none
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--g500);
+      box-shadow: 0 0 0 3px rgba(45, 212, 191, .15)
+    }
+
+    input.err {
+      border-color: var(--red) !important;
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, .1) !important
+    }
+
+    textarea {
+      resize: none;
+      line-height: 1.5;
+      height: 76px
+    }
+
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2364748b' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 32px;
+      background-color: rgba(255, 255, 255, .9);
+    }
+
+    /* BOTONES */
+    .btn {
+      width: 100%;
+      border: none;
+      border-radius: var(--r2);
+      padding: 15px;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: var(--font);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all .2s cubic-bezier(.4, 0, .2, 1);
+      -webkit-appearance: none;
+      letter-spacing: -.1px;
+    }
+
+    .btn:active {
+      transform: scale(.98)
+    }
+
+    .btn-green {
+      background: var(--g700);
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(15, 118, 110, .35)
+    }
+
+    .btn-red {
+      background: var(--red);
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(239, 68, 68, .3)
+    }
+
+    .btn-outline {
+      background: rgba(255, 255, 255, .2);
+      color: #fff;
+      border: 1.5px solid rgba(255, 255, 255, .4);
+      backdrop-filter: blur(8px)
+    }
+
+    .btn-sm {
+      background: rgba(255, 255, 255, .75);
+      border: 1px solid rgba(255, 255, 255, .5);
+      border-radius: var(--r3);
+      padding: 7px 12px;
+      font-size: 12px;
+      font-weight: 500;
+      font-family: var(--font);
+      color: var(--ink2);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      backdrop-filter: blur(8px);
+    }
+
+    /* BADGES */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border-radius: 20px;
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: 500
+    }
+
+    .badge-green {
+      background: rgba(204, 251, 241, .8);
+      color: var(--g700)
+    }
+
+    .badge-amber {
+      background: rgba(255, 251, 235, .9);
+      color: var(--amber)
+    }
+
+    .badge-red {
+      background: rgba(254, 242, 242, .9);
+      color: var(--red)
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      flex-shrink: 0
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1)
+      }
+
+      50% {
+        opacity: .3;
+        transform: scale(1.6)
+      }
+    }
+
+    .pulse {
+      animation: pulse 1.3s ease-in-out infinite
+    }
+
+    /* TIMER */
+    .timer-wrap {
+      text-align: center;
+      padding: 10px 0 4px
+    }
+
+    .timer-big {
+      font-family: var(--mono);
+      font-size: 44px;
+      font-weight: 500;
+      color: var(--g700);
+      letter-spacing: .04em;
+      line-height: 1
+    }
+
+    .timer-inicio {
+      font-size: 12px;
+      color: var(--g600);
+      margin-top: 5px;
+      font-family: var(--mono);
+      font-weight: 500
+    }
+
+    .timer-sub {
+      font-size: 11px;
+      color: var(--ink3);
+      margin-top: 2px
+    }
+
+    /* CAMERA */
+    .cam-zone {
+      background: #0d1a16;
+      border-radius: var(--r2);
+      overflow: hidden;
+      position: relative;
+      min-height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center
+    }
+
+    .cam-ph {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 24px;
+      text-align: center
+    }
+
+    .cam-ph svg {
+      opacity: .3
+    }
+
+    .cam-ph p {
+      color: rgba(255, 255, 255, .35);
+      font-size: 12px;
+      line-height: 1.5
+    }
+
+    .cam-ctrl {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+      background: rgba(0, 0, 0, .5);
+      width: 100%;
+      position: absolute;
+      bottom: 0
+    }
+
+    .shutter {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: #fff;
+      border: 4px solid rgba(255, 255, 255, .25);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform .1s
+    }
+
+    .shutter:active {
+      transform: scale(.88)
+    }
+
+    .shutter-in {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #fff;
+      border: 2px solid #ccc
+    }
+
+    #photoPreviewImg {
+      width: 100%;
+      border-radius: var(--r2);
+      object-fit: cover;
+      max-height: 240px;
+      display: none
+    }
+
+    .cam-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+      flex-wrap: wrap
+    }
+
+    .foto-ok {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(204, 251, 241, .6);
+      border: 1px solid var(--g300);
+      border-radius: var(--r3);
+      padding: 8px 12px;
+      font-size: 12px;
+      color: var(--g700);
+      font-weight: 500;
+      margin-top: 7px
+    }
+
+    /* BOTÓN CAMBIAR CÁMARA */
+    .btn-switch-cam {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(0, 0, 0, .5);
+      border: 1px solid rgba(255, 255, 255, .2);
+      border-radius: 8px;
+      padding: 7px 9px;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      gap: 5px;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 500;
+      font-family: var(--font);
+      z-index: 10
+    }
+
+    .btn-switch-cam.visible {
+      display: flex
+    }
+
+    /* GPS */
+    .gps-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap
+    }
+
+    .gps-coords {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink3);
+      margin-top: 6px;
+      line-height: 1.5
+    }
+
+    /* ALERTAS */
+    .req-alert {
+      background: rgba(254, 242, 242, .9);
+      border: 1px solid rgba(239, 68, 68, .2);
+      border-radius: var(--r3);
+      padding: 10px 13px;
+      font-size: 12px;
+      color: var(--red);
+      display: none;
+      align-items: center;
+      gap: 7px;
+      backdrop-filter: blur(8px)
+    }
+
+    .req-alert.on {
+      display: flex
+    }
+
+    .offline-bar {
+      background: rgba(255, 251, 235, .9);
+      border-bottom: 1px solid rgba(245, 158, 11, .2);
+      padding: 7px 16px;
+      font-size: 11px;
+      color: var(--amber);
+      display: none;
+      align-items: center;
+      gap: 7px;
+      flex-shrink: 0
+    }
+
+    .offline-bar.on {
+      display: flex
+    }
+
+    /* BANNER ALERTA TIEMPO */
+    .alerta-tiempo {
+      background: rgba(10, 50, 42, .92);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(94, 234, 212, .3);
+      border-radius: var(--r);
+      padding: 16px;
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+      margin: 8px
+    }
+
+    .alerta-tiempo.visible {
+      display: flex
+    }
+
+    .alerta-titulo {
+      color: #fff;
+      font-size: 15px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px
+    }
+
+    .alerta-sub {
+      color: rgba(255, 255, 255, .7);
+      font-size: 12px;
+      line-height: 1.5
+    }
+
+    .alerta-countdown {
+      font-family: var(--mono);
+      font-size: 28px;
+      font-weight: 500;
+      color: #5eead4;
+      text-align: center;
+      padding: 4px 0
+    }
+
+    .alerta-btns {
+      display: flex;
+      gap: 8px
+    }
+
+    .alerta-btn-si {
+      flex: 1;
+      background: var(--g500);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: var(--font);
+      cursor: pointer
+    }
+
+    .alerta-btn-no {
+      flex: 1;
+      background: rgba(255, 255, 255, .1);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, .2);
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: var(--font);
+      cursor: pointer
+    }
+
+    /* STATS */
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px
+    }
+
+    .stat {
+      background: rgba(255, 255, 255, .75);
+      backdrop-filter: blur(8px);
+      border-radius: var(--r2);
+      border: 1px solid rgba(255, 255, 255, .5);
+      padding: 12px;
+      text-align: center
+    }
+
+    .stat-n {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--g700);
+      font-family: var(--mono)
+    }
+
+    .stat-l {
+      font-size: 10px;
+      color: var(--ink3);
+      margin-top: 2px;
+      text-transform: uppercase;
+      letter-spacing: .04em
+    }
+
+    /* TARJETAS HISTORIAL */
+    .vcard {
+      background: rgba(255, 255, 255, .85);
+      backdrop-filter: blur(10px);
+      border-radius: var(--r);
+      border: 1px solid rgba(255, 255, 255, .6);
+      padding: 13px;
+      display: flex;
+      gap: 11px;
+      align-items: flex-start;
+      box-shadow: 0 2px 12px rgba(10, 50, 42, .08)
+    }
+
+    .vav {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--g100);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--g700);
+      flex-shrink: 0;
+      font-family: var(--mono)
+    }
+
+    .vinfo {
+      flex: 1;
+      min-width: 0
+    }
+
+    .vname {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap
+    }
+
+    .vmeta {
+      font-size: 11px;
+      color: var(--ink3);
+      margin-top: 2px
+    }
+
+    .vnotes {
+      font-size: 11px;
+      color: var(--ink2);
+      margin-top: 3px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      line-height: 1.4
+    }
+
+    .vgps {
+      font-size: 10px;
+      color: var(--g600);
+      margin-top: 3px;
+      font-family: var(--mono)
+    }
+
+    .vbadges {
+      display: flex;
+      gap: 5px;
+      margin-top: 5px;
+      flex-wrap: wrap
+    }
+
+    .vpill {
+      background: rgba(204, 251, 241, .7);
+      color: var(--g700);
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 10px
+    }
+
+    .vpill-dur {
+      background: rgba(255, 255, 255, .6);
+      color: var(--ink2);
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-family: var(--mono)
+    }
+
+    /* SUCCESS */
+    .suc-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 28px 20px;
+      gap: 16px
+    }
+
+    .suc-ring {
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .25);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, .4);
+      display: flex;
+      align-items: center;
+      justify-content: center
+    }
+
+    @keyframes pop {
+      0% {
+        transform: scale(0)
+      }
+
+      70% {
+        transform: scale(1.15)
+      }
+
+      100% {
+        transform: scale(1)
+      }
+    }
+
+    .pop {
+      animation: pop .4s cubic-bezier(.175, .885, .32, 1.275) .05s both
+    }
+
+    .sum-card {
+      background: rgba(255, 255, 255, .85);
+      backdrop-filter: blur(10px);
+      border-radius: var(--r);
+      border: 1px solid rgba(255, 255, 255, .6);
+      width: 100%;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(10, 50, 42, .10)
+    }
+
+    .sum-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(15, 118, 110, .08);
+      gap: 12px
+    }
+
+    .sum-row:last-child {
+      border-bottom: none
+    }
+
+    .sum-k {
+      font-size: 11px;
+      color: var(--ink3);
+      flex-shrink: 0
+    }
+
+    .sum-v {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--ink);
+      text-align: right
+    }
+
+    /* UPLOAD / SPINNER */
+    .upload-bar {
+      background: rgba(255, 255, 255, .75);
+      border-radius: var(--r3);
+      padding: 10px 13px;
+      font-size: 12px;
+      color: var(--ink2);
+      display: none;
+      align-items: center;
+      gap: 8px;
+      backdrop-filter: blur(8px)
+    }
+
+    .upload-bar.on {
+      display: flex
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg)
+      }
+    }
+
+    .spinner {
+      width: 14px;
+      height: 14px;
+      border: 2px solid var(--g300);
+      border-top-color: var(--g700);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+      flex-shrink: 0
+    }
+
+    .hist-loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px
+    }
+
+    @keyframes spin-hist {
+      to {
+        transform: rotate(360deg)
+      }
+    }
+
+    .spinner-hist {
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255, 255, 255, .3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin-hist .7s linear infinite;
+      flex-shrink: 0
+    }
+
+    /* CHAR COUNT */
+    .ta-wrap {
+      position: relative
+    }
+
+    .cc {
+      position: absolute;
+      bottom: 8px;
+      right: 10px;
+      font-size: 10px;
+      color: var(--ink3);
+      font-family: var(--mono);
+      pointer-events: none
+    }
+
+    @keyframes up {
+      from {
+        opacity: 0;
+        transform: translateY(10px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    .up {
+      animation: up .22s ease-out both
+    }
+
+    .empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 44px 20px;
+      gap: 10px;
+      color: rgba(255, 255, 255, .6);
+      text-align: center
+    }
+
+    .empty svg {
+      opacity: .4
+    }
+
+    .empty p {
+      font-size: 13px;
+      line-height: 1.5;
+      color: rgba(255, 255, 255, .7)
+    }
+  </style>
 </head>
+
 <body>
 
-<div class="offline-bar" id="offlineBar">
-  <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" stroke-width="1.2"/><path d="M6.5 4v3M6.5 9v.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
-  Sin conexión — guardando localmente
-</div>
-
-<!-- ══ SCREEN: FORMULARIO ══ -->
-<div class="screen active" id="s-form">
-  <div class="hdr">
-    <div class="hdr-inner">
-      <div>
-        <div class="hdr-brand">CORFA-BIONESTA</div>
-        <div class="hdr-title">Nueva visita</div>
-        <div class="hdr-sub" id="hdrDate">—</div>
-      </div>
-      <img src="https://raw.githubusercontent.com/iVO-DEVEL/app-corfa/main/icon-192.png" alt="Logo" style="width:40px;height:40px;border-radius:10px;object-fit:contain;flex-shrink:0;opacity:.9">
-    </div>
+  <div class="offline-bar" id="offlineBar">
+    <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+      <circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" stroke-width="1.2" />
+      <path d="M6.5 4v3M6.5 9v.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
+    </svg>
+    Sin conexión — guardando localmente
   </div>
-  <div class="body">
-    <div class="req-alert" id="reqAlert">
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.3"/><path d="M7 4v3.5M7 9.5v.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-      <span id="reqMsg">Completa todos los campos obligatorios</span>
-    </div>
-    <div class="card up" style="animation-delay:.04s">
-      <div class="lbl"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="6" cy="4" r="2.5"/><path d="M1.5 11c0-2.5 2-4 4.5-4s4.5 1.5 4.5 4"/></svg>Visitador médico</div>
-      <select id="selVisitador"><option value="YADIRA CÓRDOBA">YADIRA CÓRDOBA</option></select>
-    </div>
-    <div class="card up" style="animation-delay:.08s">
-      <div class="lbl"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="1" y="2" width="10" height="8" rx="1.5"/><path d="M3.5 5.5h5M3.5 7.5h3"/></svg>Médico visitado <span class="req">*</span></div>
-      <input type="text" id="inMedico" placeholder="Ej: Dr. Carlos Mejía — Clínica San José" autocomplete="off" autocapitalize="words">
-    </div>
-    <div class="card up" style="animation-delay:.12s">
-      <div class="lbl"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="1" y="3" width="10" height="7.5" rx="1.5"/><circle cx="6" cy="6.5" r="1.8"/><path d="M3.5 3l.7-1.5h3.6L8.5 3"/></svg>Foto del médico / consultorio <span class="req">*</span></div>
-      <div class="cam-zone" id="camZone">
-        <button class="btn-switch-cam" id="btnSwitchCam" onclick="switchCamera()">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M2 5a5 5 0 0 1 9-1.5M12 9a5 5 0 0 1-9 1.5"/><path d="M12 5l-1.5 1.5L9 5M2 9l1.5-1.5L5 9"/></svg>
-          Girar
-        </button>
-        <div class="cam-ph" id="camPh">
-          <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="white" stroke-width="1.5"><rect x="2" y="8" width="32" height="22" rx="4"/><circle cx="18" cy="19" r="5.5"/><path d="M11 8l2-4h10l2 4"/></svg>
-          <p>Toca "Abrir cámara" para capturar<br>foto del médico o consultorio</p>
+
+  <!-- ══ SCREEN: FORMULARIO ══ -->
+  <div class="screen active" id="s-form">
+    <div class="hdr">
+      <div class="hdr-inner">
+        <div>
+          <div class="hdr-title">Nueva visita</div>
+          <div class="hdr-sub" id="hdrDate">—</div>
         </div>
-        <video id="videoEl" autoplay playsinline muted style="display:none;width:100%;max-height:260px;object-fit:cover"></video>
-        <canvas id="photoCanvas" style="display:none"></canvas>
-        <img id="photoPreviewImg" alt="Foto capturada">
-        <div class="cam-ctrl" id="camCtrl" style="display:none">
-          <button class="shutter" onclick="takePhoto()"><div class="shutter-in"></div></button>
+        <img src="https://raw.githubusercontent.com/iVO-DEVEL/app-corfa/main/icon-192.png" alt="Logo"
+          style="width:40px;height:40px;border-radius:10px;object-fit:contain;flex-shrink:0;opacity:.9">
+      </div>
+    </div>
+    <div class="body">
+      <div class="req-alert" id="reqAlert">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.3" />
+          <path d="M7 4v3.5M7 9.5v.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" />
+        </svg>
+        <span id="reqMsg">Completa todos los campos obligatorios</span>
+      </div>
+      <div class="card up" style="animation-delay:.04s">
+        <div class="lbl"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3">
+            <circle cx="6" cy="4" r="2.5" />
+            <path d="M1.5 11c0-2.5 2-4 4.5-4s4.5 1.5 4.5 4" />
+          </svg>Visitador médico</div>
+        <select id="selVisitador">
+          <option value="YADIRA CÓRDOVA">YADIRA CÓRDOVA</option>
+        </select>
+      </div>
+      <div class="card up" style="animation-delay:.08s">
+        <div class="lbl"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3">
+            <rect x="1" y="2" width="10" height="8" rx="1.5" />
+            <path d="M3.5 5.5h5M3.5 7.5h3" />
+          </svg>Médico visitado <span class="req">*</span></div>
+        <input type="text" id="inMedico" placeholder="Ej: Dr. Carlos Mejía — Clínica San José" autocomplete="off"
+          autocapitalize="words">
+      </div>
+      <div class="card up" style="animation-delay:.12s">
+        <div class="lbl"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3">
+            <rect x="1" y="3" width="10" height="7.5" rx="1.5" />
+            <circle cx="6" cy="6.5" r="1.8" />
+            <path d="M3.5 3l.7-1.5h3.6L8.5 3" />
+          </svg>Foto del médico / consultorio <span class="req">*</span></div>
+        <div class="cam-zone" id="camZone">
+          <button class="btn-switch-cam" id="btnSwitchCam" onclick="switchCamera()">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.3">
+              <path d="M2 5a5 5 0 0 1 9-1.5M12 9a5 5 0 0 1-9 1.5" />
+              <path d="M12 5l-1.5 1.5L9 5M2 9l1.5-1.5L5 9" />
+            </svg>
+            Girar
+          </button>
+          <div class="cam-ph" id="camPh">
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="white" stroke-width="1.5">
+              <rect x="2" y="8" width="32" height="22" rx="4" />
+              <circle cx="18" cy="19" r="5.5" />
+              <path d="M11 8l2-4h10l2 4" />
+            </svg>
+            <p>Toca "Abrir cámara" para capturar<br>foto del médico o consultorio</p>
+          </div>
+          <video id="videoEl" autoplay playsinline muted
+            style="display:none;width:100%;max-height:260px;object-fit:cover"></video>
+          <canvas id="photoCanvas" style="display:none"></canvas>
+          <img id="photoPreviewImg" alt="Foto capturada">
+          <div class="cam-ctrl" id="camCtrl" style="display:none">
+            <button class="shutter" onclick="takePhoto()">
+              <div class="shutter-in"></div>
+            </button>
+          </div>
+        </div>
+        <div id="fotoOk" class="foto-ok" style="display:none">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--g700)" stroke-width="2">
+            <path d="M2 7l4 4 6-6" />
+          </svg>
+          Foto capturada correctamente
+        </div>
+        <div class="cam-actions">
+          <button class="btn-sm" id="btnCam" onclick="openCamera()">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.3">
+              <rect x="1" y="3" width="11" height="8" rx="1.5" />
+              <circle cx="6.5" cy="7" r="2" />
+              <path d="M4 3l.8-1.5h2.4L8 3" />
+            </svg>
+            Abrir cámara
+          </button>
+          <button class="btn-sm" id="btnRetake" onclick="retakePhoto()" style="display:none">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.3">
+              <path d="M1.5 6.5A5 5 0 1 0 3.5 3M1.5 1v3h3" />
+            </svg>
+            Repetir
+          </button>
+          <button class="btn-sm" id="btnCancelCam" onclick="closeCamera()" style="display:none">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.3">
+              <path d="M2 2l9 9M11 2L2 11" />
+            </svg>
+            Cancelar
+          </button>
         </div>
       </div>
-      <div id="fotoOk" class="foto-ok" style="display:none">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--g700)" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg>
-        Foto capturada correctamente
+      <div class="card up" style="animation-delay:.16s">
+        <div class="lbl"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3">
+            <path d="M6 1C3.8 1 2 2.8 2 5c0 3 4 7 4 7s4-4 4-7c0-2.2-1.8-4-4-4z" />
+            <circle cx="6" cy="5" r="1.3" />
+          </svg>Ubicación GPS <span class="req">*</span></div>
+        <div class="gps-row">
+          <div id="gpsBadge" class="badge badge-amber">
+            <div class="dot pulse" style="background:var(--amber)"></div>Obteniendo ubicación...
+          </div>
+          <button class="btn-sm" onclick="getGPS()"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"
+              stroke="currentColor" stroke-width="1.3">
+              <path d="M1.5 6A4.5 4.5 0 1 0 3 3M1.5 1v3h3" />
+            </svg>Actualizar</button>
+        </div>
+        <div class="gps-coords" id="gpsCoords">Buscando señal GPS...</div>
       </div>
-      <div class="cam-actions">
-        <button class="btn-sm" id="btnCam" onclick="openCamera()">
-          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="1" y="3" width="11" height="8" rx="1.5"/><circle cx="6.5" cy="7" r="2"/><path d="M4 3l.8-1.5h2.4L8 3"/></svg>
-          Abrir cámara
-        </button>
-        <button class="btn-sm" id="btnRetake" onclick="retakePhoto()" style="display:none">
-          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M1.5 6.5A5 5 0 1 0 3.5 3M1.5 1v3h3"/></svg>
-          Repetir
-        </button>
-        <button class="btn-sm" id="btnCancelCam" onclick="closeCamera()" style="display:none">
-          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M2 2l9 9M11 2L2 11"/></svg>
-          Cancelar
-        </button>
+      <div class="card up" style="animation-delay:.20s">
+        <div class="lbl"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3">
+            <path d="M2 3h8M2 6h6M2 9h7" />
+          </svg>Notas <span style="font-size:9px;color:var(--ink3);font-weight:400;margin-left:2px">(opcional)</span>
+        </div>
+        <div class="ta-wrap">
+          <textarea id="inNotas" placeholder="Productos presentados, observaciones, acuerdos..." maxlength="500"
+            oninput="document.getElementById('cc').textContent=this.value.length+'/500'"></textarea>
+          <div class="cc" id="cc">0/500</div>
+        </div>
       </div>
-    </div>
-    <div class="card up" style="animation-delay:.16s">
-      <div class="lbl"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M6 1C3.8 1 2 2.8 2 5c0 3 4 7 4 7s4-4 4-7c0-2.2-1.8-4-4-4z"/><circle cx="6" cy="5" r="1.3"/></svg>Ubicación GPS <span class="req">*</span></div>
-      <div class="gps-row">
-        <div id="gpsBadge" class="badge badge-amber"><div class="dot pulse" style="background:var(--amber)"></div>Obteniendo ubicación...</div>
-        <button class="btn-sm" onclick="getGPS()"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M1.5 6A4.5 4.5 0 1 0 3 3M1.5 1v3h3"/></svg>Actualizar</button>
-      </div>
-      <div class="gps-coords" id="gpsCoords">Buscando señal GPS...</div>
-    </div>
-    <div class="card up" style="animation-delay:.20s">
-      <div class="lbl"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M2 3h8M2 6h6M2 9h7"/></svg>Notas <span style="font-size:9px;color:var(--ink3);font-weight:400;margin-left:2px">(opcional)</span></div>
-      <div class="ta-wrap">
-        <textarea id="inNotas" placeholder="Productos presentados, observaciones, acuerdos..." maxlength="500" oninput="document.getElementById('cc').textContent=this.value.length+'/500'"></textarea>
-        <div class="cc" id="cc">0/500</div>
-      </div>
-    </div>
-    <button class="btn btn-green up" style="animation-delay:.24s" onclick="iniciarVisita()">
-      <svg width="17" height="17" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="4,2 15,8.5 4,15"/></svg>
-      Iniciar visita
-    </button>
-  </div>
-  <nav class="nav">
-    <button class="nav-btn active" onclick="goTo('form')">
-      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="14" height="14" rx="3"/><path d="M7 10h6M10 7v6"/></svg>
-      <span>Nueva visita</span>
-    </button>
-    <button class="nav-btn" onclick="goTo('historial')">
-      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 5.5h14M3 10h14M3 14.5h9"/></svg>
-      <span>Mis visitas</span>
-    </button>
-  </nav>
-</div>
-
-<!-- ══ SCREEN: EN CURSO ══ -->
-<div class="screen" id="s-curso">
-  <div class="hdr" id="hdrCurso">
-    <div class="hdr-inner">
-      <div>
-        <div class="hdr-brand">CORFA-BIONESTA</div>
-        <div class="hdr-title" id="cursoMedico">Visita en curso</div>
-        <div class="hdr-sub" id="cursoVisitador">—</div>
-      </div>
-      <div class="hdr-pill hdr-pill-active" id="timerPill">00:00</div>
-    </div>
-  </div>
-  <div class="alerta-tiempo" id="alertaTiempo">
-    <div class="alerta-titulo"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#5eead4" stroke-width="2"><circle cx="9" cy="9" r="7"/><path d="M9 5v4.5M9 13v.5"/></svg>¿Sigues en la visita?</div>
-    <div class="alerta-sub">Llevas más de 2 horas. Si no respondes, se cerrará automáticamente en:</div>
-    <div class="alerta-countdown" id="alertaCountdown">5:00</div>
-    <div class="alerta-btns">
-      <button class="alerta-btn-si" onclick="continuarVisita()">Sí, sigo en visita</button>
-      <button class="alerta-btn-no" onclick="cerrarDesdeAlerta()">Finalizar ahora</button>
-    </div>
-  </div>
-  <div class="body">
-    <div class="card card-active">
-      <div class="lbl"><div class="dot pulse" style="background:var(--g500)"></div>Tiempo en consulta</div>
-      <div class="timer-wrap">
-        <div class="timer-big" id="timerBig">00:00</div>
-        <div class="timer-inicio" id="timerInicio">Inicio: —</div>
-        <div class="timer-sub">Cronómetro guardado — resistente a apagado</div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="lbl"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="1" y="3" width="10" height="7.5" rx="1.5"/><circle cx="6" cy="6.5" r="1.8"/></svg>Foto de entrada registrada</div>
-      <img id="fotoEntradaThumb" style="width:100%;border-radius:8px;max-height:130px;object-fit:cover;display:none" alt="">
-      <div class="foto-ok" id="fotoEntradaOk" style="display:none"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--g700)" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg>Foto de entrada guardada</div>
-    </div>
-    <div class="card">
-      <div class="lbl">GPS de entrada registrado</div>
-      <div id="gpsEntradaLabel" class="badge badge-green" style="font-size:11px;font-family:var(--mono)">—</div>
-    </div>
-    <div class="card">
-      <div class="lbl"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M2 3h8M2 6h6M2 9h7"/></svg>Notas durante la visita <span style="font-size:9px;color:var(--ink3);font-weight:400;margin-left:2px">(opcional)</span></div>
-      <div class="ta-wrap">
-        <textarea id="inNotasCurso" placeholder="Observaciones adicionales..." maxlength="500" oninput="document.getElementById('cc2').textContent=this.value.length+'/500'"></textarea>
-        <div class="cc" id="cc2">0/500</div>
-      </div>
-    </div>
-    <button class="btn btn-red" onclick="finalizarVisita()">
-      <svg width="17" height="17" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="11" height="11" rx="2"/></svg>
-      Finalizar visita
-    </button>
-  </div>
-</div>
-
-<!-- ══ SCREEN: ÉXITO ══ -->
-<div class="screen" id="s-exito">
-  <div class="hdr">
-    <div class="hdr-inner">
-      <div>
-        <div class="hdr-brand">CORFA-BIONESTA</div>
-        <div class="hdr-title">Visita registrada</div>
-        <div class="hdr-sub" id="exitoDate">—</div>
-      </div>
-      <img src="https://raw.githubusercontent.com/iVO-DEVEL/app-corfa/main/icon-192.png" alt="Logo" style="width:40px;height:40px;border-radius:10px;object-fit:contain;flex-shrink:0;opacity:.9">
-    </div>
-  </div>
-  <div class="suc-body">
-    <div class="suc-ring pop">
-      <svg width="38" height="38" viewBox="0 0 38 38" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M6 19l8 8 18-18"/></svg>
-    </div>
-    <div style="text-align:center">
-      <div style="font-size:21px;font-weight:600;letter-spacing:-.3px;color:#fff">¡Visita completada!</div>
-      <div style="font-size:13px;color:rgba(255,255,255,.7);margin-top:5px;line-height:1.6">Datos y foto enviados a Google Sheets.</div>
-    </div>
-    <div class="upload-bar" id="uploadBar"><div class="spinner"></div><span>Subiendo foto a Drive...</span></div>
-    <div class="sum-card" id="sumCard"></div>
-    <div style="width:100%;display:flex;flex-direction:column;gap:9px">
-      <button class="btn btn-green" onclick="nuevaVisita()">
-        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="2"><path d="M7.5 2v11M2 7.5h11"/></svg>
-        Nueva visita
+      <button class="btn btn-green up" style="animation-delay:.24s" onclick="iniciarVisita()">
+        <svg width="17" height="17" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round">
+          <polygon points="4,2 15,8.5 4,15" />
+        </svg>
+        Iniciar visita
       </button>
-      <button class="btn btn-outline" onclick="goTo('historial')">Ver mis visitas del día</button>
     </div>
+    <nav class="nav">
+      <button class="nav-btn active" onclick="goTo('form')">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="3" y="3" width="14" height="14" rx="3" />
+          <path d="M7 10h6M10 7v6" />
+        </svg>
+        <span>Nueva visita</span>
+      </button>
+      <button class="nav-btn" onclick="goTo('historial')">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M3 5.5h14M3 10h14M3 14.5h9" />
+        </svg>
+        <span>Mis visitas</span>
+      </button>
+    </nav>
   </div>
-</div>
 
-<!-- ══ SCREEN: HISTORIAL ══ -->
-<div class="screen" id="s-historial">
-  <div class="hdr">
-    <div class="hdr-inner">
-      <div>
-        <div class="hdr-brand">CORFA-BIONESTA</div>
-        <div class="hdr-title">Mis visitas</div>
-        <div class="hdr-sub" id="histDate">—</div>
+  <!-- ══ SCREEN: EN CURSO ══ -->
+  <div class="screen" id="s-curso">
+    <div class="hdr" id="hdrCurso">
+      <div class="hdr-inner">
+        <div>
+          <div class="hdr-brand">CORFA-BIONESTA</div>
+          <div class="hdr-title" id="cursoMedico">Visita en curso</div>
+          <div class="hdr-sub" id="cursoVisitador">—</div>
+        </div>
+        <div class="hdr-pill hdr-pill-active" id="timerPill">00:00</div>
       </div>
-      <div class="hdr-pill" id="histCount">0 hoy</div>
+    </div>
+    <div class="alerta-tiempo" id="alertaTiempo">
+      <div class="alerta-titulo"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#5eead4"
+          stroke-width="2">
+          <circle cx="9" cy="9" r="7" />
+          <path d="M9 5v4.5M9 13v.5" />
+        </svg>¿Sigues en la visita?</div>
+      <div class="alerta-sub">Llevas más de 2 horas. Si no respondes, se cerrará automáticamente en:</div>
+      <div class="alerta-countdown" id="alertaCountdown">5:00</div>
+      <div class="alerta-btns">
+        <button class="alerta-btn-si" onclick="continuarVisita()">Sí, sigo en visita</button>
+        <button class="alerta-btn-no" onclick="cerrarDesdeAlerta()">Finalizar ahora</button>
+      </div>
+    </div>
+    <div class="body">
+      <div class="card card-active">
+        <div class="lbl">
+          <div class="dot pulse" style="background:var(--g500)"></div>Tiempo en consulta
+        </div>
+        <div class="timer-wrap">
+          <div class="timer-big" id="timerBig">00:00</div>
+          <div class="timer-inicio" id="timerInicio">Inicio: —</div>
+          <div class="timer-sub">Cronómetro guardado — resistente a apagado</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="lbl"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3">
+            <rect x="1" y="3" width="10" height="7.5" rx="1.5" />
+            <circle cx="6" cy="6.5" r="1.8" />
+          </svg>Foto de entrada registrada</div>
+        <img id="fotoEntradaThumb" style="width:100%;border-radius:8px;max-height:130px;object-fit:cover;display:none"
+          alt="">
+        <div class="foto-ok" id="fotoEntradaOk" style="display:none"><svg width="14" height="14" viewBox="0 0 14 14"
+            fill="none" stroke="var(--g700)" stroke-width="2">
+            <path d="M2 7l4 4 6-6" />
+          </svg>Foto de entrada guardada</div>
+      </div>
+      <div class="card">
+        <div class="lbl">GPS de entrada registrado</div>
+        <div id="gpsEntradaLabel" class="badge badge-green" style="font-size:11px;font-family:var(--mono)">—</div>
+      </div>
+      <div class="card">
+        <div class="lbl"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3">
+            <path d="M2 3h8M2 6h6M2 9h7" />
+          </svg>Notas durante la visita <span
+            style="font-size:9px;color:var(--ink3);font-weight:400;margin-left:2px">(opcional)</span></div>
+        <div class="ta-wrap">
+          <textarea id="inNotasCurso" placeholder="Observaciones adicionales..." maxlength="500"
+            oninput="document.getElementById('cc2').textContent=this.value.length+'/500'"></textarea>
+          <div class="cc" id="cc2">0/500</div>
+        </div>
+      </div>
+      <button class="btn btn-red" onclick="finalizarVisita()">
+        <svg width="17" height="17" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round">
+          <rect x="3" y="3" width="11" height="11" rx="2" />
+        </svg>
+        Finalizar visita
+      </button>
     </div>
   </div>
-  <div class="body">
-    <div class="stats">
-      <div class="stat"><div class="stat-n" id="stTotal">0</div><div class="stat-l">Visitas hoy</div></div>
-      <div class="stat"><div class="stat-n" id="stFotos">0</div><div class="stat-l">Con foto</div></div>
+
+  <!-- ══ SCREEN: ÉXITO ══ -->
+  <div class="screen" id="s-exito">
+    <div class="hdr">
+      <div class="hdr-inner">
+        <div>
+          <div class="hdr-brand">CORFA-BIONESTA</div>
+          <div class="hdr-title">Visita registrada</div>
+          <div class="hdr-sub" id="exitoDate">—</div>
+        </div>
+        <img src="https://raw.githubusercontent.com/iVO-DEVEL/app-corfa/main/icon-192.png" alt="Logo"
+          style="width:40px;height:40px;border-radius:10px;object-fit:contain;flex-shrink:0;opacity:.9">
+      </div>
     </div>
-    <div id="visitList"></div>
+    <div class="suc-body">
+      <div class="suc-ring pop">
+        <svg width="38" height="38" viewBox="0 0 38 38" fill="none" stroke="#fff" stroke-width="2.5"
+          stroke-linecap="round">
+          <path d="M6 19l8 8 18-18" />
+        </svg>
+      </div>
+      <div style="text-align:center">
+        <div style="font-size:21px;font-weight:600;letter-spacing:-.3px;color:#fff">¡Visita completada!</div>
+        <div style="font-size:13px;color:rgba(255,255,255,.7);margin-top:5px;line-height:1.6">Datos y foto enviados a
+          Google Sheets.</div>
+      </div>
+      <div class="upload-bar" id="uploadBar">
+        <div class="spinner"></div><span>Subiendo foto a Drive...</span>
+      </div>
+      <div class="sum-card" id="sumCard"></div>
+      <div style="width:100%;display:flex;flex-direction:column;gap:9px">
+        <button class="btn btn-green" onclick="nuevaVisita()">
+          <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M7.5 2v11M2 7.5h11" />
+          </svg>
+          Nueva visita
+        </button>
+        <button class="btn btn-outline" onclick="goTo('historial')">Ver mis visitas del día</button>
+      </div>
+    </div>
   </div>
-  <nav class="nav">
-    <button class="nav-btn" onclick="goTo('form')">
-      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="14" height="14" rx="3"/><path d="M7 10h6M10 7v6"/></svg>
-      <span>Nueva visita</span>
-    </button>
-    <button class="nav-btn active" onclick="goTo('historial')">
-      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 5.5h14M3 10h14M3 14.5h9"/></svg>
-      <span>Mis visitas</span>
-    </button>
-  </nav>
-</div>
 
-<script>
-// ── CONFIG ──
-var SCRIPT_URL='https://script.google.com/macros/s/AKfycbypiEibuyrV0xpEp118ScqdPlONRO3uI7wPwu-ij18qWDJUL2HQjbgFtCOncQUhWOKaeA/exec';
+  <!-- ══ SCREEN: HISTORIAL ══ -->
+  <div class="screen" id="s-historial">
+    <div class="hdr">
+      <div class="hdr-inner">
+        <div>
+          <div class="hdr-brand">CORFA-BIONESTA</div>
+          <div class="hdr-title">Mis visitas</div>
+          <div class="hdr-sub" id="histDate">—</div>
+        </div>
+        <div class="hdr-pill" id="histCount">0 hoy</div>
+      </div>
+    </div>
+    <div class="body">
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-n" id="stTotal">0</div>
+          <div class="stat-l">Visitas hoy</div>
+        </div>
+        <div class="stat">
+          <div class="stat-n" id="stFotos">0</div>
+          <div class="stat-l">Con foto</div>
+        </div>
+      </div>
+      <div id="visitList"></div>
+    </div>
+    <nav class="nav">
+      <button class="nav-btn" onclick="goTo('form')">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="3" y="3" width="14" height="14" rx="3" />
+          <path d="M7 10h6M10 7v6" />
+        </svg>
+        <span>Nueva visita</span>
+      </button>
+      <button class="nav-btn active" onclick="goTo('historial')">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M3 5.5h14M3 10h14M3 14.5h9" />
+        </svg>
+        <span>Mis visitas</span>
+      </button>
+    </nav>
+  </div>
 
-// ── ESTADO GLOBAL ──
-var visits        = JSON.parse(localStorage.getItem('cb_visitas')||'[]');
-var gpsData       = null;
-var photoB64      = null;
-var stream        = null;
-var timerInt      = null;
-var camaraActual  = 'environment';
-var alertaActivada= false;
-var alertaInterval= null;
-var alertaSecs    = 300;
-var LS_ACTIVA     = 'cb_visita_activa';
-// Normalizar texto para comparaciones — ignora tildes y mayúsculas
-function norm(s){
-  return String(s||'').trim().toUpperCase()
-    .normalize('NFD').replace(/[̀-ͯ]/g,'');
-}
-var VISITADOR_ACTIVO = 'YADIRA CÓRDOBA';
+  <script>
+    // ── CONFIG ──
+    var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbypiEibuyrV0xpEp118ScqdPlONRO3uI7wPwu-ij18qWDJUL2HQjbgFtCOncQUhWOKaeA/exec';
 
-// ── FECHA — corre inmediatamente ──
-function setDates(){
-  var d=new Date();
-  var dias=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
-  var meses=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
-  var s=dias[d.getDay()]+' '+d.getDate()+' de '+meses[d.getMonth()];
-  ['hdrDate','histDate','exitoDate'].forEach(function(id){
-    var el=document.getElementById(id); if(el) el.textContent=s;
-  });
-}
-setDates(); // corre inmediatamente, sin esperar DOMContentLoaded
-
-// ── INIT ──
-document.addEventListener('DOMContentLoaded',function(){
-  setDates();
-  getGPS();
-  recuperarVisitaActiva();
-  window.addEventListener('online',function(){document.getElementById('offlineBar').classList.remove('on');syncPending();});
-  window.addEventListener('offline',function(){document.getElementById('offlineBar').classList.add('on');});
-  if(!navigator.onLine) document.getElementById('offlineBar').classList.add('on');
-});
-
-// ── GPS + GEOCODING INVERSO ──
-function getGPS(){
-  var badge=document.getElementById('gpsBadge');
-  var coords=document.getElementById('gpsCoords');
-  gpsData=null;
-  if(!navigator.geolocation){
-    badge.className='badge badge-red';
-    badge.innerHTML='<div class="dot" style="background:var(--red)"></div>GPS no disponible';
-    return;
-  }
-  badge.className='badge badge-amber';
-  badge.innerHTML='<div class="dot pulse" style="background:var(--amber)"></div>Obteniendo ubicación...';
-  coords.textContent='Buscando señal GPS...';
-  navigator.geolocation.getCurrentPosition(
-    function(pos){
-      var lat=pos.coords.latitude.toFixed(6);
-      var lng=pos.coords.longitude.toFixed(6);
-      var acc=Math.round(pos.coords.accuracy);
-      gpsData={lat:lat,lng:lng,acc:acc,direccion:''};
-      badge.className='badge badge-green';
-      badge.innerHTML='<div class="dot" style="background:var(--g600)"></div>Ubicación obtenida · ±'+acc+'m';
-      coords.textContent=lat+', '+lng+' · Obteniendo dirección...';
-      // Geocoding inverso con OpenStreetMap Nominatim (gratuito, sin API key)
-      fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat='+lat+'&lon='+lng+'&zoom=16&addressdetails=1',{
-        headers:{'Accept-Language':'es','User-Agent':'CORFA-BIONESTA-App'}
-      })
-      .then(function(r){return r.json();})
-      .then(function(d){
-        var a=d.address||{};
-        // Construir dirección legible
-        var partes=[];
-        // Calle y número
-        var calle=a.road||a.street||a.pedestrian||a.footway||'';
-        var numero=a.house_number||'';
-        if(calle) partes.push(calle+(numero?' '+numero:''));
-        // Barrio o sector
-        var sector=a.neighbourhood||a.suburb||a.quarter||a.hamlet||a.village||'';
-        if(sector) partes.push(sector);
-        // Ciudad
-        var ciudad=a.city||a.town||a.municipality||a.county||'';
-        if(ciudad) partes.push(ciudad);
-        // Provincia
-        var provincia=a.state||'';
-        if(provincia) partes.push(provincia);
-
-        var direccion=partes.join(', ')||d.display_name||'';
-        gpsData.direccion=direccion;
-
-        // Mostrar en pantalla
-        coords.innerHTML=
-          '<span style="color:var(--ink2);font-size:12px;font-family:var(--font);font-weight:500">'+
-          (direccion||'Sin dirección disponible')+
-          '</span><br>'+
-          '<span style="font-size:10px;opacity:.7">'+lat+', '+lng+' · ±'+acc+'m</span>';
-      })
-      .catch(function(){
-        // Si falla el geocoding, mostrar solo coordenadas
-        coords.textContent=lat+', '+lng+' · ±'+acc+'m';
-      });
-    },
-    function(){
-      badge.className='badge badge-red';
-      badge.innerHTML='<div class="dot" style="background:var(--red)"></div>Sin permiso de GPS';
-      coords.textContent='Activa el GPS y permite el acceso';
-    },
-    {enableHighAccuracy:true,timeout:15000,maximumAge:0}
-  );
-}
-
-// ── CÁMARA ──
-function openCamera(){ startCamera(camaraActual); }
-function startCamera(facing){
-  if(stream){stream.getTracks().forEach(function(t){t.stop();});stream=null;}
-  camaraActual=facing;
-  navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:facing},width:{ideal:1280},height:{ideal:960}},audio:false})
-  .then(function(s){
-    stream=s;
-    var v=document.getElementById('videoEl');
-    v.srcObject=s;v.style.display='block';
-    document.getElementById('camPh').style.display='none';
-    document.getElementById('camCtrl').style.display='flex';
-    document.getElementById('btnCam').style.display='none';
-    document.getElementById('btnCancelCam').style.display='inline-flex';
-    var sw=document.getElementById('btnSwitchCam');if(sw)sw.classList.add('visible');
-  }).catch(function(){alert('No se pudo acceder a la cámara.\nVerifica los permisos del navegador.');});
-}
-function switchCamera(){ startCamera(camaraActual==='environment'?'user':'environment'); }
-function takePhoto(){
-  var v=document.getElementById('videoEl');
-  var c=document.getElementById('photoCanvas');
-  c.width=v.videoWidth;c.height=v.videoHeight;
-  c.getContext('2d').drawImage(v,0,0);
-  photoB64=c.toDataURL('image/jpeg',0.80);
-  stopStream();v.style.display='none';
-  document.getElementById('camPh').style.display='none';
-  document.getElementById('camCtrl').style.display='none';
-  var img=document.getElementById('photoPreviewImg');
-  img.src=photoB64;img.style.display='block';
-  document.getElementById('fotoOk').style.display='flex';
-  document.getElementById('btnCam').style.display='none';
-  document.getElementById('btnRetake').style.display='inline-flex';
-  document.getElementById('btnCancelCam').style.display='none';
-  var sw=document.getElementById('btnSwitchCam');if(sw)sw.classList.remove('visible');
-}
-function retakePhoto(){
-  photoB64=null;camaraActual='environment';
-  document.getElementById('photoPreviewImg').style.display='none';
-  document.getElementById('fotoOk').style.display='none';
-  document.getElementById('btnRetake').style.display='none';
-  document.getElementById('btnCam').style.display='inline-flex';
-  document.getElementById('camPh').style.display='flex';
-}
-function closeCamera(){
-  stopStream();
-  document.getElementById('videoEl').style.display='none';
-  document.getElementById('camCtrl').style.display='none';
-  document.getElementById('camPh').style.display='flex';
-  document.getElementById('btnCam').style.display='inline-flex';
-  document.getElementById('btnCancelCam').style.display='none';
-  var sw=document.getElementById('btnSwitchCam');if(sw)sw.classList.remove('visible');
-}
-function stopStream(){ if(stream){stream.getTracks().forEach(function(t){t.stop();});stream=null;} }
-
-// ── VALIDACIÓN ──
-function validar(){
-  var medico=document.getElementById('inMedico').value.trim();
-  var errores=[];
-  document.getElementById('inMedico').classList.remove('err');
-  document.getElementById('reqAlert').classList.remove('on');
-  if(!medico){errores.push('Nombre del médico');document.getElementById('inMedico').classList.add('err');}
-  if(!photoB64) errores.push('Foto obligatoria');
-  if(!gpsData)  errores.push('Ubicación GPS');
-  if(errores.length>0){
-    document.getElementById('reqMsg').textContent='Faltan: '+errores.join(', ');
-    document.getElementById('reqAlert').classList.add('on');
-    document.getElementById('reqAlert').scrollIntoView({behavior:'smooth',block:'center'});
-    return false;
-  }
-  return true;
-}
-
-// ── INICIAR VISITA ──
-function iniciarVisita(){
-  if(!validar()) return;
-  var now=new Date();
-  var activa={
-    id:Date.now(),visitador:document.getElementById('selVisitador').value,
-    medico:document.getElementById('inMedico').value.trim(),
-    notasIniciales:document.getElementById('inNotas').value.trim(),
-    fecha:(function(){var n=new Date(new Date().toLocaleString('en-US',{timeZone:'America/Guayaquil'}));return n.getFullYear()+'-'+(n.getMonth()<9?'0':'')+(n.getMonth()+1)+'-'+(n.getDate()<10?'0':'')+n.getDate();})(),
-    fechaDisplay:now.toLocaleDateString('es-EC',{day:'numeric',month:'long',year:'numeric'}),
-    horaInicio:now.toLocaleTimeString('es-EC',{hour:'2-digit',minute:'2-digit',second:'2-digit'}),
-    tsInicio:now.getTime(),
-    lat:gpsData.lat,lng:gpsData.lng,gpsAcc:gpsData.acc,
-    direccion:gpsData.direccion||'',
-    fotoB64:photoB64
-  };
-  localStorage.setItem(LS_ACTIVA,JSON.stringify(activa));
-  mostrarPantallaCurso(activa);
-  showScreen('curso');
-}
-
-// ── ALERTA TIEMPO ──
-function mostrarAlertaTiempo(){
-  var banner=document.getElementById('alertaTiempo');
-  if(banner) banner.classList.add('visible');
-  if(navigator.vibrate) navigator.vibrate([400,200,400,200,400]);
-}
-function iniciarCuentaRegresiva(){
-  alertaSecs=300;clearInterval(alertaInterval);
-  alertaInterval=setInterval(function(){
-    alertaSecs--;
-    var cm=Math.floor(alertaSecs/60),cs=alertaSecs%60;
-    var el=document.getElementById('alertaCountdown');
-    if(el) el.textContent=cm+':'+(cs<10?'0':'')+cs;
-    if(alertaSecs%60===0&&alertaSecs>0&&navigator.vibrate) navigator.vibrate([300,150,300]);
-    if(alertaSecs<=0){clearInterval(alertaInterval);cerrarDesdeAlerta();}
-  },1000);
-}
-function continuarVisita(){
-  var banner=document.getElementById('alertaTiempo');
-  if(banner) banner.classList.remove('visible');
-  clearInterval(alertaInterval);alertaActivada=false;
-  if(navigator.vibrate) navigator.vibrate(100);
-}
-function cerrarDesdeAlerta(){
-  clearInterval(alertaInterval);
-  var banner=document.getElementById('alertaTiempo');
-  if(banner) banner.classList.remove('visible');
-  finalizarVisita();
-}
-
-// ── PANTALLA EN CURSO ──
-function mostrarPantallaCurso(activa){
-  document.getElementById('cursoMedico').textContent=activa.medico;
-  document.getElementById('cursoVisitador').textContent=activa.visitador;
-  document.getElementById('timerInicio').textContent='Inicio: '+activa.horaInicio;
-  if(activa.fotoB64){
-    var t=document.getElementById('fotoEntradaThumb');
-    t.src=activa.fotoB64;t.style.display='block';
-    document.getElementById('fotoEntradaOk').style.display='flex';
-  }
-  document.getElementById('gpsEntradaLabel').textContent=activa.lat+', '+activa.lng+' · ±'+activa.gpsAcc+'m';
-  clearInterval(timerInt);
-  alertaActivada=false;alertaInterval=null;alertaSecs=300;
-  timerInt=setInterval(function(){
-    var elapsed=Math.floor((Date.now()-activa.tsInicio)/1000);
-    var hh=Math.floor(elapsed/3600),mm=Math.floor((elapsed%3600)/60),ss=elapsed%60;
-    var str=hh>0?(hh<10?'0':'')+hh+':'+(mm<10?'0':'')+mm+':'+(ss<10?'0':'')+ss:(mm<10?'0':'')+mm+':'+(ss<10?'0':'')+ss;
-    document.getElementById('timerBig').textContent=str;
-    document.getElementById('timerPill').textContent=str;
-    if(elapsed>=7200&&!alertaActivada){alertaActivada=true;mostrarAlertaTiempo();iniciarCuentaRegresiva();}
-  },1000);
-}
-
-function recuperarVisitaActiva(){
-  var saved=localStorage.getItem(LS_ACTIVA);if(!saved) return;
-  try{var activa=JSON.parse(saved);if(!activa.tsInicio) return;mostrarPantallaCurso(activa);showScreen('curso');}
-  catch(e){localStorage.removeItem(LS_ACTIVA);}
-}
-
-// ── FINALIZAR VISITA ──
-function finalizarVisita(){
-  clearInterval(timerInt);clearInterval(alertaInterval);
-  var saved=localStorage.getItem(LS_ACTIVA);
-  if(!saved){alert('No hay visita activa.');return;}
-  var activa=JSON.parse(saved);
-  var now=new Date();
-  var durMin=Math.min(120,Math.max(0,Math.round((now.getTime()-activa.tsInicio)/60000)));
-  var notas=[activa.notasIniciales,document.getElementById('inNotasCurso').value.trim()].filter(Boolean).join(' | ');
-  var v={
-    id:activa.id,visitador:activa.visitador,medico:activa.medico,
-    fecha:activa.fecha,fechaDisplay:activa.fechaDisplay,
-    hora:activa.horaInicio,horaFin:now.toLocaleTimeString('es-EC',{hour:'2-digit',minute:'2-digit',second:'2-digit'}),
-    duracion:durMin,lat:activa.lat,lng:activa.lng,gpsAcc:activa.gpsAcc,
-    direccion:activa.direccion||'',
-    notas:notas,fotoB64:activa.fotoB64,foto:activa.fotoB64?'Sí':'No',
-    fotoLink:'',sincronia:navigator.onLine?'En línea':'Pendiente',synced:false
-  };
-  visits.push(v);
-  localStorage.setItem('cb_visitas',JSON.stringify(visits));
-  localStorage.removeItem(LS_ACTIVA);
-  mostrarResumen(v);showScreen('exito');
-  if(navigator.onLine){
-    sendToSheets(v);
-    // Pre-cargar historial en background para que esté listo al navegar
-    setTimeout(function(){ renderHistorial(); }, 6000);
-  }
-}
-
-function mostrarResumen(v){
-  var rows=[
-    ['Visitador',v.visitador],['Médico',v.medico],['Fecha',v.fechaDisplay],
-    ['Inicio',v.hora],['Fin',v.horaFin],['Duración',v.duracion+' min'],
-    ['Ubicación',(v.direccion?v.direccion:'—')],
-    ['GPS',v.lat+', '+v.lng+' (±'+v.gpsAcc+'m)'],
-    ['Foto',v.foto==='Sí'?'✓ Capturada':'—'],
-    ['Estado',v.sincronia==='En línea'?'● Enviando...':'⏳ Pendiente'],
-  ];
-  if(v.notas) rows.splice(4,0,['Notas',v.notas]);
-  document.getElementById('sumCard').innerHTML=rows.map(function(r){
-    return '<div class="sum-row"><span class="sum-k">'+r[0]+'</span><span class="sum-v" id="sum-'+r[0].toLowerCase().replace(/[^a-z]/g,'-')+'">'+r[1]+'</span></div>';
-  }).join('');
-}
-
-// ── SYNC A SHEETS ──
-function comprimirFoto(base64,maxWidth,calidad){
-  try{
-    var img=new Image();img.src=base64;
-    var w=img.width||maxWidth,h=img.height||maxWidth;
-    if(w>maxWidth){h=Math.round(h*maxWidth/w);w=maxWidth;}
-    var c=document.createElement('canvas');c.width=w;c.height=h;
-    c.getContext('2d').drawImage(img,0,0,w,h);
-    return c.toDataURL('image/jpeg',calidad);
-  }catch(e){return base64;}
-}
-function sendToSheets(v){
-  var fotoParaEnviar='';
-  if(v.fotoB64&&v.fotoB64.length>100) fotoParaEnviar=comprimirFoto(v.fotoB64,800,0.65);
-  fetch(SCRIPT_URL,{
-    method:'POST',headers:{'Content-Type':'text/plain'},
-    body:JSON.stringify({id:v.id,visitador:v.visitador,medico:v.medico,fecha:v.fecha,hora:v.hora,lat:v.lat,lng:v.lng,gpsAcc:v.gpsAcc,direccion:v.direccion||'',duracion:v.duracion,notas:v.notas,sincronia:v.sincronia,fotoBase64:fotoParaEnviar})
-  }).then(function(r){return r.json();})
-  .then(function(data){
-    v.synced=true;v.fotoLink=data.fotoLink||'';v.fotoB64=null;
-    var idx=visits.findIndex?visits.findIndex(function(lv){return lv.id===v.id;}):-1;
-    if(idx>-1) visits[idx]=v;
-    var hace7dias=Date.now()-(7*24*60*60*1000);
-    visits=visits.filter(function(lv){return !lv.synced||lv.id>hace7dias;});
-    localStorage.setItem('cb_visitas',JSON.stringify(visits));
-    if(v.fotoLink&&v.fotoLink.startsWith('http')){
-      var el=document.getElementById('sum-foto');
-      if(el) el.innerHTML='<a href="'+v.fotoLink+'" target="_blank" style="color:var(--g700)">Ver foto en Drive ↗</a>';
+    // ── ESTADO GLOBAL ──
+    var visits = JSON.parse(localStorage.getItem('cb_visitas') || '[]');
+    var gpsData = null;
+    var photoB64 = null;
+    var stream = null;
+    var timerInt = null;
+    var camaraActual = 'environment';
+    var alertaActivada = false;
+    var alertaInterval = null;
+    var alertaSecs = 300;
+    var LS_ACTIVA = 'cb_visita_activa';
+    // Normalizar texto para comparaciones — ignora tildes y mayúsculas
+    function norm(s) {
+      return String(s || '').trim().toUpperCase()
+        .normalize('NFD').replace(/[̀-ͯ]/g, '');
     }
-  }).catch(function(){});
-}
-function syncPending(){ visits.filter(function(v){return !v.synced;}).forEach(sendToSheets); }
+    var VISITADOR_ACTIVO = 'YADIRA CÓRDOVA';
 
-// ── NUEVA VISITA ──
-function nuevaVisita(){
-  photoB64=null;gpsData=null;camaraActual='environment';
-  stopStream();clearInterval(timerInt);clearInterval(alertaInterval);
-  alertaActivada=false;
-  document.getElementById('inMedico').value='';
-  document.getElementById('inMedico').classList.remove('err');
-  document.getElementById('inNotas').value='';
-  document.getElementById('inNotasCurso').value='';
-  document.getElementById('cc').textContent='0/500';
-  document.getElementById('cc2').textContent='0/500';
-  document.getElementById('photoPreviewImg').style.display='none';
-  document.getElementById('fotoOk').style.display='none';
-  document.getElementById('camPh').style.display='flex';
-  document.getElementById('btnRetake').style.display='none';
-  document.getElementById('btnCam').style.display='inline-flex';
-  document.getElementById('btnCancelCam').style.display='none';
-  document.getElementById('reqAlert').classList.remove('on');
-  document.getElementById('fotoEntradaThumb').style.display='none';
-  document.getElementById('fotoEntradaOk').style.display='none';
-  var banner=document.getElementById('alertaTiempo');if(banner)banner.classList.remove('visible');
-  getGPS();showScreen('form');
-}
-
-// ── HISTORIAL ──
-// ── Convierte cualquier valor de fecha/Sheets a formato yyyy-MM-dd ──
-function parseFechaSheets(raw){
-  if(!raw) return '';
-  var s=String(raw);
-  // Formato dd/MM/yyyy
-  if(/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(s)){
-    var p=s.split('/');
-    return p[2]+'-'+(p[1].length<2?'0':'')+p[1]+'-'+(p[0].length<2?'0':'')+p[0];
-  }
-  // Formato yyyy-MM-dd ya correcto
-  if(/^\d{4}-\d{2}-\d{2}/.test(s)) return s.substring(0,10);
-  // Date object o ISO string con T
-  if(s.indexOf('T')>-1 || s.indexOf('GMT')>-1 || s.indexOf('UTC')>-1){
-    var d=new Date(s);
-    if(!isNaN(d.getTime())){
-      // Ajustar a zona Ecuador para evitar desfase de día
-      var ec=new Date(d.toLocaleString('en-US',{timeZone:'America/Guayaquil'}));
-      return ec.getFullYear()+'-'+(ec.getMonth()<9?'0':'')+(ec.getMonth()+1)+'-'+(ec.getDate()<10?'0':'')+ec.getDate();
-    }
-  }
-  return s;
-}
-
-// ── Convierte cualquier valor de hora/Sheets a formato HH:mm ──
-function parseHoraSheets(raw){
-  if(!raw) return '';
-  var s=String(raw);
-  // Ya es HH:mm
-  if(/^\d{1,2}:\d{2}$/.test(s)) return (s.length===4?'0':'')+s;
-  // ISO con T: '1899-12-30T14:41:00.000Z' → extraer hora UTC
-  if(s.indexOf('T')>-1){
-    var match=s.match(/T(\d{2}):(\d{2})/);
-    if(match) return match[1]+':'+match[2];
-  }
-  return s;
-}
-
-function renderHistorial(){
-  var list=document.getElementById('visitList');
-
-  // Fecha de hoy en Ecuador
-  var nowEC=new Date(new Date().toLocaleString('en-US',{timeZone:'America/Guayaquil'}));
-  var today=nowEC.getFullYear()+'-'+(nowEC.getMonth()<9?'0':'')+(nowEC.getMonth()+1)+'-'+(nowEC.getDate()<10?'0':'')+nowEC.getDate();
-
-  // Mostrar local pendiente inmediatamente
-  var localHoy=visits.filter(function(v){return v.fecha===today&&!v.synced;});
-  if(localHoy.length>0){
-    pintarHistorial(localHoy,navigator.onLine);
-  } else {
-    list.innerHTML='<div class="empty"><div class="hist-loading"><div class="spinner-hist"></div><p style="color:rgba(255,255,255,.7)">Cargando visitas...</p></div></div>';
-  }
-
-  if(!navigator.onLine){ pintarHistorial(localHoy,false); return; }
-
-  fetch(SCRIPT_URL)
-    .then(function(r){ return r.json(); })
-    .then(function(d){
-      if(!d.ok||!d.data){ pintarHistorial(localHoy,false); return; }
-
-      var sheetsHoy=d.data
-        .map(function(row){
-          var fechaStr = parseFechaSheets(row['Fecha']||row.fecha);
-          var horaStr  = parseHoraSheets(row['Hora']||row.hora);
-          var fl       = String(row['Foto (link)']||row.fotoLink||'');
-          return {
-            id:        String(row['ID']||row.id||''),
-            visitador: String(row['Visitador']||row.visitador||''),
-            medico:    String(row['Médico visitado']||row.medico||''),
-            fecha:     fechaStr,
-            hora:      horaStr,
-            horaFin:   parseHoraSheets(row['Hora fin']||row.horaFin),
-            duracion:  parseInt(row['Duración (min)']||row.duracion||0)||0,
-            lat:       String(row['Latitud']||row.lat||''),
-            lng:       String(row['Longitud']||row.lng||''),
-            notas:     String(row['Notas']||row.notas||''),
-            direccion: String(row['Dirección']||row.direccion||''),
-            fotoLink:  fl,
-            foto:      fl.startsWith('http')?'Sí':(row.foto||'No'),
-            synced:    true
-          };
-        })
-        .filter(function(v){
-          return v.fecha===today && norm(v.visitador)===norm(VISITADOR_ACTIVO);
-        });
-
-      // Merge: Sheets + locales pendientes sin duplicados
-      var pendientes=visits.filter(function(v){return v.fecha===today&&!v.synced;});
-      var seen={};
-      var merged=sheetsHoy.concat(pendientes).filter(function(v){
-        var k=String(v.id||v.medico+v.hora); // fallback por medico+hora si no hay id
-        if(seen[k]) return false; seen[k]=true; return true;
+    // ── FECHA — corre inmediatamente ──
+    function setDates() {
+      var d = new Date();
+      var dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+      var meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+      var s = dias[d.getDay()] + ' ' + d.getDate() + ' de ' + meses[d.getMonth()];
+      ['hdrDate', 'histDate', 'exitoDate'].forEach(function (id) {
+        var el = document.getElementById(id); if (el) el.textContent = s;
       });
+    }
+    setDates(); // corre inmediatamente, sin esperar DOMContentLoaded
 
-      pintarHistorial(merged,false);
-    })
-    .catch(function(err){
-      console.error('Error cargando historial:', err);
-      pintarHistorial(localHoy,false);
+    // ── INIT ──
+    document.addEventListener('DOMContentLoaded', function () {
+      setDates();
+      getGPS();
+      recuperarVisitaActiva();
+      window.addEventListener('online', function () { document.getElementById('offlineBar').classList.remove('on'); syncPending(); });
+      window.addEventListener('offline', function () { document.getElementById('offlineBar').classList.add('on'); });
+      if (!navigator.onLine) document.getElementById('offlineBar').classList.add('on');
     });
-}
 
-function pintarHistorial(tv,cargando){
-  var cf=tv.filter(function(v){return v.foto==='Sí';}).length;
-  document.getElementById('stTotal').textContent=tv.length;
-  document.getElementById('stFotos').textContent=cf;
-  var ahora=new Date();
-  var hhmm=(ahora.getHours()<10?'0':'')+ahora.getHours()+':'+(ahora.getMinutes()<10?'0':'')+ahora.getMinutes();
-  document.getElementById('histCount').textContent=tv.length+' hoy · '+hhmm;
-  var list=document.getElementById('visitList');
-  var html='';
-  if(tv.length===0&&!cargando){
-    html='<div class="empty"><svg width="44" height="44" viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="7" y="7" width="30" height="30" rx="6"/><path d="M15 22h14M15 29h9"/></svg><p>Sin visitas hoy.<br>Toca Nueva visita para comenzar.</p></div>';
-  } else {
-    var sorted=tv.slice().sort(function(a,b){return(b.hora||'')>(a.hora||'')?1:-1;});
-    html=sorted.map(function(v,i){
-      var ini=(v.medico||'').replace(/Dra?\.?\s*/i,'').split(' ').slice(0,2).map(function(w){return w[0]||'';}).join('').toUpperCase()||'?';
-      var fl=String(v.fotoLink||'');
-      var fotoBtn=fl.startsWith('http')?'<a href="'+fl+'" target="_blank" style="background:rgba(204,251,241,.7);color:var(--g700);font-size:10px;font-weight:600;padding:3px 8px;border-radius:10px;text-decoration:none">📷 Ver foto</a>':(v.foto==='Sí'?'<span class="vpill">📷 Subiendo...</span>':'');
-      var gpsStr=v.direccion
-        ?'📍 '+v.direccion
-        :(v.lat&&v.lat!==''&&v.lat!=='undefined'?'📍 '+v.lat+', '+v.lng:'');
-      return '<div class="vcard up" style="animation-delay:'+(i*.04)+'s"><div class="vav">'+ini+'</div><div class="vinfo"><div class="vname">'+v.medico+'</div><div class="vmeta">'+v.hora+(v.horaFin?' → '+v.horaFin:'')+' · '+v.visitador+'</div>'+(v.notas?'<div class="vnotes">'+v.notas+'</div>':'')+(gpsStr?'<div class="vgps">'+gpsStr+'</div>':'')+'<div class="vbadges"><span class="vpill-dur">'+(v.duracion||0)+' min</span>'+fotoBtn+'</div></div></div>';
-    }).join('');
-    if(cargando) html+='<div style="text-align:center;padding:10px;font-size:11px;color:rgba(255,255,255,.6);display:flex;align-items:center;justify-content:center;gap:6px"><div class="spinner-hist"></div>Actualizando desde Sheets...</div>';
-  }
-  list.innerHTML=html;
-}
+    // ── GPS + GEOCODING INVERSO ──
+    function getGPS() {
+      var badge = document.getElementById('gpsBadge');
+      var coords = document.getElementById('gpsCoords');
+      gpsData = null;
+      if (!navigator.geolocation) {
+        badge.className = 'badge badge-red';
+        badge.innerHTML = '<div class="dot" style="background:var(--red)"></div>GPS no disponible';
+        return;
+      }
+      badge.className = 'badge badge-amber';
+      badge.innerHTML = '<div class="dot pulse" style="background:var(--amber)"></div>Obteniendo ubicación...';
+      coords.textContent = 'Buscando señal GPS...';
+      navigator.geolocation.getCurrentPosition(
+        function (pos) {
+          var lat = pos.coords.latitude.toFixed(6);
+          var lng = pos.coords.longitude.toFixed(6);
+          var acc = Math.round(pos.coords.accuracy);
+          gpsData = { lat: lat, lng: lng, acc: acc, direccion: '' };
+          badge.className = 'badge badge-green';
+          badge.innerHTML = '<div class="dot" style="background:var(--g600)"></div>Ubicación obtenida · ±' + acc + 'm';
+          coords.textContent = lat + ', ' + lng + ' · Obteniendo dirección...';
+          // Geocoding inverso con OpenStreetMap Nominatim (gratuito, sin API key)
+          fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat + '&lon=' + lng + '&zoom=16&addressdetails=1', {
+            headers: { 'Accept-Language': 'es', 'User-Agent': 'CORFA-BIONESTA-App' }
+          })
+            .then(function (r) { return r.json(); })
+            .then(function (d) {
+              var a = d.address || {};
+              // Construir dirección legible
+              var partes = [];
+              // Calle y número
+              var calle = a.road || a.street || a.pedestrian || a.footway || '';
+              var numero = a.house_number || '';
+              if (calle) partes.push(calle + (numero ? ' ' + numero : ''));
+              // Barrio o sector
+              var sector = a.neighbourhood || a.suburb || a.quarter || a.hamlet || a.village || '';
+              if (sector) partes.push(sector);
+              // Ciudad
+              var ciudad = a.city || a.town || a.municipality || a.county || '';
+              if (ciudad) partes.push(ciudad);
+              // Provincia
+              var provincia = a.state || '';
+              if (provincia) partes.push(provincia);
 
-// ── NAV ──
-var historialTimer = null;
+              var direccion = partes.join(', ') || d.display_name || '';
+              gpsData.direccion = direccion;
 
-function goTo(name){
-  stopStream();
-  // Limpiar timer anterior
-  if(historialTimer){ clearInterval(historialTimer); historialTimer=null; }
+              // Mostrar en pantalla
+              coords.innerHTML =
+                '<span style="color:var(--ink2);font-size:12px;font-family:var(--font);font-weight:500">' +
+                (direccion || 'Sin dirección disponible') +
+                '</span><br>' +
+                '<span style="font-size:10px;opacity:.7">' + lat + ', ' + lng + ' · ±' + acc + 'm</span>';
+            })
+            .catch(function () {
+              // Si falla el geocoding, mostrar solo coordenadas
+              coords.textContent = lat + ', ' + lng + ' · ±' + acc + 'm';
+            });
+        },
+        function () {
+          badge.className = 'badge badge-red';
+          badge.innerHTML = '<div class="dot" style="background:var(--red)"></div>Sin permiso de GPS';
+          coords.textContent = 'Activa el GPS y permite el acceso';
+        },
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+      );
+    }
 
-  if(name==='historial'){
-    renderHistorial(); // carga inmediata
-    // Auto-refresh cada 30 segundos mientras está en historial
-    historialTimer = setInterval(function(){
-      var activa = document.getElementById('s-historial');
-      if(activa && activa.classList.contains('active')) renderHistorial();
-    }, 30000);
-  }
-  if(name==='form') getGPS();
-  showScreen(name);
-}
-function showScreen(name){
-  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
-  document.getElementById('s-'+name).classList.add('active');
-}
-</script>
-<script>
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('sw-visitador.js').catch(function(){});
-}
-</script>
+    // ── CÁMARA ──
+    function openCamera() { startCamera(camaraActual); }
+    function startCamera(facing) {
+      if (stream) { stream.getTracks().forEach(function (t) { t.stop(); }); stream = null; }
+      camaraActual = facing;
+      navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: facing }, width: { ideal: 1280 }, height: { ideal: 960 } }, audio: false })
+        .then(function (s) {
+          stream = s;
+          var v = document.getElementById('videoEl');
+          v.srcObject = s; v.style.display = 'block';
+          document.getElementById('camPh').style.display = 'none';
+          document.getElementById('camCtrl').style.display = 'flex';
+          document.getElementById('btnCam').style.display = 'none';
+          document.getElementById('btnCancelCam').style.display = 'inline-flex';
+          var sw = document.getElementById('btnSwitchCam'); if (sw) sw.classList.add('visible');
+        }).catch(function () { alert('No se pudo acceder a la cámara.\nVerifica los permisos del navegador.'); });
+    }
+    function switchCamera() { startCamera(camaraActual === 'environment' ? 'user' : 'environment'); }
+    function takePhoto() {
+      var v = document.getElementById('videoEl');
+      var c = document.getElementById('photoCanvas');
+      c.width = v.videoWidth; c.height = v.videoHeight;
+      c.getContext('2d').drawImage(v, 0, 0);
+      photoB64 = c.toDataURL('image/jpeg', 0.80);
+      stopStream(); v.style.display = 'none';
+      document.getElementById('camPh').style.display = 'none';
+      document.getElementById('camCtrl').style.display = 'none';
+      var img = document.getElementById('photoPreviewImg');
+      img.src = photoB64; img.style.display = 'block';
+      document.getElementById('fotoOk').style.display = 'flex';
+      document.getElementById('btnCam').style.display = 'none';
+      document.getElementById('btnRetake').style.display = 'inline-flex';
+      document.getElementById('btnCancelCam').style.display = 'none';
+      var sw = document.getElementById('btnSwitchCam'); if (sw) sw.classList.remove('visible');
+    }
+    function retakePhoto() {
+      photoB64 = null; camaraActual = 'environment';
+      document.getElementById('photoPreviewImg').style.display = 'none';
+      document.getElementById('fotoOk').style.display = 'none';
+      document.getElementById('btnRetake').style.display = 'none';
+      document.getElementById('btnCam').style.display = 'inline-flex';
+      document.getElementById('camPh').style.display = 'flex';
+    }
+    function closeCamera() {
+      stopStream();
+      document.getElementById('videoEl').style.display = 'none';
+      document.getElementById('camCtrl').style.display = 'none';
+      document.getElementById('camPh').style.display = 'flex';
+      document.getElementById('btnCam').style.display = 'inline-flex';
+      document.getElementById('btnCancelCam').style.display = 'none';
+      var sw = document.getElementById('btnSwitchCam'); if (sw) sw.classList.remove('visible');
+    }
+    function stopStream() { if (stream) { stream.getTracks().forEach(function (t) { t.stop(); }); stream = null; } }
+
+    // ── VALIDACIÓN ──
+    function validar() {
+      var medico = document.getElementById('inMedico').value.trim();
+      var errores = [];
+      document.getElementById('inMedico').classList.remove('err');
+      document.getElementById('reqAlert').classList.remove('on');
+      if (!medico) { errores.push('Nombre del médico'); document.getElementById('inMedico').classList.add('err'); }
+      if (!photoB64) errores.push('Foto obligatoria');
+      if (!gpsData) errores.push('Ubicación GPS');
+      if (errores.length > 0) {
+        document.getElementById('reqMsg').textContent = 'Faltan: ' + errores.join(', ');
+        document.getElementById('reqAlert').classList.add('on');
+        document.getElementById('reqAlert').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return false;
+      }
+      return true;
+    }
+
+    // ── INICIAR VISITA ──
+    function iniciarVisita() {
+      if (!validar()) return;
+      var now = new Date();
+      var activa = {
+        id: Date.now(), visitador: document.getElementById('selVisitador').value,
+        medico: document.getElementById('inMedico').value.trim(),
+        notasIniciales: document.getElementById('inNotas').value.trim(),
+        fecha: (function () { var n = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Guayaquil' })); return n.getFullYear() + '-' + (n.getMonth() < 9 ? '0' : '') + (n.getMonth() + 1) + '-' + (n.getDate() < 10 ? '0' : '') + n.getDate(); })(),
+        fechaDisplay: now.toLocaleDateString('es-EC', { day: 'numeric', month: 'long', year: 'numeric' }),
+        horaInicio: now.toLocaleTimeString('es-EC', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+        tsInicio: now.getTime(),
+        lat: gpsData.lat, lng: gpsData.lng, gpsAcc: gpsData.acc,
+        direccion: gpsData.direccion || '',
+        fotoB64: photoB64
+      };
+      localStorage.setItem(LS_ACTIVA, JSON.stringify(activa));
+      mostrarPantallaCurso(activa);
+      showScreen('curso');
+    }
+
+    // ── ALERTA TIEMPO ──
+    function mostrarAlertaTiempo() {
+      var banner = document.getElementById('alertaTiempo');
+      if (banner) banner.classList.add('visible');
+      if (navigator.vibrate) navigator.vibrate([400, 200, 400, 200, 400]);
+    }
+    function iniciarCuentaRegresiva() {
+      alertaSecs = 300; clearInterval(alertaInterval);
+      alertaInterval = setInterval(function () {
+        alertaSecs--;
+        var cm = Math.floor(alertaSecs / 60), cs = alertaSecs % 60;
+        var el = document.getElementById('alertaCountdown');
+        if (el) el.textContent = cm + ':' + (cs < 10 ? '0' : '') + cs;
+        if (alertaSecs % 60 === 0 && alertaSecs > 0 && navigator.vibrate) navigator.vibrate([300, 150, 300]);
+        if (alertaSecs <= 0) { clearInterval(alertaInterval); cerrarDesdeAlerta(); }
+      }, 1000);
+    }
+    function continuarVisita() {
+      var banner = document.getElementById('alertaTiempo');
+      if (banner) banner.classList.remove('visible');
+      clearInterval(alertaInterval); alertaActivada = false;
+      if (navigator.vibrate) navigator.vibrate(100);
+    }
+    function cerrarDesdeAlerta() {
+      clearInterval(alertaInterval);
+      var banner = document.getElementById('alertaTiempo');
+      if (banner) banner.classList.remove('visible');
+      finalizarVisita();
+    }
+
+    // ── PANTALLA EN CURSO ──
+    function mostrarPantallaCurso(activa) {
+      document.getElementById('cursoMedico').textContent = activa.medico;
+      document.getElementById('cursoVisitador').textContent = activa.visitador;
+      document.getElementById('timerInicio').textContent = 'Inicio: ' + activa.horaInicio;
+      if (activa.fotoB64) {
+        var t = document.getElementById('fotoEntradaThumb');
+        t.src = activa.fotoB64; t.style.display = 'block';
+        document.getElementById('fotoEntradaOk').style.display = 'flex';
+      }
+      document.getElementById('gpsEntradaLabel').textContent = activa.lat + ', ' + activa.lng + ' · ±' + activa.gpsAcc + 'm';
+      clearInterval(timerInt);
+      alertaActivada = false; alertaInterval = null; alertaSecs = 300;
+      timerInt = setInterval(function () {
+        var elapsed = Math.floor((Date.now() - activa.tsInicio) / 1000);
+        var hh = Math.floor(elapsed / 3600), mm = Math.floor((elapsed % 3600) / 60), ss = elapsed % 60;
+        var str = hh > 0 ? (hh < 10 ? '0' : '') + hh + ':' + (mm < 10 ? '0' : '') + mm + ':' + (ss < 10 ? '0' : '') + ss : (mm < 10 ? '0' : '') + mm + ':' + (ss < 10 ? '0' : '') + ss;
+        document.getElementById('timerBig').textContent = str;
+        document.getElementById('timerPill').textContent = str;
+        if (elapsed >= 7200 && !alertaActivada) { alertaActivada = true; mostrarAlertaTiempo(); iniciarCuentaRegresiva(); }
+      }, 1000);
+    }
+
+    function recuperarVisitaActiva() {
+      var saved = localStorage.getItem(LS_ACTIVA); if (!saved) return;
+      try { var activa = JSON.parse(saved); if (!activa.tsInicio) return; mostrarPantallaCurso(activa); showScreen('curso'); }
+      catch (e) { localStorage.removeItem(LS_ACTIVA); }
+    }
+
+    // ── FINALIZAR VISITA ──
+    function finalizarVisita() {
+      clearInterval(timerInt); clearInterval(alertaInterval);
+      var saved = localStorage.getItem(LS_ACTIVA);
+      if (!saved) { alert('No hay visita activa.'); return; }
+      var activa = JSON.parse(saved);
+      var now = new Date();
+      var durMin = Math.min(120, Math.max(0, Math.round((now.getTime() - activa.tsInicio) / 60000)));
+      var notas = [activa.notasIniciales, document.getElementById('inNotasCurso').value.trim()].filter(Boolean).join(' | ');
+      var v = {
+        id: activa.id, visitador: activa.visitador, medico: activa.medico,
+        fecha: activa.fecha, fechaDisplay: activa.fechaDisplay,
+        hora: activa.horaInicio, horaFin: now.toLocaleTimeString('es-EC', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+        duracion: durMin, lat: activa.lat, lng: activa.lng, gpsAcc: activa.gpsAcc,
+        direccion: activa.direccion || '',
+        notas: notas, fotoB64: activa.fotoB64, foto: activa.fotoB64 ? 'Sí' : 'No',
+        fotoLink: '', sincronia: navigator.onLine ? 'En línea' : 'Pendiente', synced: false
+      };
+      visits.push(v);
+      localStorage.setItem('cb_visitas', JSON.stringify(visits));
+      localStorage.removeItem(LS_ACTIVA);
+      mostrarResumen(v); showScreen('exito');
+      if (navigator.onLine) {
+        sendToSheets(v);
+        // Pre-cargar historial en background para que esté listo al navegar
+        setTimeout(function () { renderHistorial(); }, 6000);
+      }
+    }
+
+    function mostrarResumen(v) {
+      var rows = [
+        ['Visitador', v.visitador], ['Médico', v.medico], ['Fecha', v.fechaDisplay],
+        ['Inicio', v.hora], ['Fin', v.horaFin], ['Duración', v.duracion + ' min'],
+        ['Ubicación', (v.direccion ? v.direccion : '—')],
+        ['GPS', v.lat + ', ' + v.lng + ' (±' + v.gpsAcc + 'm)'],
+        ['Foto', v.foto === 'Sí' ? '✓ Capturada' : '—'],
+        ['Estado', v.sincronia === 'En línea' ? '● Enviando...' : '⏳ Pendiente'],
+      ];
+      if (v.notas) rows.splice(4, 0, ['Notas', v.notas]);
+      document.getElementById('sumCard').innerHTML = rows.map(function (r) {
+        return '<div class="sum-row"><span class="sum-k">' + r[0] + '</span><span class="sum-v" id="sum-' + r[0].toLowerCase().replace(/[^a-z]/g, '-') + '">' + r[1] + '</span></div>';
+      }).join('');
+    }
+
+    // ── SYNC A SHEETS ──
+    function comprimirFoto(base64, maxWidth, calidad) {
+      try {
+        var img = new Image(); img.src = base64;
+        var w = img.width || maxWidth, h = img.height || maxWidth;
+        if (w > maxWidth) { h = Math.round(h * maxWidth / w); w = maxWidth; }
+        var c = document.createElement('canvas'); c.width = w; c.height = h;
+        c.getContext('2d').drawImage(img, 0, 0, w, h);
+        return c.toDataURL('image/jpeg', calidad);
+      } catch (e) { return base64; }
+    }
+    function sendToSheets(v) {
+      var fotoParaEnviar = '';
+      if (v.fotoB64 && v.fotoB64.length > 100) fotoParaEnviar = comprimirFoto(v.fotoB64, 800, 0.65);
+      fetch(SCRIPT_URL, {
+        method: 'POST', headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({ id: v.id, visitador: v.visitador, medico: v.medico, fecha: v.fecha, hora: v.hora, lat: v.lat, lng: v.lng, gpsAcc: v.gpsAcc, direccion: v.direccion || '', duracion: v.duracion, notas: v.notas, sincronia: v.sincronia, fotoBase64: fotoParaEnviar })
+      }).then(function (r) { return r.json(); })
+        .then(function (data) {
+          v.synced = true; v.fotoLink = data.fotoLink || ''; v.fotoB64 = null;
+          var idx = visits.findIndex ? visits.findIndex(function (lv) { return lv.id === v.id; }) : -1;
+          if (idx > -1) visits[idx] = v;
+          var hace7dias = Date.now() - (7 * 24 * 60 * 60 * 1000);
+          visits = visits.filter(function (lv) { return !lv.synced || lv.id > hace7dias; });
+          localStorage.setItem('cb_visitas', JSON.stringify(visits));
+          if (v.fotoLink && v.fotoLink.startsWith('http')) {
+            var el = document.getElementById('sum-foto');
+            if (el) el.innerHTML = '<a href="' + v.fotoLink + '" target="_blank" style="color:var(--g700)">Ver foto en Drive ↗</a>';
+          }
+        }).catch(function () { });
+    }
+    function syncPending() { visits.filter(function (v) { return !v.synced; }).forEach(sendToSheets); }
+
+    // ── NUEVA VISITA ──
+    function nuevaVisita() {
+      photoB64 = null; gpsData = null; camaraActual = 'environment';
+      stopStream(); clearInterval(timerInt); clearInterval(alertaInterval);
+      alertaActivada = false;
+      document.getElementById('inMedico').value = '';
+      document.getElementById('inMedico').classList.remove('err');
+      document.getElementById('inNotas').value = '';
+      document.getElementById('inNotasCurso').value = '';
+      document.getElementById('cc').textContent = '0/500';
+      document.getElementById('cc2').textContent = '0/500';
+      document.getElementById('photoPreviewImg').style.display = 'none';
+      document.getElementById('fotoOk').style.display = 'none';
+      document.getElementById('camPh').style.display = 'flex';
+      document.getElementById('btnRetake').style.display = 'none';
+      document.getElementById('btnCam').style.display = 'inline-flex';
+      document.getElementById('btnCancelCam').style.display = 'none';
+      document.getElementById('reqAlert').classList.remove('on');
+      document.getElementById('fotoEntradaThumb').style.display = 'none';
+      document.getElementById('fotoEntradaOk').style.display = 'none';
+      var banner = document.getElementById('alertaTiempo'); if (banner) banner.classList.remove('visible');
+      getGPS(); showScreen('form');
+    }
+
+    // ── HISTORIAL ──
+    // ── Convierte cualquier valor de fecha/Sheets a formato yyyy-MM-dd ──
+    function parseFechaSheets(raw) {
+      if (!raw) return '';
+      var s = String(raw);
+      // Formato dd/MM/yyyy
+      if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(s)) {
+        var p = s.split('/');
+        return p[2] + '-' + (p[1].length < 2 ? '0' : '') + p[1] + '-' + (p[0].length < 2 ? '0' : '') + p[0];
+      }
+      // Formato yyyy-MM-dd ya correcto
+      if (/^\d{4}-\d{2}-\d{2}/.test(s)) return s.substring(0, 10);
+      // Date object o ISO string con T
+      if (s.indexOf('T') > -1 || s.indexOf('GMT') > -1 || s.indexOf('UTC') > -1) {
+        var d = new Date(s);
+        if (!isNaN(d.getTime())) {
+          // Ajustar a zona Ecuador para evitar desfase de día
+          var ec = new Date(d.toLocaleString('en-US', { timeZone: 'America/Guayaquil' }));
+          return ec.getFullYear() + '-' + (ec.getMonth() < 9 ? '0' : '') + (ec.getMonth() + 1) + '-' + (ec.getDate() < 10 ? '0' : '') + ec.getDate();
+        }
+      }
+      return s;
+    }
+
+    // ── Convierte cualquier valor de hora/Sheets a formato HH:mm ──
+    function parseHoraSheets(raw) {
+      if (!raw) return '';
+      var s = String(raw);
+      // Ya es HH:mm
+      if (/^\d{1,2}:\d{2}$/.test(s)) return (s.length === 4 ? '0' : '') + s;
+      // ISO con T: '1899-12-30T14:41:00.000Z' → extraer hora UTC
+      if (s.indexOf('T') > -1) {
+        var match = s.match(/T(\d{2}):(\d{2})/);
+        if (match) return match[1] + ':' + match[2];
+      }
+      return s;
+    }
+
+    function renderHistorial() {
+      var list = document.getElementById('visitList');
+
+      // Fecha de hoy en Ecuador
+      var nowEC = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Guayaquil' }));
+      var today = nowEC.getFullYear() + '-' + (nowEC.getMonth() < 9 ? '0' : '') + (nowEC.getMonth() + 1) + '-' + (nowEC.getDate() < 10 ? '0' : '') + nowEC.getDate();
+
+      // Mostrar local pendiente inmediatamente
+      var localHoy = visits.filter(function (v) { return v.fecha === today && !v.synced; });
+      if (localHoy.length > 0) {
+        pintarHistorial(localHoy, navigator.onLine);
+      } else {
+        list.innerHTML = '<div class="empty"><div class="hist-loading"><div class="spinner-hist"></div><p style="color:rgba(255,255,255,.7)">Cargando visitas...</p></div></div>';
+      }
+
+      if (!navigator.onLine) { pintarHistorial(localHoy, false); return; }
+
+      fetch(SCRIPT_URL)
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+          if (!d.ok || !d.data) { pintarHistorial(localHoy, false); return; }
+
+          var sheetsHoy = d.data
+            .map(function (row) {
+              var fechaStr = parseFechaSheets(row['Fecha'] || row.fecha);
+              var horaStr = parseHoraSheets(row['Hora'] || row.hora);
+              var fl = String(row['Foto (link)'] || row.fotoLink || '');
+              return {
+                id: String(row['ID'] || row.id || ''),
+                visitador: String(row['Visitador'] || row.visitador || ''),
+                medico: String(row['Médico visitado'] || row.medico || ''),
+                fecha: fechaStr,
+                hora: horaStr,
+                horaFin: parseHoraSheets(row['Hora fin'] || row.horaFin),
+                duracion: parseInt(row['Duración (min)'] || row.duracion || 0) || 0,
+                lat: String(row['Latitud'] || row.lat || ''),
+                lng: String(row['Longitud'] || row.lng || ''),
+                notas: String(row['Notas'] || row.notas || ''),
+                direccion: String(row['Dirección'] || row.direccion || ''),
+                fotoLink: fl,
+                foto: fl.startsWith('http') ? 'Sí' : (row.foto || 'No'),
+                synced: true
+              };
+            })
+            .filter(function (v) {
+              return v.fecha === today && norm(v.visitador) === norm(VISITADOR_ACTIVO);
+            });
+
+          // Merge: Sheets + locales pendientes sin duplicados
+          var pendientes = visits.filter(function (v) { return v.fecha === today && !v.synced; });
+          var seen = {};
+          var merged = sheetsHoy.concat(pendientes).filter(function (v) {
+            var k = String(v.id || v.medico + v.hora); // fallback por medico+hora si no hay id
+            if (seen[k]) return false; seen[k] = true; return true;
+          });
+
+          pintarHistorial(merged, false);
+        })
+        .catch(function (err) {
+          console.error('Error cargando historial:', err);
+          pintarHistorial(localHoy, false);
+        });
+    }
+
+    function pintarHistorial(tv, cargando) {
+      var cf = tv.filter(function (v) { return v.foto === 'Sí'; }).length;
+      document.getElementById('stTotal').textContent = tv.length;
+      document.getElementById('stFotos').textContent = cf;
+      var ahora = new Date();
+      var hhmm = (ahora.getHours() < 10 ? '0' : '') + ahora.getHours() + ':' + (ahora.getMinutes() < 10 ? '0' : '') + ahora.getMinutes();
+      document.getElementById('histCount').textContent = tv.length + ' hoy · ' + hhmm;
+      var list = document.getElementById('visitList');
+      var html = '';
+      if (tv.length === 0 && !cargando) {
+        html = '<div class="empty"><svg width="44" height="44" viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="7" y="7" width="30" height="30" rx="6"/><path d="M15 22h14M15 29h9"/></svg><p>Sin visitas hoy.<br>Toca Nueva visita para comenzar.</p></div>';
+      } else {
+        var sorted = tv.slice().sort(function (a, b) { return (b.hora || '') > (a.hora || '') ? 1 : -1; });
+        html = sorted.map(function (v, i) {
+          var ini = (v.medico || '').replace(/Dra?\.?\s*/i, '').split(' ').slice(0, 2).map(function (w) { return w[0] || ''; }).join('').toUpperCase() || '?';
+          var fl = String(v.fotoLink || '');
+          var fotoBtn = fl.startsWith('http') ? '<a href="' + fl + '" target="_blank" style="background:rgba(204,251,241,.7);color:var(--g700);font-size:10px;font-weight:600;padding:3px 8px;border-radius:10px;text-decoration:none">📷 Ver foto</a>' : (v.foto === 'Sí' ? '<span class="vpill">📷 Subiendo...</span>' : '');
+          var gpsStr = v.direccion
+            ? '📍 ' + v.direccion
+            : (v.lat && v.lat !== '' && v.lat !== 'undefined' ? '📍 ' + v.lat + ', ' + v.lng : '');
+          return '<div class="vcard up" style="animation-delay:' + (i * .04) + 's"><div class="vav">' + ini + '</div><div class="vinfo"><div class="vname">' + v.medico + '</div><div class="vmeta">' + v.hora + (v.horaFin ? ' → ' + v.horaFin : '') + ' · ' + v.visitador + '</div>' + (v.notas ? '<div class="vnotes">' + v.notas + '</div>' : '') + (gpsStr ? '<div class="vgps">' + gpsStr + '</div>' : '') + '<div class="vbadges"><span class="vpill-dur">' + (v.duracion || 0) + ' min</span>' + fotoBtn + '</div></div></div>';
+        }).join('');
+        if (cargando) html += '<div style="text-align:center;padding:10px;font-size:11px;color:rgba(255,255,255,.6);display:flex;align-items:center;justify-content:center;gap:6px"><div class="spinner-hist"></div>Actualizando desde Sheets...</div>';
+      }
+      list.innerHTML = html;
+    }
+
+    // ── NAV ──
+    var historialTimer = null;
+
+    function goTo(name) {
+      stopStream();
+      // Limpiar timer anterior
+      if (historialTimer) { clearInterval(historialTimer); historialTimer = null; }
+
+      if (name === 'historial') {
+        renderHistorial(); // carga inmediata
+        // Auto-refresh cada 30 segundos mientras está en historial
+        historialTimer = setInterval(function () {
+          var activa = document.getElementById('s-historial');
+          if (activa && activa.classList.contains('active')) renderHistorial();
+        }, 30000);
+      }
+      if (name === 'form') getGPS();
+      showScreen(name);
+    }
+    function showScreen(name) {
+      document.querySelectorAll('.screen').forEach(function (s) { s.classList.remove('active'); });
+      document.getElementById('s-' + name).classList.add('active');
+    }
+  </script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw-visitador.js').catch(function () { });
+    }
+  </script>
 </body>
+
 </html>
